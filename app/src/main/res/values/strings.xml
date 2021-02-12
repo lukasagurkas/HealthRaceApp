@@ -3,4 +3,9 @@
     <string name="enter_your_email">Enter your Email</string>
     <string name="enter_your_password">Enter your Password</string>
     <string name="sign_in">Sign In</string>
+    <string name="male_radio_button">Male</string>
+    <string name="female_radio_button">Female</string>
+    <string name="pick_date">Set</string>
+    <string name="date_of_birth">Date of Birth</string>
+    <string name="enter_your_username">Enter your Username</string>
 </resources>
