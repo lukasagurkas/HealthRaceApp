@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -122,8 +123,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
+        if (username.length() > 16){
+            Toast.makeText(this, "Username has to be less than 16 characters", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         // If the none of the fields are empty displaying a progress dialog
-        progressDialog.setMessage("Registering Please Wait...");
+        {
+            progressDialog.setMessage("Registering Please Wait...");
+        }
         progressDialog.show();
 
 
