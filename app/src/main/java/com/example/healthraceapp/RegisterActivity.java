@@ -13,14 +13,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private Button buttonRegister;
     private Button buttonSignIn;
     private EditText editTextUsername;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RadioButton radioButtonFemale;
 
     // Defining FirebaseAuth object
-    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth mAuth;
 
     // Defining FirebaseDatabase object
     private FirebaseDatabase firebaseDatabase;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        firebaseAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         progressDialog = new ProgressDialog(this);
 
@@ -70,6 +72,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
+        Query usernameQuery = FirebaseDatabase.getInstance().getReference().child("Users")
+                .orderByChild("username").equalTo("username");
+        usernameQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.getChildrenCount() > 0){
+                    Toast.makeText(RegisterActivity.this,
+                            "Username not available, please choose another username",
+                            Toast.LENGTH_SHORT).show();
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
         // Checking if username, email and passwords are empty
         if (TextUtils.isEmpty(username)) {
             Toast.makeText(this, "Please enter your username", Toast.LENGTH_LONG).show();
@@ -84,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
+        // Checking if a date of birth was set
         if (!dateOfBirthSet) {
             Toast.makeText(this, "Please set the date of birth", Toast.LENGTH_LONG).show();
             return;
@@ -92,42 +116,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean checkedMale = ((RadioButton) radioButtonMale).isChecked();
         boolean checkedFemale = ((RadioButton) radioButtonFemale).isChecked();
 
+        //Check if a gender was selected
         if (!checkedMale && !checkedFemale) {
             Toast.makeText(this, "Please select the gender", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // If the email and password are not empty
-        // displaying a progress dialog
+        // If the none of the fields are empty displaying a progress dialog
         progressDialog.setMessage("Registering Please Wait...");
         progressDialog.show();
 
+
+
         // Creating a new user
-        firebaseAuth.createUserWithEmailAndPassword(email, password)
+        mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             User user = new User(username, email, checkedMale, year, month, day);
 
-                            firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+                            firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+                                    "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
                             firebaseDatabase.getReference("Users")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(MainActivity.this, "Successfully registered",
+                                        Toast.makeText(RegisterActivity.this, "Successfully registered",
                                                 Toast.LENGTH_LONG).show();
                                     } else {
-                                        Toast.makeText(MainActivity.this, task.getException().getMessage(),
+                                        Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
                         } else {
-                            Toast.makeText(MainActivity.this, task.getException().getMessage(),
+                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
                         progressDialog.dismiss();
