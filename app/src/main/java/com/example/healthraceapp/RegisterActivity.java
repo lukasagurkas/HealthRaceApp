@@ -173,19 +173,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 });
     }
 
+    @Override
+    public void onClick(View v) {
+        registerUser();
+    }
+
     public void setDateOfBirth(int year, int month, int day) {
         dateOfBirthSet = true;
         this.year = year;
         this.month = month;
         this.day = day;
     }
-
-
-    @Override
-    public void onClick(View v) {
-        registerUser();
-    }
-
 
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment = new DatePickerFragment();
