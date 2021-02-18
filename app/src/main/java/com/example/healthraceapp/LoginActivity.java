@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button buttonRegister, buttonSignIn;
     private EditText editTextEmail, editTextPassword;
@@ -30,71 +29,90 @@ public class LoginActivity extends AppCompatActivity {
     // Defining FirebaseAuth object
     private FirebaseAuth mAuth;
 
-    // Defining FirebaseDatabase object
-    private FirebaseDatabase firebaseDatabase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //getting firebase auth object
         mAuth = FirebaseAuth.getInstance();
+
+        //if the objects getcurrentuser method is not null
+        //means user is already logged in
+        if(mAuth.getCurrentUser() != null){
+            //close this activity
+            finish();
+            //opening profile activity
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        }
+
+        //initializing views
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
+        buttonRegister  = (Button) findViewById(R.id.buttonRegister);
 
         progressDialog = new ProgressDialog(this);
 
-        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        editTextPassword = (EditText) findViewById(R.id.editTextPassword);
+        //attaching click listener
+        buttonSignIn.setOnClickListener(this);
+        buttonRegister.setOnClickListener(this);
+    }
 
-        buttonRegister = (Button) findViewById(R.id.buttonRegister);
-        buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
-
-        buttonRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
-            }
-        });
-
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String email = editTextEmail.getText().toString().trim();
-                String password = editTextPassword.getText().toString().trim();
-
-                if(TextUtils.isEmpty(email)){
-                    editTextEmail.setError("Email is Required.");
-                    return;
-                }
-
-                if(TextUtils.isEmpty(password)){
-                    editTextPassword.setError("Password is Required.");
-                    return;
-                }
-
-                if(password.length() < 6){
-                    editTextPassword.setError("Password Must be >= 6 Characters");
-                    return;
-                }
+    //method for user login
+    private void userLogin(){
+        String email = editTextEmail.getText().toString().trim();
+        String password  = editTextPassword.getText().toString().trim();
 
 
-                // authenticate the user
+        //checking if email and passwords are empty
+        if(TextUtils.isEmpty(email)){
+            Toast.makeText(this,"Please enter email",Toast.LENGTH_LONG).show();
+            return;
+        }
 
-                mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(
-                        new OnCompleteListener<AuthResult>() {
+        if(TextUtils.isEmpty(password) || password.length() < 6){
+            Toast.makeText(this,"Please enter password longer than 6 characters",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        //if the email and password are not empty
+        //displaying a progress dialog
+
+        progressDialog.setMessage("Registering Please Wait...");
+        progressDialog.show();
+
+        //logging in the user
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressDialog.dismiss();
+                        //if the task is successfull
                         if(task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this, "Logged in Successfully",
-                                    Toast.LENGTH_SHORT).show();
+                            //start the profile activity
+                            finish();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        }else {
-                            Toast.makeText(LoginActivity.this, "Error! "
-                                    + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-            }
-        });
+
+    }
+
+    public void onClick(View view) {
+        if(view == buttonSignIn){
+            userLogin();
+        }
+
+        if(view == buttonRegister){
+            finish();
+            startActivity(new Intent(this, RegisterActivity.class));
+        }
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 }

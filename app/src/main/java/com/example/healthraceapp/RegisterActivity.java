@@ -60,12 +60,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
 
         buttonRegister.setOnClickListener(this);
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-            }
-        });
+        buttonSignIn.setOnClickListener(this);
 
         radioButtonMale = (RadioButton) findViewById(R.id.radioButtonMale);
         radioButtonFemale = (RadioButton) findViewById(R.id.radioButtonFemale);
@@ -175,7 +170,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        registerUser();
+        if(v == buttonSignIn){
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+
+        if(v == buttonRegister){
+            registerUser();
+        }
+
     }
 
     public void setDateOfBirth(int year, int month, int day) {
