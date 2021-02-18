@@ -1,6 +1,7 @@
 package com.example.healthraceapp;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,14 +26,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
-    private Button buttonRegister;
-    private Button buttonSignIn;
-    private EditText editTextUsername;
-    private EditText editTextEmail;
-    private EditText editTextPassword;
+    private Button buttonRegister, buttonSignIn;
+    private EditText editTextUsername, editTextEmail, editTextPassword;
     private ProgressDialog progressDialog;
-    private RadioButton radioButtonMale;
-    private RadioButton radioButtonFemale;
+    private RadioButton radioButtonMale, radioButtonFemale;
 
     // Defining FirebaseAuth object
     private FirebaseAuth mAuth;
@@ -48,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -62,7 +60,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
 
         buttonRegister.setOnClickListener(this);
-        buttonSignIn.setOnClickListener(this);
+        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
+        });
 
         radioButtonMale = (RadioButton) findViewById(R.id.radioButtonMale);
         radioButtonFemale = (RadioButton) findViewById(R.id.radioButtonFemale);
@@ -73,25 +76,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        Query usernameQuery = FirebaseDatabase.getInstance().getReference().child("Users")
-                .orderByChild("username").equalTo("username");
-        usernameQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.getChildrenCount() > 0){
-                    Toast.makeText(RegisterActivity.this,
-                            "Username not available, please choose another username",
-                            Toast.LENGTH_SHORT).show();
-                }else{
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+//        Query usernameQuery = FirebaseDatabase.getInstance().getReference().child("Users")
+//                .orderByChild("username").equalTo("username");
+//        usernameQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if (snapshot.getChildrenCount() > 0){
+//                    Toast.makeText(RegisterActivity.this,
+//                            "Username not available, please choose another username",
+//                            Toast.LENGTH_SHORT).show();
+//                }else{
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
 
 
         // Checking if username, email and passwords are empty
@@ -103,8 +106,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Please enter your email address", Toast.LENGTH_LONG).show();
             return;
         }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please enter your password", Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(password) || password.length() < 6) {
+            Toast.makeText(this, "Please enter your password longer than 6 characters", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -177,14 +180,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         this.day = day;
     }
 
+
     @Override
-    public void onClick(View view) {
+    public void onClick(View v) {
         registerUser();
     }
+
 
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setCurrentActivity(this);
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }
+
 }
