@@ -23,14 +23,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
+    // If permission is granted
     private int PERMISSION_CODE = 1;
+
+    // Text field for the amount of steps
     private TextView textViewStepCounter;
+
+    // The sensor manager for the step counter
     private SensorManager sensorManager;
+
+    // The step counter sensor
     private Sensor myStepCounter;
+
+    // If the device has a step counter
     private boolean isCounterSensorPresent;
+
+    // Initial stepCount
     int stepCount = 0;
-    ProgressBar simpleProgressBar; // initiate the progress bar
-//    simpleProgressBar.setMax(100); // 100 maximum value for the progress bar
+
+    // Initiate the progress bar
+    ProgressBar simpleProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +55,21 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         prog();
 
-        Button buttonRequest = findViewById(R.id.permissionButton);
-        buttonRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(StepActivity.this,
-                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-                } else {
-                    requestActivity();
-                }
-            }
-        });
+//        // Ask for permission to use activity recognition
+//        Button buttonRequest = findViewById(R.id.permissionButton);
+//        buttonRequest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(StepActivity.this,
+//                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    requestActivity();
+//                }
+//            }
+//        });
+
+        // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             myStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             isCounterSensorPresent = true;
@@ -64,12 +79,16 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    // Sets the progressBar
     public void prog() {
         simpleProgressBar  = (ProgressBar) findViewById(R.id.StepProgress);
     }
 
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        // Gives toast saying if the user granted or denied permission to use step counter
         if (requestCode == PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
@@ -77,35 +96,35 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
             }
         }
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    private void requestActivity() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed because of this and that")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(StepActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-        }
+//    // Requests permission to use step counter
+//    private void requestActivity() {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
+//            new AlertDialog.Builder(this)
+//                    .setTitle("Permission needed")
+//                    .setMessage("This permission is needed to track the amount of steps you take")
+//                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            ActivityCompat.requestPermissions(StepActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+//                        }
+//                    })
+//                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    })
+//                    .create().show();
+//        } else {
+//            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+//        }
+//        ;
+//    }
 
-        ;
-    }
-
+    // Changes the shows value in the textView to current amount of steps
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor == myStepCounter){
