@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button buttonRegister, buttonSignIn;
     private EditText editTextEmail, editTextPassword;
     private ProgressDialog progressDialog;
+    private TextView textForgotPassword;
 
     // Defining FirebaseAuth object
     private FirebaseAuth mAuth;

@@ -12,12 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthRaceApp">
         <activity android:name=".LoginActivity" />
+        <activity android:name=".StepActivity"/>
+        <activity android:name=".MainActivity"/>
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
     </application>
 
