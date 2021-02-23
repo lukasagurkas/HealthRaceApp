@@ -7,7 +7,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.PeriodicSync;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -22,24 +25,35 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
     // If permission is granted
     private int PERMISSION_CODE = 1;
 
-    // Text field for the amount of steps
+    // Text field for the amount of stepCounter
     private TextView textViewStepCounter;
+
+    // Text field for the amount of steps of stepDetector
+    private static TextView textViewStepDetector;
 
     // The sensor manager for the step counter
     private SensorManager sensorManager;
 
-    // The step counter sensor
-    private Sensor myStepCounter;
+    // The step counter and detector sensor
+    private Sensor myStepCounter, myStepDetector;
 
     // If the device has a step counter
     private boolean isCounterSensorPresent;
 
+    // If the device has a step counter
+    private boolean isDetectorSensorPresent;
+
     // Initial stepCount
     int stepCount = 0;
+
+    // Initial stepDetect
+    int stepDetect = 0;
 
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
@@ -49,7 +63,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        dailyResetAlarm();
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
+        textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -77,6 +93,29 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             textViewStepCounter.setText("No stepCounter detected");
             isCounterSensorPresent = false;
         }
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            isDetectorSensorPresent = true;
+        } else {
+            textViewStepDetector.setText("Detector sensor is not present");
+            isDetectorSensorPresent = false;
+        }
+    }
+
+    private void dailyResetAlarm() {
+        Intent intent = new Intent(MainActivity.this, StepDetectorResetScheduler.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 15);
+        calendar.set(Calendar.MINUTE, 42);
+        calendar.set(Calendar.SECOND, 15);
+
+        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     // Sets the progressBar
@@ -130,7 +169,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         if (sensorEvent.sensor == myStepCounter){
             stepCount = (int) sensorEvent.values[0];
             textViewStepCounter.setText(String.valueOf(stepCount));
+        } else if (sensorEvent.sensor == myStepDetector) {
+            stepDetect = (int) (stepDetect + sensorEvent.values[0]);
+            textViewStepDetector.setText(String.valueOf(stepDetect));
         }
+
         simpleProgressBar.setProgress(stepCount);
     }
 
@@ -145,11 +188,21 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
             sensorManager.registerListener(this, myStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         }
+
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null){
+            sensorManager.registerListener(this, myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+
+    public void resetCount() {
+        stepDetect = 0;
+        textViewStepDetector.setText(String.valueOf(stepDetect));
     }
 
 }

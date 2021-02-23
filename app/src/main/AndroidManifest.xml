@@ -28,6 +28,11 @@
         <activity android:name=".PopupForgot"
             android:theme="@style/Theme_Translucent" />
 
+        <receiver
+            android:name=".StepDetectorResetScheduler"
+            android:enabled="true"
+            android:exported="true"/>
+
     </application>
 
 </manifest>
