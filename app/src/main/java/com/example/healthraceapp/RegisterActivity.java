@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,12 +19,15 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.ArrayList;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private Button buttonRegister, buttonSignIn;
@@ -42,6 +46,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     // Date of birth
     private int year, month, day;
+
+    private static final String TAG = "RegisterActivity";
+
+    private final ArrayList<String> allUsernames = new ArrayList<>();;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,31 +74,44 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         radioButtonFemale = (RadioButton) findViewById(R.id.radioButtonFemale);
     }
 
+    private void retrieveAllUsernames() {
+        // Defining DatabaseReference object
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
+                    assert temporaryUsername != null;
+                    if (!allUsernames.contains(temporaryUsername)) {
+                        // Adding all unique usernames to the ArrayList allUsernames
+                        allUsernames.add(temporaryUsername);
+                    }
+                }
+                // After retrieving all the usernames the user can now be registerd
+                registerUser();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
+            }
+        });
+    }
+
     private void registerUser() {
         String username = editTextUsername.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-//        Query usernameQuery = FirebaseDatabase.getInstance().getReference().child("Users")
-//                .orderByChild("username").equalTo("username");
-//        usernameQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if (snapshot.getChildrenCount() > 0){
-//                    Toast.makeText(RegisterActivity.this,
-//                            "Username not available, please choose another username",
-//                            Toast.LENGTH_SHORT).show();
-//                }else{
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
 
+        if (allUsernames.contains(username)) {
+            Toast.makeText(this, "Username is already in use", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         // Checking if username, email and passwords are empty
         if (TextUtils.isEmpty(username)) {
@@ -175,7 +196,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
 
         if(v == buttonRegister){
-            registerUser();
+            retrieveAllUsernames();
         }
 
     }
