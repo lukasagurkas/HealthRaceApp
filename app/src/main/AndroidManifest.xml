@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PopupForgot"
+        <activity android:name=".PopupForgotPassword"
             android:theme="@style/Theme_Translucent" />
 
     </application>
