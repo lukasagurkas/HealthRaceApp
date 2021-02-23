@@ -18,15 +18,12 @@
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".PopupForgot"
-            tools:ignore="ExtraText">
-            android:theme="@style/Theme.HealthRaceApp.CustomTheme"
-        </activity>
+            android:theme="@style/Theme_Translucent" />
+
     </application>
 
 </manifest>

@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-    private Button buttonLogout;
+    private Button buttonLogout, buttonStep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +56,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //initializing views
         buttonLogout = (Button) findViewById(R.id.buttonLogout);
+        buttonStep = (Button) findViewById(R.id.buttonStep);
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
 
         //adding listener to button
         buttonLogout.setOnClickListener(this);
+        buttonStep.setOnClickListener(this);
     }
 
     public void onClick(View view) {
@@ -73,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             //starting login activity
             startActivity(new Intent(this, LoginActivity.class));
+        }
+
+        if (view == buttonStep){
+            startActivity(new Intent(this, StepActivity.class));
         }
     }
 }

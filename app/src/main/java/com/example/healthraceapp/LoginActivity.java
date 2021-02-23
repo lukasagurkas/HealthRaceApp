@@ -8,15 +8,19 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
         //getting firebase auth object
         mAuth = FirebaseAuth.getInstance();
 
@@ -62,12 +67,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         buttonRegister  = (Button) findViewById(R.id.buttonRegister);
+        textForgotPassword = (TextView) findViewById(R.id.textForgotPassword);
 
         progressDialog = new ProgressDialog(this);
 
         //attaching click listener
+        textForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, PopupForgot.class));
+            }
+        });
         buttonSignIn.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
+
 
         // Ask for permission to use activity recognition
 //        Button buttonRequest = findViewById(R.id.buttonSignIn);
@@ -159,6 +172,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             finish();
             startActivity(new Intent(this, RegisterActivity.class));
         }
+
     }
 
     @Override
