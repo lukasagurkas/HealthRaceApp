@@ -39,6 +39,7 @@ public class PopupForgotPassword extends LoginActivity{
         int height = dm.heightPixels;
 
         getWindow().setLayout(width, (int) (height*.3));
+        firebaseAuth = firebaseAuth.getInstance();
 
         editUserEmail = (EditText) findViewById(R.id.editTextEmail);
         buttonSubmit = findViewById(R.id.buttonSubmit);
