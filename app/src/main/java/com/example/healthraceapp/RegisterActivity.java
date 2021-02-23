@@ -1,7 +1,11 @@
 package com.example.healthraceapp;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,6 +30,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 
@@ -72,6 +78,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         radioButtonMale = (RadioButton) findViewById(R.id.radioButtonMale);
         radioButtonFemale = (RadioButton) findViewById(R.id.radioButtonFemale);
+
     }
 
     private void retrieveAllUsernames() {

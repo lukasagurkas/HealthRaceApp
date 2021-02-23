@@ -71,19 +71,19 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         prog();
 
-//        // Ask for permission to use activity recognition
-//        Button buttonRequest = findViewById(R.id.permissionButton);
-//        buttonRequest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (ContextCompat.checkSelfPermission(StepActivity.this,
-//                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    requestActivity();
-//                }
-//            }
-//        });
+        // Ask for permission to use activity recognition
+        Button buttonRequest = findViewById(R.id.permissionButton);
+        buttonRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(StepActivity.this,
+                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
+                } else {
+                    requestActivity();
+                }
+            }
+        });
 
         // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
@@ -104,8 +104,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void dailyResetAlarm() {
-        Intent intent = new Intent(MainActivity.this, StepDetectorResetScheduler.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+        Intent intent = new Intent(StepActivity.this, StepDetectorResetScheduler.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -138,30 +138,30 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-//    // Requests permission to use step counter
-//    private void requestActivity() {
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
-//            new AlertDialog.Builder(this)
-//                    .setTitle("Permission needed")
-//                    .setMessage("This permission is needed to track the amount of steps you take")
-//                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            ActivityCompat.requestPermissions(StepActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-//                        }
-//                    })
-//                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                        }
-//                    })
-//                    .create().show();
-//        } else {
-//            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-//        }
-//        ;
-//    }
+    // Requests permission to use step counter
+    private void requestActivity() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("This permission is needed to track the amount of steps you take")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(StepActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+        }
+        ;
+    }
 
     // Changes the shows value in the textView to current amount of steps
     @Override

@@ -1,7 +1,10 @@
 package com.example.healthraceapp;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,7 +26,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +39,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //view objects
     private TextView textViewUserEmail;
     private Button buttonLogout, buttonStep;
+
+    // If permission is granted
+    private int PERMISSION_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +75,54 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonStep.setOnClickListener(this);
     }
 
+//    public void askPermission() {
+//        if (ContextCompat.checkSelfPermission(MainActivity.this,
+//                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+//            Toast.makeText(MainActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
+//        } else {
+//            requestActivity();
+//        }
+//    }
+
+//    // Requests permission to use step counter
+//    private void requestActivity() {
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
+//            new AlertDialog.Builder(this)
+//                    .setTitle("Permission needed")
+//                    .setMessage("This permission is needed to track the amount of steps you take")
+//                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+//                        }
+//                    })
+//                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.dismiss();
+//                        }
+//                    })
+//                    .create().show();
+//        } else {
+//            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+//        }
+//        ;
+//    }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//
+//        // Gives toast saying if the user granted or denied permission to use step counter
+//        if (requestCode == PERMISSION_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+//            }
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//    }
+
     public void onClick(View view) {
         //if logout is pressed
         if(view == buttonLogout){
@@ -77,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, LoginActivity.class));
         }
 
-        if (view == buttonStep){
+        if (view == buttonStep) {
+//            askPermission();
             startActivity(new Intent(this, StepActivity.class));
         }
     }
