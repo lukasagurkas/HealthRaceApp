@@ -108,18 +108,25 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     public void dailyResetAlarm() {
         Intent intent = new Intent(StepActivity.this, StepDetectorResetScheduler.class);
+        Log.d("waitCheck", "It works");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+        Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 1);
-        Log.d("Timecheck", String.valueOf(calendar.getTime()));
+        setCalendar.setTimeInMillis(System.currentTimeMillis());
+        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        setCalendar.set(Calendar.MINUTE, 0);
+        setCalendar.set(Calendar.SECOND, 1);
+        Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
-        alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        if (setCalendar.before(calendar)){
+            setCalendar.add(Calendar.DATE, 1);
+        }
+        Log.d("TimeCheck after fix", String.valueOf(setCalendar.getTime()));
+
+        alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     // Sets the progressBar
