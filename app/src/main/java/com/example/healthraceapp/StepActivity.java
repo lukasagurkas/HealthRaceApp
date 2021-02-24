@@ -201,10 +201,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
     }
 
-
-//    public void resetCount() {
-//        stepDetect = 0;
-//        textViewStepDetector.setText(String.valueOf(stepDetect));
-//    }
+    public void resetCount() {
+        stepDetect = 0;
+        textViewStepDetector.setText(String.valueOf(stepDetect));
+    }
 
 }
