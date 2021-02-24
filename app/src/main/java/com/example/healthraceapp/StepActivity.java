@@ -19,6 +19,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -92,7 +93,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             myStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             isCounterSensorPresent = true;
         } else {
-            //textViewStepCounter.setText("No stepCounter detected");
+            textViewStepCounter.setText("No stepCounter detected");
             isCounterSensorPresent = false;
         }
 
@@ -100,7 +101,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             isDetectorSensorPresent = true;
         } else {
-            //textViewStepDetector.setText("Detector sensor is not present");
+            textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
@@ -115,7 +116,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.SECOND, 1);
+        Log.d("Timecheck", String.valueOf(calendar.getTime()));
 
         alarmManager.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
