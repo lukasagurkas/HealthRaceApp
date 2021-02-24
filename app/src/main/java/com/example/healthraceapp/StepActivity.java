@@ -105,7 +105,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    private void dailyResetAlarm() {
+    public void dailyResetAlarm() {
         Intent intent = new Intent(StepActivity.this, StepDetectorResetScheduler.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
 
@@ -202,9 +202,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    public void resetCount() {
-        stepDetect = 0;
-        textViewStepDetector.setText(String.valueOf(stepDetect));
-    }
+//    public void resetCount() {
+//        stepDetect = 0;
+//        textViewStepDetector.setText(String.valueOf(stepDetect));
+//    }
 
 }
