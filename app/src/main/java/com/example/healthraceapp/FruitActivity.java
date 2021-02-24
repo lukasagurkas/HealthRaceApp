@@ -50,7 +50,7 @@ public class FruitActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
-            tvProgressLabel.setText("Grams: " + progress);
+            tvProgressLabel.setText("Grams:" + progress);
         }
 
         @Override
