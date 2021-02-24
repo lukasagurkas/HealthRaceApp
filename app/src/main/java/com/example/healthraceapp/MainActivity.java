@@ -1,6 +1,7 @@
 package com.example.healthraceapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -72,8 +73,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //adding listener to button
         buttonLogout.setOnClickListener(this);
-        buttonStep.setOnClickListener(this);
-        buttonFruit.setOnClickListener(this);
+        buttonStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, StepActivity.class));
+            }
+        });
+        buttonFruit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, FruitActivity.class));
+            }
+        });
     }
 
 //    public void askPermission() {
@@ -133,15 +144,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             //starting login activity
             startActivity(new Intent(this, LoginActivity.class));
-        }
-
-        if (view == buttonStep) {
-//            askPermission();
-            startActivity(new Intent(this, StepActivity.class));
-        }
-
-        if (view == buttonFruit) {
-            startActivity(new Intent(this, FruitActivity.class));
         }
     }
 }

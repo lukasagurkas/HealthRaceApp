@@ -63,7 +63,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_step);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         dailyResetAlarm();
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
@@ -92,7 +92,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             myStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             isCounterSensorPresent = true;
         } else {
-//            textViewStepCounter.setText("No stepCounter detected");
+            //textViewStepCounter.setText("No stepCounter detected");
             isCounterSensorPresent = false;
         }
 
@@ -100,12 +100,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             isDetectorSensorPresent = true;
         } else {
-   //         textViewStepDetector.setText("Detector sensor is not present");
+            //textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
 
-    private void dailyResetAlarm() {
+    public void dailyResetAlarm() {
         Intent intent = new Intent(StepActivity.this, StepDetectorResetScheduler.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
 
@@ -202,9 +202,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    public void resetCount() {
-        stepDetect = 0;
-        textViewStepDetector.setText(String.valueOf(stepDetect));
-    }
+//    public void resetCount() {
+//        stepDetect = 0;
+//        textViewStepDetector.setText(String.valueOf(stepDetect));
+//    }
 
 }
