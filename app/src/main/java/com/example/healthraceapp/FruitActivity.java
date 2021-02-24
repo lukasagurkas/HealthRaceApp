@@ -34,12 +34,11 @@ public class FruitActivity extends AppCompatActivity {
         int progress = seekBar.getProgress();
         tvProgressLabel = findViewById(R.id.textView);
         tvProgressLabel.setText("Grams: " + progress);
-        buttonAdd.setOnClickListener(v -> {
-            // TODO Auto-generated method stub
-
-            progressBar.incrementProgressBy(progress);
-            progressBar.setVisibility(View.VISIBLE);
-
+        buttonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setProgress(seekBar.getProgress());
+            }
         });
 //        progressBar.setProgress(progress);
 
@@ -50,7 +49,7 @@ public class FruitActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
-            tvProgressLabel.setText("Grams:" + progress);
+            tvProgressLabel.setText("Grams: " + progress);
         }
 
         @Override

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-    private Button buttonLogout, buttonStep;
+    private Button buttonLogout, buttonStep, buttonFruit;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //initializing views
         buttonLogout = (Button) findViewById(R.id.buttonLogout);
         buttonStep = (Button) findViewById(R.id.buttonStep);
+        buttonFruit = (Button) findViewById(R.id.buttonFruit);
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //adding listener to button
         buttonLogout.setOnClickListener(this);
         buttonStep.setOnClickListener(this);
+        buttonFruit.setOnClickListener(this);
     }
 
 //    public void askPermission() {
@@ -136,6 +138,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (view == buttonStep) {
 //            askPermission();
             startActivity(new Intent(this, StepActivity.class));
+        }
+
+        if (view == buttonFruit) {
+            startActivity(new Intent(this, FruitActivity.class));
         }
     }
 }
