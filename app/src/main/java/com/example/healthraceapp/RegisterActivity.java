@@ -179,8 +179,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(RegisterActivity.this, "Successfully registered",
-                                                Toast.LENGTH_LONG).show();
+                                        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    Toast.makeText(RegisterActivity.this,
+                                                            "Registered successfully." +
+                                                                    " Please verify your email",
+                                                            Toast.LENGTH_LONG).show();
+                                                }else{
+                                                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
                                     } else {
                                         Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                                 Toast.LENGTH_LONG).show();
