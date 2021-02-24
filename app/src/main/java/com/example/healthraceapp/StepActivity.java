@@ -72,18 +72,18 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         prog();
 
         // Ask for permission to use activity recognition
-        Button buttonRequest = findViewById(R.id.permissionButton);
-        buttonRequest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(StepActivity.this,
-                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-                } else {
-                    requestActivity();
-                }
-            }
-        });
+//        Button buttonRequest = findViewById(R.id.permissionButton);
+//        buttonRequest.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (ContextCompat.checkSelfPermission(StepActivity.this,
+//                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
+//                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    requestActivity();
+//                }
+//            }
+//        });
 
         // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
