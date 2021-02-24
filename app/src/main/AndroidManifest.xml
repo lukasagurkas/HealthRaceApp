@@ -15,24 +15,31 @@
         <activity
             android:name=".FruitActivity"
             android:label="@string/title_activity_fruit"
-            android:theme="@style/Theme.HealthRaceApp.NoActionBar"></activity>
+            android:theme="@style/Theme.HealthRaceApp.NoActionBar">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".StepActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".StepActivity" />
+        <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PopupForgotPassword"
+        <activity
+            android:name=".PopupForgotPassword"
             android:theme="@style/Theme_Translucent" />
 
         <receiver
             android:name=".StepDetectorResetScheduler"
             android:enabled="true"
-            android:exported="true"/>
-
+            android:exported="true" />
     </application>
 
 </manifest>

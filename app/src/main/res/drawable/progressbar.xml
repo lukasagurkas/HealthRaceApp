@@ -11,7 +11,7 @@
     <item
         android:id="@android:id/progress"
         android:gravity="center_vertical|fill_horizontal">
-        <scale android:scaleWidth="10%">
+        <scale android:scaleWidth="100%">
             <shape android:shape="rectangle">
                 <size android:height="45dp"/>
                 <solid android:color="@color/green"/>
