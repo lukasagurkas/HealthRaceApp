@@ -7,6 +7,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
@@ -53,11 +54,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     int stepCount = 0;
 
     // Initial stepDetect
-    int stepDetect = 0;
+    public static int stepDetect = 0;
 
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +92,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             myStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             isCounterSensorPresent = true;
         } else {
-            textViewStepCounter.setText("No stepCounter detected");
+//            textViewStepCounter.setText("No stepCounter detected");
             isCounterSensorPresent = false;
         }
 
@@ -98,7 +100,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             isDetectorSensorPresent = true;
         } else {
-            textViewStepDetector.setText("Detector sensor is not present");
+   //         textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
