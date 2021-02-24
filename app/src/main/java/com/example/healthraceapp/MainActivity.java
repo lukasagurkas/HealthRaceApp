@@ -1,6 +1,7 @@
 package com.example.healthraceapp;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-    private Button buttonLogout, buttonStep;
+    private Button buttonLogout, buttonStep, buttonFruit;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
@@ -65,13 +66,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //initializing views
         buttonLogout = (Button) findViewById(R.id.buttonLogout);
         buttonStep = (Button) findViewById(R.id.buttonStep);
+        buttonFruit = (Button) findViewById(R.id.buttonFruit);
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
 
         //adding listener to button
         buttonLogout.setOnClickListener(this);
-        buttonStep.setOnClickListener(this);
+        buttonStep.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, StepActivity.class));
+            }
+        });
+        buttonFruit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, FruitActivity.class));
+            }
+        });
     }
 
 //    public void askPermission() {
@@ -131,11 +144,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             finish();
             //starting login activity
             startActivity(new Intent(this, LoginActivity.class));
-        }
-
-        if (view == buttonStep) {
-//            askPermission();
-            startActivity(new Intent(this, StepActivity.class));
         }
     }
 }
