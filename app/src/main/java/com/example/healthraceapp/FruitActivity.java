@@ -2,6 +2,7 @@ package com.example.healthraceapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -14,7 +15,7 @@ import android.widget.ProgressBar;
 public class FruitActivity extends AppCompatActivity {
 
     TextView tvProgressLabel;
-    Button buttonAdd;
+    Button buttonAdd, buttonMainPage;
     ProgressBar progressBar;
 
     @Override
@@ -26,6 +27,7 @@ public class FruitActivity extends AppCompatActivity {
         progressBar.setProgress(0);
         progressBar.setMax(100);
         buttonAdd = findViewById(R.id.buttonAdd);
+        buttonMainPage = findViewById(R.id.buttonMainPage);
 
         // set a change listener on the SeekBar
         SeekBar seekBar = findViewById(R.id.seekBar);
@@ -40,6 +42,12 @@ public class FruitActivity extends AppCompatActivity {
                 progressBar.setProgress(seekBar.getProgress());
             }
         });
+//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
+//            }
+//        });
 //        progressBar.setProgress(progress);
 
     }

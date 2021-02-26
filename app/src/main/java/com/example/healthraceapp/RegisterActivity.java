@@ -211,8 +211,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if(v == buttonSignIn){
+            mAuth.signOut();
             finish();
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         }
 
         if(v == buttonRegister){
