@@ -55,14 +55,15 @@
         app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
         app:layout_constraintVertical_bias="0.032" />
 
+
     <TextView
         android:id="@+id/textDoB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="52dp"
         android:text="Date of Birth:"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.091"
+        app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -74,22 +75,21 @@
         android:text="Gender:"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.082"
+        app:layout_constraintHorizontal_bias="0.069"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textDoB"
-        app:layout_constraintVertical_bias="0.142" />
-
+        app:layout_constraintVertical_bias="0.106" />
 
     <TextView
         android:id="@+id/textEmailProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="344dp"
-        android:layout_marginRight="344dp"
-        android:text="Email"
+        android:layout_marginEnd="348dp"
+        android:layout_marginRight="348dp"
+        android:text="Email:"
         app:layout_constraintBottom_toTopOf="@+id/textDoB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile"
-        app:layout_constraintVertical_bias="0.633" />
+        app:layout_constraintVertical_bias="0.705" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
