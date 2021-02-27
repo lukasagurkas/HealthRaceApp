@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-    private Button buttonLogout, buttonStep, buttonFruit;
+    private Button buttonLogout, buttonStep, buttonFruit, buttonProfile;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonLogout = (Button) findViewById(R.id.buttonLogout);
         buttonStep = (Button) findViewById(R.id.buttonStep);
         buttonFruit = (Button) findViewById(R.id.buttonFruit);
+        buttonProfile = (Button) findViewById(R.id.buttonProfile);
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
@@ -85,6 +86,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, FruitActivity.class));
+            }
+        });
+        buttonProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             }
         });
     }

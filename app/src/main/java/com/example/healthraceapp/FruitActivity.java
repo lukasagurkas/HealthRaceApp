@@ -15,7 +15,7 @@ import android.widget.ProgressBar;
 public class FruitActivity extends AppCompatActivity {
 
     TextView tvProgressLabel;
-    Button buttonAdd;
+    Button buttonAdd, buttonMainPage;
     ProgressBar progressBar;
     Button buttonMainPage;
 
@@ -43,6 +43,12 @@ public class FruitActivity extends AppCompatActivity {
                 progressBar.setProgress(seekBar.getProgress());
             }
         });
+//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
+//            }
+//        });
 //        progressBar.setProgress(progress);
         buttonMainPage.setOnClickListener(new View.OnClickListener() {
             @Override

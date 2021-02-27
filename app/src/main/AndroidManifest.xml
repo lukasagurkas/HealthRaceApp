@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.healthraceapp">
-    <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,9 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthRaceApp">
-        <activity android:name=".FruitActivity"
+        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".FruitActivity"
             android:label="@string/title_activity_fruit"
-            android:theme="@style/Theme.HealthRaceApp.NoActionBar"/>
+            android:theme="@style/Theme.HealthRaceApp.NoActionBar" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".StepActivity" />
         <activity android:name=".MainActivity" />
@@ -25,7 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PopupForgotPassword"
+        <activity
+            android:name=".PopupForgotPassword"
             android:theme="@style/Theme_Translucent" />
 
         <receiver
