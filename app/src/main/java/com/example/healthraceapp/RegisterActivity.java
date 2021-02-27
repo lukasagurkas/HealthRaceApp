@@ -187,7 +187,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                             "Registered successfully." +
                                                                     " Please verify your email",
                                                             Toast.LENGTH_LONG).show();
-                                                }else{
+                                                } else {
                                                     Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                                             Toast.LENGTH_LONG).show();
                                                 }
@@ -211,12 +211,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         if(v == buttonSignIn){
+            // Signing out the user so he could sign in again
             mAuth.signOut();
+            // Finishing registration activity
             finish();
+            // Starting a login activity
             startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         }
 
         if(v == buttonRegister){
+            // Retrieving all usernames from the database to check if the username is unique
+            // then calling the method registerUser() if username is unique
             retrieveAllUsernames();
         }
 
@@ -229,6 +234,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         this.day = day;
     }
 
+    // Date picker dialog is shown when the button 'set' is pressed in the register activity
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setCurrentActivity(this);

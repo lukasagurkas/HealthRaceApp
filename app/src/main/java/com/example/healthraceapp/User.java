@@ -1,9 +1,9 @@
 package com.example.healthraceapp;
 
 public class User {
-    public String username, email;
-    public boolean male;
-    public int year, month, day;
+    private String username, email;
+    private boolean male;
+    private int year, month, day;
 
     public User() {}
 
@@ -14,5 +14,29 @@ public class User {
         this.year = year;
         this.month = month;
         this.day = day;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
     }
 }
