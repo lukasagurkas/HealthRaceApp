@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-    private Button buttonLogout, buttonStep, buttonFruit, buttonProfile;
+    private Button buttonLogout, buttonStep, buttonFruit, buttonProfile, buttonVeggie, buttonWater;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
@@ -65,10 +65,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        FirebaseUser user = mAuth.getCurrentUser();
 
         //initializing views
-        buttonLogout = (Button) findViewById(R.id.buttonLogout);
-        buttonStep = (Button) findViewById(R.id.buttonStep);
-        buttonFruit = (Button) findViewById(R.id.buttonFruit);
-        buttonProfile = (Button) findViewById(R.id.buttonProfile);
+        buttonLogout = findViewById(R.id.buttonLogout);
+        buttonStep =  findViewById(R.id.buttonStep);
+        buttonFruit = findViewById(R.id.buttonFruit);
+        buttonProfile = findViewById(R.id.buttonProfile);
+        buttonVeggie = findViewById(R.id.buttonVeggie);
+        buttonWater = findViewById(R.id.buttonWater);
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
@@ -94,6 +96,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             }
         });
+        buttonVeggie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, VegetableActivity.class));
+            }
+        });
+        buttonWater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, WaterActivity.class));
+            }
+        });
+
+
     }
 
 //    public void askPermission() {

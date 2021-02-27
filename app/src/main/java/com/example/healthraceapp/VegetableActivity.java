@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-public class FruitActivity extends AppCompatActivity {
+public class VegetableActivity extends AppCompatActivity {
 
     TextView tvProgressLabel;
     Button buttonAdd, buttonMainPage;
@@ -25,7 +25,7 @@ public class FruitActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setProgress(0);
-        progressBar.setMax(100);
+        progressBar.setMax(400);
         buttonAdd = findViewById(R.id.buttonAdd);
         buttonMainPage = findViewById(R.id.buttonMainPage);
 
@@ -42,11 +42,17 @@ public class FruitActivity extends AppCompatActivity {
                 progressBar.setProgress(seekBar.getProgress());
             }
         });
-
+//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
+//            }
+//        });
+//        progressBar.setProgress(progress);
         buttonMainPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(FruitActivity.this, MainActivity.class));
+                startActivity(new Intent(VegetableActivity.this, MainActivity.class));
             }
         });
     }

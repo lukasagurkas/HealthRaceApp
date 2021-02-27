@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-public class FruitActivity extends AppCompatActivity {
+public class WaterActivity extends AppCompatActivity {
 
     TextView tvProgressLabel;
     Button buttonAdd, buttonMainPage;
@@ -35,18 +35,24 @@ public class FruitActivity extends AppCompatActivity {
 
         int progress = seekBar.getProgress();
         tvProgressLabel = findViewById(R.id.textView);
-        tvProgressLabel.setText("Grams: " + progress);
+        tvProgressLabel.setText("Milliliters: " + progress);
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 progressBar.setProgress(seekBar.getProgress());
             }
         });
-
+//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
+//            }
+//        });
+//        progressBar.setProgress(progress);
         buttonMainPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(FruitActivity.this, MainActivity.class));
+                startActivity(new Intent(WaterActivity.this, MainActivity.class));
             }
         });
     }
@@ -56,7 +62,7 @@ public class FruitActivity extends AppCompatActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
-            tvProgressLabel.setText("Grams: " + progress);
+            tvProgressLabel.setText("Milliliters: " + progress);
         }
 
         @Override
