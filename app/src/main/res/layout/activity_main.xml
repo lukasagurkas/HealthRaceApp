@@ -34,56 +34,70 @@
         android:id="@+id/buttonStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Step counter page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonLogout"
-        app:layout_constraintVertical_bias="0.019" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/buttonFruit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
         android:text="Fruit page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogout"
-        app:layout_constraintVertical_bias="0.152" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonStep"
+        app:layout_constraintVertical_bias="0.005" />
 
     <Button
         android:id="@+id/buttonVeggie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
         android:text="Vegetable page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogout"
-        app:layout_constraintVertical_bias="0.285" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonFruit"
+        app:layout_constraintVertical_bias="0.01" />
 
     <Button
         android:id="@+id/buttonWater"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="Water page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.516"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogout"
-        app:layout_constraintVertical_bias="0.418" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonVeggie"
+        app:layout_constraintVertical_bias="0.02" />
 
     <Button
         android:id="@+id/buttonProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="196dp"
+        android:layout_marginTop="8dp"
         android:text="Profile Page"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogout" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonWater" />
+
+    <Button
+        android:id="@+id/buttonGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:text="@string/button_group_activity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonProfile" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
