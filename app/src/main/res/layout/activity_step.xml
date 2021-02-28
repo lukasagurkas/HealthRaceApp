@@ -31,6 +31,22 @@
         app:layout_constraintVertical_bias="0.309"
         tools:ignore="MissingConstraints" />
 
+    <Button
+        android:id="@+id/buttonMainPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="Main Page"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.938"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023"
+        tools:ignore="MissingConstraints"
+        />
+
     <TextView
         android:id="@+id/textViewStepDetector"
         android:layout_width="wrap_content"
