@@ -70,6 +70,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
+        Button buttonMainPage = findViewById(R.id.buttonMainPage);
+        buttonMainPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StepActivity.this, MainActivity.class));
+            }
+        });
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         prog();
@@ -214,5 +222,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
     }
+
+
 
 }
