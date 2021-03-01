@@ -80,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("buttonCheck", "Button works");
                 startActivity(new Intent(MainActivity.this, StepActivity.class));
             }
         });

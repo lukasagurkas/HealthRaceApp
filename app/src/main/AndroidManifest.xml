@@ -12,13 +12,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthRaceApp">
-        <activity android:name=".WaterActivity"></activity>
+        <activity android:name=".WaterActivity">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity android:name=".VegetableActivity" />
         <activity android:name=".ProfileActivity" />
         <activity
-            android:name=".FruitActivity"
+            android:name=".FruitActivity">
             android:label="@string/title_activity_fruit"
-            android:theme="@style/Theme.HealthRaceApp.NoActionBar" />
+            android:theme="@style/Theme.HealthRaceApp.NoActionBar"
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>/>-->
+         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".StepActivity" />
         <activity android:name=".MainActivity" />
