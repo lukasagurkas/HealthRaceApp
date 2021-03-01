@@ -12,27 +12,49 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthRaceApp">
-        <activity android:name=".WaterActivity">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+        <activity android:name=".WaterActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_water">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
-        <activity android:name=".VegetableActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".VegetableActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_vegetable">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity
-            android:name=".FruitActivity">
+            android:name=".FruitActivity"
             android:label="@string/title_activity_fruit"
-            android:theme="@style/Theme.HealthRaceApp.NoActionBar"
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>/>-->
-         </activity>
+            android:parentActivityName=".MainActivity">
+            <!-- android:theme="@style/Theme.HealthRaceApp.NoActionBar" -->
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".StepActivity" />
+        <activity android:name=".StepActivity"
+            android:label="@string/title_activity_step_counter"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity">
             <intent-filter>
@@ -49,6 +71,14 @@
             android:name=".StepDetectorResetScheduler"
             android:enabled="true"
             android:exported="true" />
+        <activity android:name=".GroupActivity"
+            android:label="@string/title_activity_group"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>
