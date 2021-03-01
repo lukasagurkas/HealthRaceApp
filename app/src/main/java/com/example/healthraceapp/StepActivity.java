@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.PeriodicSync;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,6 +36,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     // Text field for the amount of stepCounter
     private TextView textViewStepCounter;
+
+    // Text field to display remaining progress of user
+    private TextView progress;
+
+    // Text field to display the points for each checkpoint
+    private TextView checkpoint;
 
     // Text field for the amount of steps of stepDetector
     private static TextView textViewStepDetector;
@@ -69,6 +76,17 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         dailyResetAlarm();
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
+
+        progress = findViewById(R.id.progress);
+//        int remaining = 7000 - progress;
+        progress.setText("You walked x steps today out of the " +
+                "recommended 7000 per day. Only y steps remain till the next checkpoint.");
+        progress.setTextColor(Color.WHITE);
+        progress.setTextSize(15);
+
+        checkpoint = findViewById(R.id.checkpoint);
+        checkpoint.setTextColor(Color.WHITE);
+        checkpoint.setTextSize(25);
 
         Button buttonMainPage = findViewById(R.id.buttonMainPage);
         buttonMainPage.setOnClickListener(new View.OnClickListener() {
