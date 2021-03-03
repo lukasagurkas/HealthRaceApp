@@ -15,4 +15,16 @@ public class User {
         this.month = month;
         this.day = day;
     }
+
+    public String getUserName() {
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public int getDoB() {
+        return year;
+    }
 }
