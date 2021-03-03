@@ -13,6 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+
 public class WaterActivity extends AppCompatActivity {
 
     TextView tvProgressLabel; //stores the progress on the slider
@@ -22,6 +30,9 @@ public class WaterActivity extends AppCompatActivity {
     Button buttonAdd; //button to add water quantity
     Button buttonMainPage; //button to go back to main page
     ProgressBar progressBar; //progress bar for user to enter water intake
+
+    // Initiate bar chart
+    BarChart barChartWater;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,27 @@ public class WaterActivity extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
         buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
         // page
+
+        barChartWater = findViewById(R.id.barChartWater);
+
+        // ArrayList for the shown data
+        ArrayList<BarEntry> visitorsWater = new ArrayList<>();
+        visitorsWater.add(new BarEntry(2014, 420));
+        visitorsWater.add(new BarEntry(2015, 440));
+        visitorsWater.add(new BarEntry(2016, 460));
+        visitorsWater.add(new BarEntry(2017, 480));
+        visitorsWater.add(new BarEntry(2018, 500));
+
+        // Layout of the bar chart
+        BarDataSet barDataSetWater = new BarDataSet(visitorsWater, "Visitors");
+        barDataSetWater.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSetWater.setValueTextColor(Color.BLACK);
+        barDataSetWater.setValueTextSize(16f);
+        BarData barDataWater = new BarData(barDataSetWater);
+        barChartWater.setFitBars(true);
+        barChartWater.setData(barDataWater);
+        barChartWater.getDescription().setText("Bar Chart Example");
+        barChartWater.animateY(200);
 
         // set a change listener on the SeekBar
         SeekBar seekBar = findViewById(R.id.seekBar); //finds slider in activity page

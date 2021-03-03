@@ -28,11 +28,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
@@ -72,6 +78,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
 
+    // Initiate bar chart
+    BarChart barChartStep;
+
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
@@ -93,15 +102,34 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
-        user = new User();
+        barChartStep = findViewById(R.id.barChartStep);
+
+        // ArrayList for the shown data
+        ArrayList<BarEntry> visitors = new ArrayList<>();
+        visitors.add(new BarEntry(2014, 420));
+        visitors.add(new BarEntry(2015, 440));
+        visitors.add(new BarEntry(2016, 460));
+        visitors.add(new BarEntry(2017, 480));
+        visitors.add(new BarEntry(2018, 500));
+
+        // Layout of the bar chart
+        BarDataSet barDataSet = new BarDataSet(visitors, "Visitors");
+        barDataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSet.setValueTextColor(Color.BLACK);
+        barDataSet.setValueTextSize(16f);
+        BarData barData = new BarData(barDataSet);
+        barChartStep.setFitBars(true);
+        barChartStep.setData(barData);
+        barChartStep.getDescription().setText("Bar Chart Example");
+        barChartStep.animateY(200);
+
+//        user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         userID = firebaseUser.getUid();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-
         databaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("numberOfSteps");
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -199,7 +227,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
             textViewStepDetector.setText(String.valueOf(stepDetect));
-            databaseReference.setValue(stepDetect);
+            user.setNumberOfSteps(stepDetect);
+            databaseReference.setValue(user);
         }
 
         simpleProgressBar.setProgress(stepDetect);
@@ -236,8 +265,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
         simpleProgressBar.setProgress(stepDetect);
-        // reset the number of steps in the Firebase database
-        databaseReference.setValue(stepDetect);
     }
 
     @Override
