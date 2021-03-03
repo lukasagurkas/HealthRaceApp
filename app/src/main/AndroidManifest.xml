@@ -4,6 +4,10 @@
     package="com.example.healthraceapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_REC‌​OGNITION"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="true"/>
+    <uses-feature android:name="android.hardware.sensor.stepdetector" android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -12,16 +16,51 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthRaceApp">
-        <activity android:name=".WaterActivity"></activity>
-        <activity android:name=".VegetableActivity" />
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".WaterActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_water">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".VegetableActivity"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/title_activity_vegetable">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".ProfileActivity"
+            android:label="@string/title_activity_profile"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity
             android:name=".FruitActivity"
             android:label="@string/title_activity_fruit"
-            android:theme="@style/Theme.HealthRaceApp.NoActionBar" />
+            android:parentActivityName=".MainActivity">
+            <!-- android:theme="@style/Theme.HealthRaceApp.NoActionBar" -->
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".StepActivity" />
-        <activity android:name=".MainActivity" />
+        <activity android:name=".StepActivity"
+            android:label="@string/title_activity_step_counter"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity android:name=".MainActivity">
+        </activity>
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,6 +76,14 @@
             android:name=".StepDetectorResetScheduler"
             android:enabled="true"
             android:exported="true" />
+        <activity android:name=".GroupActivity"
+            android:label="@string/title_activity_group"
+            android:parentActivityName=".MainActivity">
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

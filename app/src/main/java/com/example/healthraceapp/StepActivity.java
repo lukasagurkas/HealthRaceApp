@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.PeriodicSync;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -35,6 +36,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     // Text field for the amount of stepCounter
     private TextView textViewStepCounter;
+
+    // Text field to display remaining progress of user
+    private TextView progress;
+
+    // Text field to display the points for each checkpoint
+    private TextView checkpoint;
 
     // Text field for the amount of steps of stepDetector
     private static TextView textViewStepDetector;
@@ -63,6 +70,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACTIVITY_RECOGNITION},PERMISSION_CODE);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -70,23 +80,29 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
+        progress = findViewById(R.id.progress);
+//        int remaining = 7000 - progress;
+        progress.setText("You walked x steps today out of the " +
+                "recommended 7000 per day. Only y steps remain till the next checkpoint.");
+        progress.setTextColor(Color.WHITE);
+        progress.setTextSize(15);
+
+        checkpoint = findViewById(R.id.checkpoint);
+        checkpoint.setTextColor(Color.WHITE);
+        checkpoint.setTextSize(25);
+
+        Button buttonMainPage = findViewById(R.id.buttonMainPage);
+        buttonMainPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(StepActivity.this, MainActivity.class));
+            }
+        });
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         prog();
 
-        // Ask for permission to use activity recognition
-//        Button buttonRequest = findViewById(R.id.permissionButton);
-//        buttonRequest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (ContextCompat.checkSelfPermission(StepActivity.this,
-//                        Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
-//                    Toast.makeText(StepActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    requestActivity();
-//                }
-//            }
-//        });
 
         // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
@@ -134,46 +150,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         simpleProgressBar  = (ProgressBar) findViewById(R.id.StepProgress);
     }
 
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        // Gives toast saying if the user granted or denied permission to use step counter
-        if (requestCode == PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    // Requests permission to use step counter
-    private void requestActivity() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
-            new AlertDialog.Builder(this)
-                    .setTitle("Permission needed")
-                    .setMessage("This permission is needed to track the amount of steps you take")
-                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            ActivityCompat.requestPermissions(StepActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-                        }
-                    })
-                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .create().show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-        }
-        ;
-    }
-
     // Changes the shows value in the textView to current amount of steps
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -185,7 +161,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             textViewStepDetector.setText(String.valueOf(stepDetect));
         }
 
-        simpleProgressBar.setProgress(stepCount);
+        simpleProgressBar.setProgress(stepDetect);
+//        simpleProgressBar.setProgress(stepCount);
     }
 
     @Override
@@ -215,4 +192,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepDetector.setText(String.valueOf(stepDetect));
     }
 
+
+
 }
+

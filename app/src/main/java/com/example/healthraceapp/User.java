@@ -16,12 +16,28 @@ public class User {
         this.day = day;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return username;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
     }
 
     public int getDoB() {

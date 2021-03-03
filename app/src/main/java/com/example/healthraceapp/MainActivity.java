@@ -33,6 +33,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import java.security.acl.Group;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //firebase auth object
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-    private Button buttonLogout, buttonStep, buttonFruit, buttonProfile, buttonVeggie, buttonWater;
+//    private TextView stepText;
+    private Button buttonLogout, buttonStep, buttonFruit, buttonProfile, buttonVeggie, buttonWater, buttonGroup;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
@@ -66,11 +69,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //initializing views
         buttonLogout = findViewById(R.id.buttonLogout);
+
         buttonStep =  findViewById(R.id.buttonStep);
+//        stepText = findViewById(R.id.stepText);
+
         buttonFruit = findViewById(R.id.buttonFruit);
+
         buttonProfile = findViewById(R.id.buttonProfile);
+
         buttonVeggie = findViewById(R.id.buttonVeggie);
+
         buttonWater = findViewById(R.id.buttonWater);
+
+        buttonGroup = findViewById(R.id.buttonGroup);
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
@@ -80,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("buttonCheck", "Button works");
                 startActivity(new Intent(MainActivity.this, StepActivity.class));
             }
         });
@@ -106,6 +116,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, WaterActivity.class));
+            }
+        });
+        buttonGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, GroupActivity.class));
+
             }
         });
 
