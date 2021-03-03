@@ -93,7 +93,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
-        user = new User();
+//        user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         userID = firebaseUser.getUid();
