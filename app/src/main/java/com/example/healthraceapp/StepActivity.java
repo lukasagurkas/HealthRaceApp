@@ -28,6 +28,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
@@ -67,6 +72,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
 
+    private static final String TAG = "ViewDatabase";
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private String userID;
+    User user;
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +92,31 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         dailyResetAlarm();
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
+
+        user = new User();
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        userID = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+        databaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("numberOfSteps");
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    toastMessage("Successfully signed in with: " + user.getEmail());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    toastMessage("Successfully signed out.");
+                }
+
+            }
+        };
+
 
         progress = findViewById(R.id.progress);
         int remaining = 7000 - stepDetect;
@@ -159,6 +197,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
             textViewStepDetector.setText(String.valueOf(stepDetect));
+            user.setNumberOfSteps(stepDetect);
+            databaseReference.setValue(user);
         }
 
         simpleProgressBar.setProgress(stepDetect);
@@ -195,6 +235,24 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
         simpleProgressBar.setProgress(stepDetect);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            firebaseAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+
+    private void toastMessage(String message){
+        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
 
 

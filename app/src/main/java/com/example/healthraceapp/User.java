@@ -4,6 +4,7 @@ public class User {
     private String username, email;
     private boolean male;
     private int year, month, day;
+    private int numberOfSteps;
 
     public User() {}
 
@@ -39,4 +40,8 @@ public class User {
     public int getDay() {
         return day;
     }
+
+    public int getNumberOfSteps() { return numberOfSteps; }
+
+    public void setNumberOfSteps(int numberOfSteps) { this.numberOfSteps = numberOfSteps; }
 }

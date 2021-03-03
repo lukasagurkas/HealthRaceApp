@@ -46,7 +46,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
 
     implementation 'com.google.firebase:firebase-auth'
-    implementation 'com.google.firebase:firebase-database'
+    implementation 'com.google.firebase:firebase-database:19.6.0'
 
     implementation 'com.github.warkiz.tickseekbar:tickseekbar:0.1.4'
 }
