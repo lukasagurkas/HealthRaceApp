@@ -81,9 +81,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
         progress = findViewById(R.id.progress);
-//        int remaining = 7000 - progress;
-        progress.setText("You walked x steps today out of the " +
-                "recommended 7000 per day. Only y steps remain till the next checkpoint.");
+        int remaining = 7000 - stepDetect;
+        progress.setText("You walked " + stepDetect + " steps today out of the " +
+                "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
         progress.setTextColor(Color.WHITE);
         progress.setTextSize(15);
 
@@ -163,6 +163,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         simpleProgressBar.setProgress(stepDetect);
 //        simpleProgressBar.setProgress(stepCount);
+
+        int remaining = 7000 - stepDetect;
+        progress.setText("You walked" + stepDetect + " steps today out of the " +
+                "recommended 7000 per day. Only" + remaining + " steps remain till the next checkpoint.");
     }
 
     @Override
@@ -190,6 +194,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void resetCount() {
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
+        simpleProgressBar.setProgress(stepDetect);
     }
 
 
