@@ -1,9 +1,10 @@
 package com.example.healthraceapp;
 
 public class User {
-    public String username, email;
-    public boolean male;
-    public int year, month, day;
+    private String username, email;
+    private boolean male;
+    private int year, month, day;
+    private int numberOfSteps;
 
     public User() {}
 
@@ -40,7 +41,7 @@ public class User {
         return day;
     }
 
-    public int getDoB() {
-        return year;
-    }
+    public int getNumberOfSteps() { return numberOfSteps; }
+
+    public void setNumberOfSteps(int numberOfSteps) { this.numberOfSteps = numberOfSteps; }
 }
