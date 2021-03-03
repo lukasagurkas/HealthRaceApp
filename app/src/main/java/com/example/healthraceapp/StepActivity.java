@@ -93,13 +93,15 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
-//        user = new User();
+        user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
         userID = firebaseUser.getUid();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+
         databaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("numberOfSteps");
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -197,8 +199,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
             textViewStepDetector.setText(String.valueOf(stepDetect));
-            user.setNumberOfSteps(stepDetect);
-            databaseReference.setValue(user);
+            databaseReference.setValue(stepDetect);
         }
 
         simpleProgressBar.setProgress(stepDetect);
@@ -235,6 +236,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
         simpleProgressBar.setProgress(stepDetect);
+        // reset the number of steps in the Firebase database
+        databaseReference.setValue(stepDetect);
     }
 
     @Override

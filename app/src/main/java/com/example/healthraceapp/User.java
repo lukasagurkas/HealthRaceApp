@@ -6,6 +6,8 @@ public class User {
     private int year, month, day;
     private int numberOfSteps;
 
+    public User(){}
+
     public User(String username, String email) {}
 
     public User(String username, String email, boolean male, int year, int month, int day) {
