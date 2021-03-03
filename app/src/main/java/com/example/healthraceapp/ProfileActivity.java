@@ -11,6 +11,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,11 +49,10 @@ public class ProfileActivity extends AppCompatActivity {
         actionBar.setTitle("Profile");
 
         mAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
 
-        profileUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(user.getUid());
+        profileUserRef = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(user.getUid());
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -60,23 +60,41 @@ public class ProfileActivity extends AppCompatActivity {
         gender = (TextView) findViewById(R.id.textGender);
 
 
-        profileUserRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange( DataSnapshot snapshot) {
-                    String myUsername = snapshot.child("username").getValue(String.class);
-                    Log.d("check", myUsername);
-                    String myEmail = snapshot.child("email").getValue(String.class);
-                    Log.d("check", myEmail);
+//        profileUserRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange( DataSnapshot snapshot) {
+//                    String myUsername = snapshot.child("username").getValue(String.class);
+//                    Log.d("check", myUsername);
+//                    String myEmail = snapshot.child("email").getValue(String.class);
+//                    Log.d("check", myEmail);
+//
+//                    username.setText(myUsername);
+//                    email.setText(myEmail);
+//            }
+//
+//            @Override
+//            public void onCancelled(@NotNull DatabaseError error) {
+////                Log.w(TAG, "Failed to read value.", error.toException());
+//            }
+//
+//        });
+        String uID = mAuth.getCurrentUser().getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference(uID);
 
-                    username.setText(myUsername);
-                    email.setText(myEmail);
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String temporaryUsername = snapshot.child("username").getValue(String.class);
+                assert temporaryUsername != null;
+                Log.d(TAG, temporaryUsername);
             }
 
             @Override
-            public void onCancelled(@NotNull DatabaseError error) {
-//                Log.w(TAG, "Failed to read value.", error.toException());
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", error.toException());
             }
-
         });
     }
 
