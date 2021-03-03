@@ -158,5 +158,14 @@
         app:layout_constraintVertical_bias="0.545"
         tools:ignore="MissingConstraints" />
 
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChartVeggie"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

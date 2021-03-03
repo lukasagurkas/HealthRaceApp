@@ -74,13 +74,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
-
-    //referring to the daily numbers of steps
-    private DatabaseReference dailyDatabaseReference;
-
-    //referring to the daily numbers of steps
-    private DatabaseReference weeklyDatabaseReference;
-
+    private DatabaseReference databaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String userID;
@@ -95,7 +89,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+        dailyResetAlarm();
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
@@ -106,8 +100,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
-        dailyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
-        weeklyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklyNumberOfSteps");
+        databaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("numberOfSteps");
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -150,10 +143,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         prog();
 
-        //set an daily alarm to reset
-        resetAlarm();
-//        //set an weekly alarm to reset
-//        resetAlarm(false);
 
         // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
@@ -173,7 +162,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    public void resetAlarm() {
+    public void dailyResetAlarm() {
         Intent intent = new Intent(StepActivity.this, StepDetectorResetScheduler.class);
         Log.d("waitCheck", "It works");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
@@ -210,7 +199,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
             textViewStepDetector.setText(String.valueOf(stepDetect));
-            dailyDatabaseReference.setValue(stepDetect);
+            databaseReference.setValue(stepDetect);
         }
 
         simpleProgressBar.setProgress(stepDetect);
@@ -246,9 +235,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void resetCount() {
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
-        //simpleProgressBar.setProgress(stepDetect);
+        simpleProgressBar.setProgress(stepDetect);
         // reset the number of steps in the Firebase database
-        //dailyDatabaseReference.setValue(0);
+        databaseReference.setValue(stepDetect);
     }
 
     @Override
