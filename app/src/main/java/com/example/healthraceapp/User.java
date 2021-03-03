@@ -4,7 +4,8 @@ public class User {
     private String username, email;
     private boolean male;
     private int year, month, day;
-    private int numberOfSteps;
+    private int dailyNumberOfSteps;
+    private int weeklyNumberOfSteps;
 
     public User(){}
 
@@ -43,7 +44,19 @@ public class User {
         return day;
     }
 
-    public int getNumberOfSteps() { return numberOfSteps; }
+    public int getDailyNumberOfSteps() {
+        return dailyNumberOfSteps;
+    }
 
-    public void setNumberOfSteps(int numberOfSteps) { this.numberOfSteps = numberOfSteps; }
+    public void setDailyNumberOfSteps(int dailyNumberOfSteps) {
+        this.dailyNumberOfSteps = dailyNumberOfSteps;
+    }
+
+    public int getWeeklyNumberOfSteps() {
+        return weeklyNumberOfSteps;
+    }
+
+    public void setWeeklyNumberOfSteps(int weeklyNumberOfSteps) {
+        this.weeklyNumberOfSteps = weeklyNumberOfSteps;
+    }
 }
