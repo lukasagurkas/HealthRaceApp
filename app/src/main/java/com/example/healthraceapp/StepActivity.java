@@ -74,7 +74,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference databaseReference;
+    private DatabaseReference dailyDatabaseReference;
+    private DatabaseReference weeklyDatabaseReference;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private String userID;
@@ -100,7 +101,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
-        databaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("numberOfSteps");
+        dailyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
+        weeklyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklyNumberOfSteps");
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -199,7 +201,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
             textViewStepDetector.setText(String.valueOf(stepDetect));
-            databaseReference.setValue(stepDetect);
+            dailyDatabaseReference.setValue(stepDetect);
         }
 
         simpleProgressBar.setProgress(stepDetect);
@@ -237,7 +239,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepDetector.setText(String.valueOf(stepDetect));
         simpleProgressBar.setProgress(stepDetect);
         // reset the number of steps in the Firebase database
-        databaseReference.setValue(stepDetect);
+        //dailyDatabaseReference.setValue(stepDetect);
     }
 
     @Override
