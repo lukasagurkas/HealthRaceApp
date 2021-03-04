@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.app.Activity;
@@ -47,13 +48,20 @@ public class FruitActivity extends AppCompatActivity {
     // Initiate bar chart
     BarChart barChartFruit;
 
+    //initiate progress value
+    int progress;
+
+    //initiate total progress
+    static int totalProgress;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fruit);
 
-        progressBar = findViewById(R.id.progressBar); //finds progress bar in activity page
-        progressBar.setProgress(0);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar); //finds progress bar in activity page
+        Log.d("check", String.valueOf(totalProgress));
+        progressBar.setProgress(totalProgress);
         progressBar.setMax(500);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
         buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
@@ -84,7 +92,7 @@ public class FruitActivity extends AppCompatActivity {
         SeekBar seekBar = findViewById(R.id.seekBar); //finds slider in activity page
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
 
-        int progress = seekBar.getProgress();
+
         tvProgressLabel = findViewById(R.id.textView);
         tvProgressLabel.setText("" + progress);
         tvProgressLabel.setTextColor(Color.WHITE);
@@ -108,7 +116,12 @@ public class FruitActivity extends AppCompatActivity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setProgress(seekBar.getProgress());
+                progress = seekBar.getProgress();
+                totalProgress = totalProgress + progress;
+                progressBar.setProgress(totalProgress);
+                tvProgressLabel.setText("" + progress);
+                intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
+                        "recommended 500 g. Only " + remaining + " grams of fruit remains.");
             }
         });
 //        buttonMainPage.setOnClickListener(new View.OnClickListener() {
@@ -133,7 +146,7 @@ public class FruitActivity extends AppCompatActivity {
             // updated continuously as the user slides the thumb
             tvProgressLabel.setText("" + progress);
             int remaining = 500 - progress;
-            intakeProgress.setText("You ate " + progress + " g of fruits today out of the " +
+            intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                     "recommended 500 g. Only " + remaining + " grams of fruit remains.");
         }
 

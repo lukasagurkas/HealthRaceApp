@@ -134,13 +134,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
 
-        Button buttonMainPage = findViewById(R.id.buttonMainPage);
-        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(StepActivity.this, MainActivity.class));
-            }
-        });
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -158,12 +151,13 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+            simpleProgressBar.setProgress(stepDetect);
             isDetectorSensorPresent = true;
         } else {
             //for testing purposes
             textViewStepDetector.setText(String.valueOf(stepDetect));
 
+            simpleProgressBar.setProgress(stepDetect);
             //textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
