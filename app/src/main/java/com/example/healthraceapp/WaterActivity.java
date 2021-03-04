@@ -1,10 +1,13 @@
 package com.example.healthraceapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.app.Activity;
@@ -30,6 +33,8 @@ public class WaterActivity extends AppCompatActivity {
     Button buttonAdd; //button to add water quantity
     Button buttonMainPage; //button to go back to main page
     ProgressBar progressBar; //progress bar for user to enter water intake
+    static int totalProgress; //initiate total progress
+    int progress; //initiate progress value
 
     // Initiate bar chart
     BarChart barChartWater;
@@ -40,7 +45,7 @@ public class WaterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_water);
 
         progressBar = findViewById(R.id.progressBar); //finds progress bar in activity page
-        progressBar.setProgress(0);
+        progressBar.setProgress(totalProgress);
         progressBar.setMax(2000);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
         buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
@@ -71,7 +76,6 @@ public class WaterActivity extends AppCompatActivity {
         SeekBar seekBar = findViewById(R.id.seekBar); //finds slider in activity page
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
 
-        int progress = seekBar.getProgress();
         tvProgressLabel = findViewById(R.id.textView);
         tvProgressLabel.setText("" + progress);
         tvProgressLabel.setTextColor(Color.WHITE);
@@ -79,7 +83,7 @@ public class WaterActivity extends AppCompatActivity {
 
         waterProgress = findViewById(R.id.waterProgress);
         int remaining = 2000 - progress;
-        waterProgress.setText("You drank " + progress + " ml of water today out of the " +
+        waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
                 "recommended 2000 ml. Only " + remaining + " ml of water remains.");
         waterProgress.setTextColor(Color.WHITE);
         waterProgress.setTextSize(20);
@@ -95,7 +99,12 @@ public class WaterActivity extends AppCompatActivity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setProgress(seekBar.getProgress());
+                progress = seekBar.getProgress();
+                totalProgress = totalProgress + progress;
+                progressBar.setProgress(totalProgress);
+                tvProgressLabel.setText("" + progress);
+                waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
+                        "recommended 2000 ml. Only " + remaining + " ml of water remains.");
             }
         });
 //        buttonMainPage.setOnClickListener(new View.OnClickListener() {

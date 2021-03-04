@@ -35,6 +35,8 @@ public class VegetableActivity extends AppCompatActivity {
     Button buttonAdd; //button to add water quantity
     Button buttonMainPage; //button to go back to main page
     ProgressBar progressBar; //progress bar for user to enter water intake
+    static int totalProgress; //initiate total progress
+    int progress; //initiate progress value
 
     // Initiate bar chart
     BarChart barChartVeggie;
@@ -45,7 +47,7 @@ public class VegetableActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vegetable);
 
         progressBar = findViewById(R.id.progressBar); //finds progress bar in activity page
-        progressBar.setProgress(0);
+        progressBar.setProgress(totalProgress);
         progressBar.setMax(500);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
         buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
@@ -79,7 +81,7 @@ public class VegetableActivity extends AppCompatActivity {
 //        TickSeekBar slider = findViewById(R.id.slider);
 //        slider.setOnSeekChangeListener(sliderChangeListener);
 
-        int progress = seekBar.getProgress();
+
         tvProgressLabel = findViewById(R.id.textView);
         tvProgressLabel.setText("" + progress);
         tvProgressLabel.setTextColor(Color.WHITE);
@@ -103,7 +105,12 @@ public class VegetableActivity extends AppCompatActivity {
         buttonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setProgress(seekBar.getProgress());
+                progress = seekBar.getProgress();
+                totalProgress = totalProgress + progress;
+                progressBar.setProgress(totalProgress);
+                tvProgressLabel.setText("" + progress);
+                intakeProgress.setText("You ate " + totalProgress + " g of vegatables today out of the " +
+                        "recommended 500 g. Only " + remaining + " grams of vegatables remains.");
             }
         });
 //        buttonMainPage.setOnClickListener(new View.OnClickListener() {
