@@ -5,10 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class StepDetectorResetScheduler extends BroadcastReceiver {
+public class AlarmReceiverStepDetector extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("schedulerCheck", "it works");
+        Log.d("Time", "Alarm is triggered");
         StepActivity stepActivity = new StepActivity();
         stepActivity.resetCount();
     }

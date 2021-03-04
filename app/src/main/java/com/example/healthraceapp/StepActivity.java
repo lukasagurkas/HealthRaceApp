@@ -67,7 +67,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     int stepCount = 0;
 
     // Initial stepDetect
-    public static int stepDetect = 0;
+    public static int stepDetect;
 
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
@@ -90,9 +90,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        dailyResetAlarm();
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
+
+
 
         user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -144,7 +145,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         prog();
-
+        dailyResetAlarm();
 
         // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
@@ -157,15 +158,19 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+            textViewStepDetector.setText(String.valueOf(stepDetect));
             isDetectorSensorPresent = true;
         } else {
-            textViewStepDetector.setText("Detector sensor is not present");
+            //for testing purposes
+            textViewStepDetector.setText(String.valueOf(stepDetect));
+
+            //textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
 
     public void dailyResetAlarm() {
-        Intent intent = new Intent(StepActivity.this, StepDetectorResetScheduler.class);
+        Intent intent = new Intent(StepActivity.this, AlarmReceiverStepDetector.class);
         Log.d("waitCheck", "It works");
         PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
 
@@ -174,8 +179,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        setCalendar.set(Calendar.MINUTE, 0);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 15);
+        setCalendar.set(Calendar.MINUTE, 23);
         setCalendar.set(Calendar.SECOND, 1);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
@@ -237,7 +242,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void resetCount() {
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
-        simpleProgressBar.setProgress(stepDetect);
+        //simpleProgressBar.setProgress(stepDetect);
         // reset the number of steps in the Firebase database
         //dailyDatabaseReference.setValue(stepDetect);
     }
