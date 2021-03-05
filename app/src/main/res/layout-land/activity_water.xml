@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_500"
+    tools:context=".WaterActivity">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="300dp"
+        android:layout_height="90dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:progress="0"
+        android:progressDrawable="@drawable/progressbar"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="439dp"
+        tools:layout_editor_absoluteY="-16dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="175dp"
+        android:layout_height="25dp"
+        android:gravity="center"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="501dp"
+        tools:layout_editor_absoluteY="320dp" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="289dp"
+        android:layout_height="58dp"
+        android:max="1000"
+        android:progress="0"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="439dp"
+        tools:layout_editor_absoluteY="262dp" />
+
+    <Button
+        android:id="@+id/buttonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:text="Add Water Quantity"
+        android:textColor="#000000"
+        app:backgroundTint="#FFFFFF"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="488dp"
+        tools:layout_editor_absoluteY="345dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="91dp"
+        android:layout_height="73dp"
+        app:srcCompat="@drawable/waterglass"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="31dp" />
+
+    <TextView
+        android:id="@+id/waterProgress"
+        android:layout_width="371dp"
+        android:layout_height="119dp"
+        android:gravity="center"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="399dp"
+        tools:layout_editor_absoluteY="63dp" />
+
+    <TextView
+        android:id="@+id/checkpoint"
+        android:layout_width="332dp"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:text="You get 25 points for each checkpoint."
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="415dp"
+        tools:layout_editor_absoluteY="182dp" />
+
+    <TextView
+        android:id="@+id/ml"
+        android:layout_width="51dp"
+        android:layout_height="29dp"
+        android:gravity="center"
+        android:text="ml"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="747dp"
+        tools:layout_editor_absoluteY="278dp" />
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChartWater"
+        android:layout_width="300dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
