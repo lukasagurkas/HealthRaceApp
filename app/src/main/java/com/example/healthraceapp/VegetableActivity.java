@@ -50,7 +50,7 @@ public class VegetableActivity extends AppCompatActivity {
         progressBar.setProgress(totalProgress);
         progressBar.setMax(500);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
-        buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
+        //buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
         // page
 
         barChartVeggie = findViewById(R.id.barChartVeggie);

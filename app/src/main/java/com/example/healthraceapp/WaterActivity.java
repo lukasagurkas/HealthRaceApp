@@ -48,7 +48,7 @@ public class WaterActivity extends AppCompatActivity {
         progressBar.setProgress(totalProgress);
         progressBar.setMax(2000);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
-        buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
+        //buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
         // page
 
         barChartWater = findViewById(R.id.barChartWater);
