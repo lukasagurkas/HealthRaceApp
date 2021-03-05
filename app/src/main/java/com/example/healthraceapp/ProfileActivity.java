@@ -23,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.awt.font.NumericShaper;
+
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView email, usernamle, dob, gender;
@@ -85,9 +87,11 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String temporaryUsername = snapshot.child("username").getValue(String.class);
-                assert temporaryUsername != null;
-                Log.d(TAG, temporaryUsername);
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
+                    assert temporaryUsername != null;
+                    Log.d(TAG, temporaryUsername);
+                }
             }
 
             @Override

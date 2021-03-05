@@ -228,6 +228,15 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             // then calling the method registerUser() if username is unique
 //            retrieveAllUsernames();
             registerUser();
+//            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+//
+//                @Override
+//                public void onComplete(@NonNull Task<Void> task) {
+//                    Toast.makeText(RegisterActivity.this, "Verification Email Sent",
+//                            Toast.LENGTH_SHORT);
+//                }
+//            });
+
         }
 
     }
