@@ -48,7 +48,7 @@
         android:layout_height="58dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:max="300"
+        android:max="500"
         android:progress="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
