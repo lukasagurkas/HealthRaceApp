@@ -12,81 +12,122 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="300dp"
         android:layout_height="90dp"
+        android:layout_marginTop="16dp"
         android:indeterminate="false"
         android:max="100"
         android:progress="0"
         android:progressDrawable="@drawable/progressbar"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="439dp"
-        tools:layout_editor_absoluteY="-16dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.903"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="175dp"
-        android:layout_height="25dp"
+        android:layout_width="132dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:gravity="center"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="501dp"
-        tools:layout_editor_absoluteY="320dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+        app:layout_constraintEnd_toStartOf="@+id/seekBar"
+        app:layout_constraintStart_toEndOf="@+id/barChartWater"
+        app:layout_constraintTop_toTopOf="@+id/seekBar"
+        app:layout_constraintVertical_bias="0.484"
+        tools:ignore="MissingConstraints" />
 
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="289dp"
         android:layout_height="58dp"
+        android:layout_marginStart="168dp"
+        android:layout_marginLeft="168dp"
+        android:layout_marginEnd="64dp"
+        android:layout_marginRight="64dp"
         android:max="2000"
         android:progress="0"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="439dp"
-        tools:layout_editor_absoluteY="262dp" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonAdd"
+        app:layout_constraintEnd_toStartOf="@+id/ml"
+        app:layout_constraintStart_toEndOf="@+id/barChartWater"
+        app:layout_constraintTop_toBottomOf="@+id/waterProgress"
+        app:layout_constraintVertical_bias="0.868"
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:background="#FFFFFF"
         android:text="Add Water Quantity"
         android:textColor="#000000"
         app:backgroundTint="#FFFFFF"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="488dp"
-        tools:layout_editor_absoluteY="345dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.756"
+        app:layout_constraintStart_toEndOf="@+id/barChartWater"
+        tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="91dp"
         android:layout_height="73dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/waterglass"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="31dp" />
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/waterProgress"
         android:layout_width="371dp"
         android:layout_height="119dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginRight="24dp"
         android:gravity="center"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="399dp"
-        tools:layout_editor_absoluteY="63dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/checkpoint"
         android:layout_width="332dp"
         android:layout_height="80dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="You get 25 points for each checkpoint."
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="415dp"
-        tools:layout_editor_absoluteY="182dp" />
+        app:layout_constraintBottom_toTopOf="@+id/barChartWater"
+        app:layout_constraintEnd_toStartOf="@+id/waterProgress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="0.755"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/ml"
         android:layout_width="51dp"
         android:layout_height="29dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="13dp"
         android:gravity="center"
         android:text="ml"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="747dp"
-        tools:layout_editor_absoluteY="278dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/seekBar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChartWater"
