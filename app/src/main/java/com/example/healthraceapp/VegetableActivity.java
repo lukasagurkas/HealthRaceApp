@@ -48,6 +48,9 @@ public class VegetableActivity extends AppCompatActivity {
     int veggieMinusFive = 0;
     int veggieMinusSix = 0;
 
+    // Initialize value for information text view
+    int remaining = 500;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +78,7 @@ public class VegetableActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         intakeProgress = findViewById(R.id.intakeProgress);
-        int remaining = 500;
+
         if ((500 - totalProgress) < 0) {
             remaining = 0;
         } else {
@@ -102,7 +105,6 @@ public class VegetableActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
-                int remaining = 500;
                 if ((500 - totalProgress) < 0) {
                     remaining = 0;
                 } else {

@@ -46,6 +46,9 @@ public class WaterActivity extends AppCompatActivity {
     int waterMinusFive = 0;
     int waterMinusSix = 0;
 
+    // Initialize value for information text view
+    int remaining = 2000;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +72,7 @@ public class WaterActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         waterProgress = findViewById(R.id.waterProgress);
-        int remaining = 2000;
+
         if ((2000 - totalProgress) < 0) {
             remaining = 0;
         } else {
@@ -95,7 +98,7 @@ public class WaterActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
-                int remaining = 2000;
+
                 if ((2000 - totalProgress) < 0) {
                     remaining = 0;
                 } else {
