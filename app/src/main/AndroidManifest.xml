@@ -29,7 +29,7 @@
             android:name=".AlarmReceiverStepDetector"
             android:enabled="true"
             android:exported="false"></receiver>
-
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".WaterActivity"
             android:label="@string/title_activity_water"
@@ -82,7 +82,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
         </activity>
-        <activity android:name=".MainActivity"></activity>
         <activity android:name=".RegisterActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

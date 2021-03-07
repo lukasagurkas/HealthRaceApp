@@ -35,6 +35,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private Button buttonRegister, buttonSignIn;
@@ -64,6 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setTitle("Registration");
 
         mAuth = FirebaseAuth.getInstance();
@@ -172,18 +174,23 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // If the creating a Firebase user has been successful, then create
+                            // a User object
                             User user = new User(username, email, checkedMale, year, month, day);
 
                             firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
                                     "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
+                            // Add the additional attributes to the Firebase user
                             firebaseDatabase.getReference("Users")
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        // If the attributes have been added then send a email
+                                        // address verification email
+                                        Objects.requireNonNull(mAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
@@ -192,21 +199,26 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                                     " Please verify your email",
                                                             Toast.LENGTH_LONG).show();
                                                 } else {
-                                                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
+                                                    // If the email has not been sent - show error
+                                                    Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
                                                             Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
+                                        // If the additional attributes were not added to the user -
+                                        // show error
+                                        Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
                         } else {
-                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
+                            // If the Firebase user could not be created - show error
+                            Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
+                        // Ending progress dialog
                         progressDialog.dismiss();
                     }
                 });
@@ -227,17 +239,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             // Retrieving all usernames from the database to check if the username is unique
             // then calling the method registerUser() if username is unique
             retrieveAllUsernames();
-//            mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-//
-//                @Override
-//                public void onComplete(@NonNull Task<Void> task) {
-//                    Toast.makeText(RegisterActivity.this, "Verification Email Sent",
-//                            Toast.LENGTH_SHORT);
-//                }
-//            });
-
         }
-
     }
 
     public void setDateOfBirth(int year, int month, int day) {

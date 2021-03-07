@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //if the user is not logged in
         //that means current user will return null
-        if(mAuth.getCurrentUser() != null && mAuth.getCurrentUser().isEmailVerified()){
+        if(mAuth.getCurrentUser() == null){
             //closing this activity
             finish();
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, LoginActivity.class));
         }
 
         //getting current user
