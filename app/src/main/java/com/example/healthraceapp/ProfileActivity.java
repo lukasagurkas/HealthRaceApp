@@ -1,7 +1,10 @@
 package com.example.healthraceapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseError;
@@ -28,6 +32,7 @@ import java.awt.font.NumericShaper;
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView email, usernamle, day, month, year, gender;
+    private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
     private ImageView userProfileImage;
     private  String userID;
 
@@ -52,6 +57,31 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+
+//        buttonLogout.setOnClickListener((View.OnClickListener) this);
+
+//        buttonChangePassword.setOnClickListener((View.OnClickListener) this);
+
+//        buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//                user.delete()
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    Log.d(TAG, "User account deleted.");
+//                                    startActivity(new Intent(ProfileActivity.this,
+//                                            RegisterActivity.class));
+//                                }
+//                            }
+//                        });
+//
+//            }
+//        });
+
+
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -114,6 +144,22 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
+
+
+    }
+
+    public void onClick(View view) {
+        if (view == buttonLogout) {
+            mAuth.signOut();
+            finish();
+            startActivity(new Intent(this, LoginActivity.class));
+        }
+
+        if (view == buttonChangePassword) {
+            finish();
+            startActivity(new Intent(ProfileActivity.this, PopupForgotPassword.class));
+        }
+
     }
 
     private static final String TAG = "username";
