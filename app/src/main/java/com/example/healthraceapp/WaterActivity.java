@@ -69,7 +69,12 @@ public class WaterActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         waterProgress = findViewById(R.id.waterProgress);
-        int remaining = 2000 - progress;
+        int remaining = 2000;
+        if ((2000 - totalProgress) < 0) {
+            remaining = 0;
+        } else {
+            remaining = 2000 - totalProgress;
+        }
         waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
                 "recommended 2000 ml. Only " + remaining + " ml of water remains.");
         waterProgress.setTextColor(Color.WHITE);
@@ -90,6 +95,12 @@ public class WaterActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
+                int remaining = 2000;
+                if ((2000 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 2000 - totalProgress;
+                }
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
                         "recommended 2000 ml. Only " + remaining + " ml of water remains.");
 
@@ -104,9 +115,6 @@ public class WaterActivity extends AppCompatActivity {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
             tvProgressLabel.setText("" + progress);
-            int remaining = 2000 - progress;
-            waterProgress.setText("You drank " + progress + " ml of water today out of the " +
-                    "recommended 2000 ml. Only " + remaining + " ml of water remains.");
         }
 
         @Override
@@ -140,7 +148,7 @@ public class WaterActivity extends AppCompatActivity {
         BarData barDataWater = new BarData(barDataSetWater);
         barChartWater.setFitBars(true);
         barChartWater.setData(barDataWater);
-        barChartWater.getDescription().setText("Step progress over the last 7 days");
+        barChartWater.getDescription().setText("Water intake progress over the last 7 days");
         barChartWater.animateY(200);
     }
 

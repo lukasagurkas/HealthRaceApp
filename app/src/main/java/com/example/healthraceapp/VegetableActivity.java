@@ -75,9 +75,15 @@ public class VegetableActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         intakeProgress = findViewById(R.id.intakeProgress);
-        int remaining = 500 - progress;
-        intakeProgress.setText("You ate " + progress + " g of fruits today out of the " +
-                "recommended 500 g. Only " + remaining + " grams of fruit remains.");
+        int remaining = 500;
+        if ((500 - totalProgress) < 0) {
+            remaining = 0;
+        } else {
+            remaining = 500 - totalProgress;
+        }
+        intakeProgress.setText("You ate " + totalProgress + " g of vegetables today out of the " +
+                "recommended 500 g. Only " + remaining + " grams of vegetables remains.");
+//        intakeProgress.setText("Test");
         intakeProgress.setTextColor(Color.WHITE);
         intakeProgress.setTextSize(20);
 
@@ -96,8 +102,14 @@ public class VegetableActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
-                intakeProgress.setText("You ate " + totalProgress + " g of vegatables today out of the " +
-                        "recommended 500 g. Only " + remaining + " grams of vegatables remains.");
+                int remaining = 500;
+                if ((500 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - totalProgress;
+                }
+                intakeProgress.setText("You ate " + totalProgress + " g of vegetables today out of the " +
+                        "recommended 500 g. Only " + remaining + " grams of vegetables remains.");
 
                 createBarChart();
             }
@@ -110,9 +122,6 @@ public class VegetableActivity extends AppCompatActivity {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
             tvProgressLabel.setText("" + progress);
-            int remaining = 500 - progress;
-            intakeProgress.setText("You ate " + progress + " g of fruits today out of the " +
-                    "recommended 500 g. Only " + remaining + " grams of fruit remains.");
         }
 
         @Override
@@ -172,7 +181,7 @@ public class VegetableActivity extends AppCompatActivity {
         BarData barDataVeggie = new BarData(barDataSetVeggie);
         barChartVeggie.setFitBars(true);
         barChartVeggie.setData(barDataVeggie);
-        barChartVeggie.getDescription().setText("Step progress over the last 7 days");
+        barChartVeggie.getDescription().setText("Vegetable intake progress over the last 7 days");
         barChartVeggie.animateY(200);
     }
 

@@ -84,8 +84,13 @@ public class FruitActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         intakeProgress = findViewById(R.id.intakeProgress);
-        int remaining = 500 - progress;
-        intakeProgress.setText("You ate " + progress + " g of fruits today out of the " +
+        int remaining = 500;
+        if ((500 - totalProgress) < 0) {
+            remaining = 0;
+        } else {
+            remaining = 500 - totalProgress;
+        }
+        intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                 "recommended 500 g. Only " + remaining + " grams of fruit remains.");
         intakeProgress.setTextColor(Color.WHITE);
         intakeProgress.setTextSize(20);
@@ -105,6 +110,12 @@ public class FruitActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
+                int remaining = 500;
+                if ((500 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - totalProgress;
+                }
                 intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                         "recommended 500 g. Only " + remaining + " grams of fruit remains.");
 
@@ -119,9 +130,6 @@ public class FruitActivity extends AppCompatActivity {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
             tvProgressLabel.setText("" + progress);
-            int remaining = 500 - progress;
-            intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
-                    "recommended 500 g. Only " + remaining + " grams of fruit remains.");
         }
 
         @Override
@@ -155,7 +163,7 @@ public class FruitActivity extends AppCompatActivity {
         BarData barDataFruit = new BarData(barDataSetFruit);
         barChartFruit.setFitBars(true);
         barChartFruit.setData(barDataFruit);
-        barChartFruit.getDescription().setText("Step progress over the last 7 days");
+        barChartFruit.getDescription().setText("Fruit intake progress over the last 7 days");
         barChartFruit.animateY(200);
     }
 
