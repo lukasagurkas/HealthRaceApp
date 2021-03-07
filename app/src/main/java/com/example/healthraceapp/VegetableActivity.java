@@ -40,6 +40,14 @@ public class VegetableActivity extends AppCompatActivity {
     // Initiate bar chart
     BarChart barChartVeggie;
 
+    // Initialize values for barChart
+    int veggieMinusOne = 0;
+    int veggieMinusTwo = 0;
+    int veggieMinusThree = 0;
+    int veggieMinusFour = 0;
+    int veggieMinusFive = 0;
+    int veggieMinusSix = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,25 +59,7 @@ public class VegetableActivity extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
 
         barChartVeggie = findViewById(R.id.barChartVeggie);
-
-        // ArrayList for the shown data
-        ArrayList<BarEntry> visitorsVeggie = new ArrayList<>();
-        visitorsVeggie.add(new BarEntry(2014, 420));
-        visitorsVeggie.add(new BarEntry(2015, 440));
-        visitorsVeggie.add(new BarEntry(2016, 460));
-        visitorsVeggie.add(new BarEntry(2017, 480));
-        visitorsVeggie.add(new BarEntry(2018, 500));
-
-        // Layout of the bar chart
-        BarDataSet barDataSetVeggie = new BarDataSet(visitorsVeggie, "Visitors");
-        barDataSetVeggie.setColors(ColorTemplate.MATERIAL_COLORS);
-        barDataSetVeggie.setValueTextColor(Color.BLACK);
-        barDataSetVeggie.setValueTextSize(16f);
-        BarData barDataVeggie = new BarData(barDataSetVeggie);
-        barChartVeggie.setFitBars(true);
-        barChartVeggie.setData(barDataVeggie);
-        barChartVeggie.getDescription().setText("Bar Chart Example");
-        barChartVeggie.animateY(200);
+        createBarChart();
 
         // set a change listener on the SeekBar
         SeekBar seekBar = findViewById(R.id.seekBar); //finds slider in activity page
@@ -108,6 +98,8 @@ public class VegetableActivity extends AppCompatActivity {
                 tvProgressLabel.setText("" + progress);
                 intakeProgress.setText("You ate " + totalProgress + " g of vegatables today out of the " +
                         "recommended 500 g. Only " + remaining + " grams of vegatables remains.");
+
+                createBarChart();
             }
         });
     }
@@ -160,5 +152,40 @@ public class VegetableActivity extends AppCompatActivity {
 //        }
 //
 //    });
+
+    public void createBarChart() {
+    // ArrayList for the shown data
+        ArrayList<BarEntry> graphData = new ArrayList<>();
+        graphData.add(new BarEntry(1, veggieMinusSix));
+        graphData.add(new BarEntry(2, veggieMinusFive));
+        graphData.add(new BarEntry(3, veggieMinusFour));
+        graphData.add(new BarEntry(4, veggieMinusThree));
+        graphData.add(new BarEntry(5, veggieMinusTwo));
+        graphData.add(new BarEntry(6, veggieMinusOne));
+        graphData.add(new BarEntry(7, totalProgress));
+
+        // Layout for the bar chart
+        BarDataSet barDataSetVeggie = new BarDataSet(graphData, "Days");
+        barDataSetVeggie.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSetVeggie.setValueTextColor(Color.BLACK);
+        barDataSetVeggie.setValueTextSize(16f);
+        BarData barDataVeggie = new BarData(barDataSetVeggie);
+        barChartVeggie.setFitBars(true);
+        barChartVeggie.setData(barDataVeggie);
+        barChartVeggie.getDescription().setText("Step progress over the last 7 days");
+        barChartVeggie.animateY(200);
+    }
+
+    // Every day at midnight the bar chart will get updated
+    // This function makes sure the right data is swapped for the next day
+    public void switchDays() {
+        veggieMinusSix = veggieMinusFive;
+        veggieMinusFive = veggieMinusFour;
+        veggieMinusFour = veggieMinusThree;
+        veggieMinusThree = veggieMinusTwo;
+        veggieMinusTwo = veggieMinusOne;
+        veggieMinusOne = progress;
+        totalProgress = 0;
+    }
 
 }

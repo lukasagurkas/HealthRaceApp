@@ -38,6 +38,14 @@ public class WaterActivity extends AppCompatActivity {
     // Initiate bar chart
     BarChart barChartWater;
 
+    // Initialize values for barChart
+    int waterMinusOne = 0;
+    int waterMinusTwo = 0;
+    int waterMinusThree = 0;
+    int waterMinusFour = 0;
+    int waterMinusFive = 0;
+    int waterMinusSix = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,25 +57,7 @@ public class WaterActivity extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
 
         barChartWater = findViewById(R.id.barChartWater);
-
-        // ArrayList for the shown data
-        ArrayList<BarEntry> visitorsWater = new ArrayList<>();
-        visitorsWater.add(new BarEntry(2014, 420));
-        visitorsWater.add(new BarEntry(2015, 440));
-        visitorsWater.add(new BarEntry(2016, 460));
-        visitorsWater.add(new BarEntry(2017, 480));
-        visitorsWater.add(new BarEntry(2018, 500));
-
-        // Layout of the bar chart
-        BarDataSet barDataSetWater = new BarDataSet(visitorsWater, "Visitors");
-        barDataSetWater.setColors(ColorTemplate.MATERIAL_COLORS);
-        barDataSetWater.setValueTextColor(Color.BLACK);
-        barDataSetWater.setValueTextSize(16f);
-        BarData barDataWater = new BarData(barDataSetWater);
-        barChartWater.setFitBars(true);
-        barChartWater.setData(barDataWater);
-        barChartWater.getDescription().setText("Bar Chart Example");
-        barChartWater.animateY(200);
+        createBarChart();
 
         // set a change listener on the SeekBar
         SeekBar seekBar = findViewById(R.id.seekBar); //finds slider in activity page
@@ -102,6 +92,8 @@ public class WaterActivity extends AppCompatActivity {
                 tvProgressLabel.setText("" + progress);
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
                         "recommended 2000 ml. Only " + remaining + " ml of water remains.");
+
+                createBarChart();
             }
         });
     }
@@ -127,4 +119,41 @@ public class WaterActivity extends AppCompatActivity {
             // called after the user finishes moving the SeekBar
         }
     };
+
+
+    public void createBarChart() {
+        // ArrayList for the shown data
+        ArrayList<BarEntry> graphData = new ArrayList<>();
+        graphData.add(new BarEntry(1, waterMinusSix));
+        graphData.add(new BarEntry(2, waterMinusFive));
+        graphData.add(new BarEntry(3, waterMinusFour));
+        graphData.add(new BarEntry(4, waterMinusThree));
+        graphData.add(new BarEntry(5, waterMinusTwo));
+        graphData.add(new BarEntry(6, waterMinusOne));
+        graphData.add(new BarEntry(7, totalProgress));
+
+        // Layout for the bar chart
+        BarDataSet barDataSetWater = new BarDataSet(graphData, "Days");
+        barDataSetWater.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSetWater.setValueTextColor(Color.BLACK);
+        barDataSetWater.setValueTextSize(16f);
+        BarData barDataWater = new BarData(barDataSetWater);
+        barChartWater.setFitBars(true);
+        barChartWater.setData(barDataWater);
+        barChartWater.getDescription().setText("Step progress over the last 7 days");
+        barChartWater.animateY(200);
+    }
+
+    // Every day at midnight the bar chart will get updated
+    // This function makes sure the right data is swapped for the next day
+    public void switchDays() {
+        waterMinusSix = waterMinusFive;
+        waterMinusFive = waterMinusFour;
+        waterMinusFour = waterMinusThree;
+        waterMinusThree = waterMinusTwo;
+        waterMinusTwo = waterMinusOne;
+        waterMinusOne = progress;
+        totalProgress = 0;
+    }
+
 }

@@ -11,6 +11,7 @@ public class AlarmReceiverStepDetector extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("Time", "Alarm is triggered");
         StepActivity stepActivity = new StepActivity();
+//        stepActivity.switchDays();
         stepActivity.resetCount();
     }
 }
