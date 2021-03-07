@@ -39,9 +39,6 @@ public class FruitActivity extends AppCompatActivity {
     //button to add water quantity
     Button buttonAdd;
 
-    //button to go back to main page
-    Button buttonMainPage;
-
     //progress bar for user to enter water intake
     ProgressBar progressBar;
 
@@ -64,8 +61,6 @@ public class FruitActivity extends AppCompatActivity {
         progressBar.setProgress(totalProgress);
         progressBar.setMax(500);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
-        //buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
-        // page
 
         barChartFruit = findViewById(R.id.barChartFruit);
 
@@ -122,19 +117,6 @@ public class FruitActivity extends AppCompatActivity {
                 tvProgressLabel.setText("" + progress);
                 intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                         "recommended 500 g. Only " + remaining + " grams of fruit remains.");
-            }
-        });
-//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
-//            }
-//        });
-//        progressBar.setProgress(progress);
-        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(FruitActivity.this, MainActivity.class));
             }
         });
     }

@@ -31,7 +31,6 @@ public class WaterActivity extends AppCompatActivity {
     TextView checkpoint; //displays the points for each checkpoint
     TextView milliliters;
     Button buttonAdd; //button to add water quantity
-    Button buttonMainPage; //button to go back to main page
     ProgressBar progressBar; //progress bar for user to enter water intake
     static int totalProgress; //initiate total progress
     int progress; //initiate progress value
@@ -48,8 +47,6 @@ public class WaterActivity extends AppCompatActivity {
         progressBar.setProgress(totalProgress);
         progressBar.setMax(2000);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
-        //buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
-        // page
 
         barChartWater = findViewById(R.id.barChartWater);
 
@@ -105,19 +102,6 @@ public class WaterActivity extends AppCompatActivity {
                 tvProgressLabel.setText("" + progress);
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
                         "recommended 2000 ml. Only " + remaining + " ml of water remains.");
-            }
-        });
-//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
-//            }
-//        });
-//        progressBar.setProgress(progress);
-        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(WaterActivity.this, MainActivity.class));
             }
         });
     }

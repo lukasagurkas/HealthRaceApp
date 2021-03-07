@@ -33,7 +33,6 @@ public class VegetableActivity extends AppCompatActivity {
     TextView checkpoint; //displays the points for each checkpoint
     TextView grams;
     Button buttonAdd; //button to add water quantity
-    Button buttonMainPage; //button to go back to main page
     ProgressBar progressBar; //progress bar for user to enter water intake
     static int totalProgress; //initiate total progress
     int progress; //initiate progress value
@@ -50,8 +49,6 @@ public class VegetableActivity extends AppCompatActivity {
         progressBar.setProgress(totalProgress);
         progressBar.setMax(500);
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
-        //buttonMainPage = findViewById(R.id.buttonMainPage); //finds main page button in activity
-        // page
 
         barChartVeggie = findViewById(R.id.barChartVeggie);
 
@@ -111,19 +108,6 @@ public class VegetableActivity extends AppCompatActivity {
                 tvProgressLabel.setText("" + progress);
                 intakeProgress.setText("You ate " + totalProgress + " g of vegatables today out of the " +
                         "recommended 500 g. Only " + remaining + " grams of vegatables remains.");
-            }
-        });
-//        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(FruitActivity.this, MainActivity.class));
-//            }
-//        });
-//        progressBar.setProgress(progress);
-        buttonMainPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(VegetableActivity.this, MainActivity.class));
             }
         });
     }
