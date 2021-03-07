@@ -102,6 +102,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // Ask for permission to track physical movement
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACTIVITY_RECOGNITION},PERMISSION_CODE);
 
         super.onCreate(savedInstanceState);
@@ -110,6 +111,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
+        // Add bar chart to activity and enter the corresponding data
         barChartStep = findViewById(R.id.barChartStep);
         createBarChart();
 
@@ -141,17 +143,18 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         };
 
 
+        // Give the user information about their step progress in a text view
         progress = findViewById(R.id.progress);
         int remaining = 7000 - stepDetect;
         progress.setText("You walked " + stepDetect + " steps today out of the " +
                 "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+
+        // Set the layout for this information text view
         progress.setTextColor(Color.WHITE);
         progress.setTextSize(15);
-
         checkpoint = findViewById(R.id.checkpoint);
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
-
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -167,6 +170,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             isCounterSensorPresent = false;
         }
 
+        // Check if step detector is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             simpleProgressBar.setProgress(stepDetect);
@@ -192,7 +196,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         graphData.add(new BarEntry(6, stepDetectMinusOne));
         graphData.add(new BarEntry(7, stepDetect));
 
-        // Layout of the bar chart
+        // Layout for the bar chart
         BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
         barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
         barDataSetStep.setValueTextColor(Color.BLACK);
@@ -204,6 +208,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         barChartStep.animateY(200);
     }
 
+    // Every day at midnight the bar chart will get updated
+    // This function makes sure the right data is swapped for the next day
     public void switchDays() {
         stepDetectMinusSix = stepDetectMinusFive;
         stepDetectMinusFive = stepDetectMinusFour;
@@ -221,6 +227,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+        // Set calender for a set time in the day
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
