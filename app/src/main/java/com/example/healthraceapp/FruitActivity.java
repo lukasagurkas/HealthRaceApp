@@ -45,11 +45,22 @@ public class FruitActivity extends AppCompatActivity {
     // Initiate bar chart
     BarChart barChartFruit;
 
+    // Initialize values for barChart
+    int fruitMinusOne = 0;
+    int fruitMinusTwo = 0;
+    int fruitMinusThree = 0;
+    int fruitMinusFour = 0;
+    int fruitMinusFive = 0;
+    int fruitMinusSix = 0;
+
     //initiate progress value
     int progress;
 
     //initiate total progress
     static int totalProgress;
+
+    // Initialize value for information text view
+    int remaining = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,25 +74,7 @@ public class FruitActivity extends AppCompatActivity {
         buttonAdd = findViewById(R.id.buttonAdd); //finds add button in activity page
 
         barChartFruit = findViewById(R.id.barChartFruit);
-
-        // ArrayList for the shown data
-        ArrayList<BarEntry> visitorsFruit = new ArrayList<>();
-        visitorsFruit.add(new BarEntry(2014, 420));
-        visitorsFruit.add(new BarEntry(2015, 440));
-        visitorsFruit.add(new BarEntry(2016, 460));
-        visitorsFruit.add(new BarEntry(2017, 480));
-        visitorsFruit.add(new BarEntry(2018, 500));
-
-        // Layout of the bar chart
-        BarDataSet barDataSetFruit = new BarDataSet(visitorsFruit, "Visitors");
-        barDataSetFruit.setColors(ColorTemplate.MATERIAL_COLORS);
-        barDataSetFruit.setValueTextColor(Color.BLACK);
-        barDataSetFruit.setValueTextSize(16f);
-        BarData barDataFruit = new BarData(barDataSetFruit);
-        barChartFruit.setFitBars(true);
-        barChartFruit.setData(barDataFruit);
-        barChartFruit.getDescription().setText("Bar Chart Example");
-        barChartFruit.animateY(200);
+        createBarChart();
 
         // set a change listener on the SeekBar
         SeekBar seekBar = findViewById(R.id.seekBar); //finds slider in activity page
@@ -94,8 +87,13 @@ public class FruitActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         intakeProgress = findViewById(R.id.intakeProgress);
-        int remaining = 500 - progress;
-        intakeProgress.setText("You ate " + progress + " g of fruits today out of the " +
+
+        if ((500 - totalProgress) < 0) {
+            remaining = 0;
+        } else {
+            remaining = 500 - totalProgress;
+        }
+        intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                 "recommended 500 g. Only " + remaining + " grams of fruit remains.");
         intakeProgress.setTextColor(Color.WHITE);
         intakeProgress.setTextSize(20);
@@ -115,8 +113,16 @@ public class FruitActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
+
+                if ((500 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - totalProgress;
+                }
                 intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                         "recommended 500 g. Only " + remaining + " grams of fruit remains.");
+
+                createBarChart();
             }
         });
     }
@@ -127,9 +133,6 @@ public class FruitActivity extends AppCompatActivity {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
             tvProgressLabel.setText("" + progress);
-            int remaining = 500 - progress;
-            intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
-                    "recommended 500 g. Only " + remaining + " grams of fruit remains.");
         }
 
         @Override
@@ -142,4 +145,40 @@ public class FruitActivity extends AppCompatActivity {
             // called after the user finishes moving the SeekBar
         }
     };
+
+    // ArrayList for the shown data
+    public void createBarChart() {
+        // ArrayList for the shown data
+        ArrayList<BarEntry> graphData = new ArrayList<>();
+        graphData.add(new BarEntry(1, fruitMinusSix));
+        graphData.add(new BarEntry(2, fruitMinusFive));
+        graphData.add(new BarEntry(3, fruitMinusFour));
+        graphData.add(new BarEntry(4, fruitMinusThree));
+        graphData.add(new BarEntry(5, fruitMinusTwo));
+        graphData.add(new BarEntry(6, fruitMinusOne));
+        graphData.add(new BarEntry(7, totalProgress));
+
+        // Layout for the bar chart
+        BarDataSet barDataSetFruit = new BarDataSet(graphData, "Days");
+        barDataSetFruit.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSetFruit.setValueTextColor(Color.BLACK);
+        barDataSetFruit.setValueTextSize(16f);
+        BarData barDataFruit = new BarData(barDataSetFruit);
+        barChartFruit.setFitBars(true);
+        barChartFruit.setData(barDataFruit);
+        barChartFruit.getDescription().setText("Fruit intake progress over the last 7 days");
+        barChartFruit.animateY(200);
+    }
+
+    // Every day at midnight the bar chart will get updated
+    // This function makes sure the right data is swapped for the next day
+    public void switchDays() {
+        fruitMinusSix = fruitMinusFive;
+        fruitMinusFive = fruitMinusFour;
+        fruitMinusFour = fruitMinusThree;
+        fruitMinusThree = fruitMinusTwo;
+        fruitMinusTwo = fruitMinusOne;
+        fruitMinusOne = progress;
+        totalProgress = 0;
+    }
 }

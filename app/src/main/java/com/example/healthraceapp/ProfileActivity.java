@@ -27,7 +27,7 @@ import java.awt.font.NumericShaper;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView email, usernamle, dob, gender;
+    private TextView email, usernamle, day, month, year, gender;
     private ImageView userProfileImage;
     private  String userID;
 
@@ -52,13 +52,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        profileUserRef = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(user.getUid());
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
-        dob = (TextView) findViewById(R.id.textDoB);
+        day = (TextView) findViewById(R.id.textDay);
+        month = (TextView) findViewById(R.id.textMonth);
+        year = (TextView) findViewById(R.id.textYear);
         gender = (TextView) findViewById(R.id.textGender);
 
 
@@ -82,22 +81,37 @@ public class ProfileActivity extends AppCompatActivity {
 //        });
         String uID = mAuth.getCurrentUser().getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference(uID);
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(uID);
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
-                    assert temporaryUsername != null;
-                    Log.d(TAG, temporaryUsername);
+
+                String myUsername = snapshot.child("username").getValue(String.class);
+                String myEmail = snapshot.child("email").getValue(String.class);
+                Boolean myGender = (Boolean) snapshot.child("male").getValue();
+                String myDay = String.valueOf(snapshot.child("day").getValue());
+                String myMonth = String.valueOf(snapshot.child("month").getValue());
+                String myYear = String.valueOf(snapshot.child("year").getValue());
+
+                username.setText("@" + myUsername);
+                email.setText("Email: " + myEmail);
+                day.setText(myDay);
+                month.setText("/" + myMonth);
+                year.setText("/" + myYear);
+                if (myGender){
+                    gender.setText("Gender: male");
+                }else{
+                    gender.setText("Gender: female");
                 }
+
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", error.toException());
+                Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
     }

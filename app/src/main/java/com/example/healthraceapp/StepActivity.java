@@ -28,11 +28,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
@@ -72,6 +78,17 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
 
+    // Initiate bar chart
+    BarChart barChartStep;
+
+    // Initialize values for barChart
+    int stepDetectMinusOne = 0;
+    int stepDetectMinusTwo = 0;
+    int stepDetectMinusThree = 0;
+    int stepDetectMinusFour = 0;
+    int stepDetectMinusFive = 0;
+    int stepDetectMinusSix = 0;
+
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dailyDatabaseReference;
@@ -85,6 +102,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        // Ask for permission to track physical movement
         ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACTIVITY_RECOGNITION},PERMISSION_CODE);
 
         super.onCreate(savedInstanceState);
@@ -93,7 +111,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
-
+        // Add bar chart to activity and enter the corresponding data
+        barChartStep = findViewById(R.id.barChartStep);
+        createBarChart();
 
         user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -111,11 +131,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d("ViewDatabase", "onAuthStateChanged:signed_in:" + user.getUid());
                     toastMessage("Successfully signed in with: " + user.getEmail());
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d("ViewDatabase", "onAuthStateChanged:signed_out");
                     toastMessage("Successfully signed out.");
                 }
 
@@ -123,17 +143,18 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         };
 
 
+        // Give the user information about their step progress in a text view
         progress = findViewById(R.id.progress);
         int remaining = 7000 - stepDetect;
         progress.setText("You walked " + stepDetect + " steps today out of the " +
                 "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+
+        // Set the layout for this information text view
         progress.setTextColor(Color.WHITE);
         progress.setTextSize(15);
-
         checkpoint = findViewById(R.id.checkpoint);
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
-
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -149,6 +170,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             isCounterSensorPresent = false;
         }
 
+        // Check if step detector is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             simpleProgressBar.setProgress(stepDetect);
@@ -163,6 +185,41 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    public void createBarChart() {
+        // ArrayList for the shown data
+        ArrayList<BarEntry> graphData = new ArrayList<>();
+        graphData.add(new BarEntry(1, stepDetectMinusSix));
+        graphData.add(new BarEntry(2, stepDetectMinusFive));
+        graphData.add(new BarEntry(3, stepDetectMinusFour));
+        graphData.add(new BarEntry(4, stepDetectMinusThree));
+        graphData.add(new BarEntry(5, stepDetectMinusTwo));
+        graphData.add(new BarEntry(6, stepDetectMinusOne));
+        graphData.add(new BarEntry(7, stepDetect));
+
+        // Layout for the bar chart
+        BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
+        barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSetStep.setValueTextColor(Color.BLACK);
+        barDataSetStep.setValueTextSize(16f);
+        BarData barDataVeggie = new BarData(barDataSetStep);
+        barChartStep.setFitBars(true);
+        barChartStep.setData(barDataVeggie);
+        barChartStep.getDescription().setText("Step progress over the last 7 days");
+        barChartStep.animateY(200);
+    }
+
+    // Every day at midnight the bar chart will get updated
+    // This function makes sure the right data is swapped for the next day
+    public void switchDays() {
+        stepDetectMinusSix = stepDetectMinusFive;
+        stepDetectMinusFive = stepDetectMinusFour;
+        stepDetectMinusFour = stepDetectMinusThree;
+        stepDetectMinusThree = stepDetectMinusTwo;
+        stepDetectMinusTwo = stepDetectMinusOne;
+        stepDetectMinusOne = stepDetect;
+        stepDetect = 0;
+    }
+
     public void dailyResetAlarm() {
         Intent intent = new Intent(StepActivity.this, AlarmReceiverStepDetector.class);
         Log.d("waitCheck", "It works");
@@ -170,12 +227,13 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+        // Set calender for a set time in the day
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
         setCalendar.set(Calendar.HOUR_OF_DAY, 15);
-        setCalendar.set(Calendar.MINUTE, 23);
-        setCalendar.set(Calendar.SECOND, 1);
+        setCalendar.set(Calendar.MINUTE, 45);
+        setCalendar.set(Calendar.SECOND, 45);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){
@@ -207,8 +265,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 //        simpleProgressBar.setProgress(stepCount);
 
         int remaining = 7000 - stepDetect;
-        progress.setText("You walked" + stepDetect + " steps today out of the " +
-                "recommended 7000 per day. Only" + remaining + " steps remain till the next checkpoint.");
+        progress.setText("You walked " + stepDetect + " steps today out of the " +
+                "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+
+        createBarChart();
     }
 
     @Override
@@ -254,10 +314,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             firebaseAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+
+
 
 
 

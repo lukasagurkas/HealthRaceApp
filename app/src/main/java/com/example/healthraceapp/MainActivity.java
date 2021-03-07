@@ -133,54 +133,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-//    public void askPermission() {
-//        if (ContextCompat.checkSelfPermission(MainActivity.this,
-//                Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
-//            Toast.makeText(MainActivity.this, "You have already granted this permission!", Toast.LENGTH_SHORT).show();
-//        } else {
-//            requestActivity();
-//        }
-//    }
-
-//    // Requests permission to use step counter
-//    private void requestActivity() {
-//        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACTIVITY_RECOGNITION)) {
-//            new AlertDialog.Builder(this)
-//                    .setTitle("Permission needed")
-//                    .setMessage("This permission is needed to track the amount of steps you take")
-//                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            ActivityCompat.requestPermissions(MainActivity.this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-//                        }
-//                    })
-//                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which) {
-//                            dialog.dismiss();
-//                        }
-//                    })
-//                    .create().show();
-//        } else {
-//            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
-//        }
-//        ;
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//
-//        // Gives toast saying if the user granted or denied permission to use step counter
-//        if (requestCode == PERMISSION_CODE) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Toast.makeText(this, "Permission granted", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
-//            }
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//    }
-
     public void onClick(View view) {
         //if logout is pressed
         if(view == buttonLogout){
