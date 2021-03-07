@@ -27,7 +27,7 @@ import java.awt.font.NumericShaper;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView email, usernamle, dob, gender;
+    private TextView email, usernamle, day, month, year, gender;
     private ImageView userProfileImage;
     private  String userID;
 
@@ -55,7 +55,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
-        dob = (TextView) findViewById(R.id.textDoB);
+        day = (TextView) findViewById(R.id.textDay);
+        month = (TextView) findViewById(R.id.textMonth);
+        year = (TextView) findViewById(R.id.textYear);
         gender = (TextView) findViewById(R.id.textGender);
 
 
@@ -84,21 +86,26 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-//                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
-//                    assert temporaryUsername != null;
-//                    Log.d(TAG, temporaryUsername);
-//                }
+
                 String myUsername = snapshot.child("username").getValue(String.class);
                 String myEmail = snapshot.child("email").getValue(String.class);
-//                String myDay = snapshot.child("day").getValue(String.class);
-//                String myMonth = snapshot.child("month").getValue(String.class);
-//                String myYear = snapshot.child("year").getValue(String.class);
-//                Log.d(TAG, myUsername + myEmail);
-//
-//
+                Boolean myGender = (Boolean) snapshot.child("male").getValue();
+                String myDay = String.valueOf(snapshot.child("day").getValue());
+                String myMonth = String.valueOf(snapshot.child("month").getValue());
+                String myYear = String.valueOf(snapshot.child("year").getValue());
+
                 username.setText("@" + myUsername);
                 email.setText("Email: " + myEmail);
+                day.setText(myDay);
+                month.setText("/" + myMonth);
+                year.setText("/" + myYear);
+                if (myGender){
+                    gender.setText("Gender: male");
+                }else{
+                    gender.setText("Gender: female");
+                }
+
+
             }
 
             @Override

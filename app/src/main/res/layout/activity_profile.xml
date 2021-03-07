@@ -31,6 +31,39 @@
     <!--        app:layout_constraintTop_toBottomOf="@+id/textView4"-->
     <!--        app:layout_constraintVertical_bias="0.0" />-->
 
+    <TextView
+        android:id="@+id/textYear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Year"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.369"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
+
+    <TextView
+        android:id="@+id/textMonth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Month"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.268"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
+
+    <TextView
+        android:id="@+id/textDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.193"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
+
     <ImageView
         android:id="@+id/userProfileImage"
         android:layout_width="169dp"
@@ -41,6 +74,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.096"
         tools:srcCompat="@tools:sample/avatars" />
+
 
     <TextView
         android:id="@+id/textUsernameProfile"
@@ -53,20 +87,19 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
-        app:layout_constraintVertical_bias="0.032" />
+        app:layout_constraintVertical_bias="0.241" />
 
 
     <TextView
         android:id="@+id/textDoB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="44dp"
         android:text="@string/DoB"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
-
 
     <TextView
         android:id="@+id/textGender"
@@ -81,13 +114,13 @@
 
     <TextView
         android:id="@+id/textEmailProfile"
-        android:layout_width="353dp"
-        android:layout_height="26dp"
+        android:layout_width="357dp"
+        android:layout_height="20dp"
         android:text="@string/email_profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textUsernameProfile"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.18" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -131,11 +131,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d("ViewDatabase", "onAuthStateChanged:signed_in:" + user.getUid());
                     toastMessage("Successfully signed in with: " + user.getEmail());
                 } else {
                     // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Log.d("ViewDatabase", "onAuthStateChanged:signed_out");
                     toastMessage("Successfully signed out.");
                 }
 
@@ -314,10 +314,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             firebaseAuth.removeAuthStateListener(mAuthListener);
         }
     }
-
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
+
+
 
 
 
