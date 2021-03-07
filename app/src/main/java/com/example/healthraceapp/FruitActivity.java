@@ -59,6 +59,9 @@ public class FruitActivity extends AppCompatActivity {
     //initiate total progress
     static int totalProgress;
 
+    // Initialize value for information text view
+    int remaining = 500;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +87,7 @@ public class FruitActivity extends AppCompatActivity {
         tvProgressLabel.setTextSize(15);
 
         intakeProgress = findViewById(R.id.intakeProgress);
-        int remaining = 500;
+
         if ((500 - totalProgress) < 0) {
             remaining = 0;
         } else {
@@ -110,7 +113,7 @@ public class FruitActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
-                int remaining = 500;
+
                 if ((500 - totalProgress) < 0) {
                     remaining = 0;
                 } else {
