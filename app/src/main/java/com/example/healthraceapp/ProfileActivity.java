@@ -52,9 +52,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        profileUserRef = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(user.getUid());
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -82,22 +79,32 @@ public class ProfileActivity extends AppCompatActivity {
 //        });
         String uID = mAuth.getCurrentUser().getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference(uID);
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(uID);
 
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
-                    assert temporaryUsername != null;
-                    Log.d(TAG, temporaryUsername);
-                }
+//                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+//                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
+//                    assert temporaryUsername != null;
+//                    Log.d(TAG, temporaryUsername);
+//                }
+                String myUsername = snapshot.child("username").getValue(String.class);
+                String myEmail = snapshot.child("email").getValue(String.class);
+//                String myDay = snapshot.child("day").getValue(String.class);
+//                String myMonth = snapshot.child("month").getValue(String.class);
+//                String myYear = snapshot.child("year").getValue(String.class);
+//                Log.d(TAG, myUsername + myEmail);
+//
+//
+                username.setText("@" + myUsername);
+                email.setText("Email: " + myEmail);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", error.toException());
+                Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
     }
