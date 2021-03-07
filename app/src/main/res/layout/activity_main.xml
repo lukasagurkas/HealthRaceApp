@@ -18,38 +18,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.195" />
 
-    <!--    <LinearLayout-->
-<!--        android:id="@+id/buttonStep"-->
-<!--        style="@android:style/Widget.Button"-->
-<!--        android:layout_width="220dp"-->
-<!--        android:layout_height="60dp"-->
-<!--        android:background="@color/purple_500"-->
-<!--        android:gravity="center"-->
-<!--        tools:ignore="MissingConstraints"-->
-<!--        tools:layout_editor_absoluteX="95dp"-->
-<!--        tools:layout_editor_absoluteY="226dp">-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="50dp"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:layout_marginRight="5dp"-->
-<!--            android:src="@drawable/pedestrian" />-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/stepText"-->
-<!--            android:layout_width="164dp"-->
-<!--            android:layout_height="50dp"-->
-<!--            android:gravity="center"-->
-<!--            android:text="STEP COUNTER PAGE"-->
-<!--            android:textColor="@android:color/white" />-->
-
-<!--    </LinearLayout>-->
-
     <Button
         android:id="@+id/buttonStep"
-        android:layout_width="197dp"
-        android:layout_height="61dp"
+        android:layout_width="250dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
         android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/pedestrian_smaller"
         android:text="Step counter page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,9 +46,10 @@
 
     <Button
         android:id="@+id/buttonFruit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="170dp"
+        android:layout_height="58dp"
         android:layout_marginTop="7dp"
+        android:drawableLeft="@drawable/fruit_smaller"
         android:text="Fruit page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,6 +62,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="7dp"
+        android:drawableLeft="@drawable/vegetable_smaller"
         android:text="Vegetable page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
         android:text="Water page"
+        android:drawableLeft="@drawable/waterglass_smaller"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
