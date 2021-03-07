@@ -27,4 +27,8 @@
     <string name="DoB">DoB</string>
     <string name="gender">Gender</string>
     <string name="email_profile">Email</string>
+    <string name="card_view_username">Username:</string>
+    <string name="card_view_email">Email:</string>
+    <string name="card_view_filler_email">email@example.com</string>
+    <string name="card_view_filler_username">ExampleUsername</string>
 </resources>
