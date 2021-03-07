@@ -28,11 +28,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
@@ -72,6 +78,17 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Initiate the progress bar
     ProgressBar simpleProgressBar;
 
+    // Initiate bar chart
+    BarChart barChartStep;
+
+    // Initialize values for barChart
+    int stepDetectMinusOne = 0;
+    int stepDetectMinusTwo = 0;
+    int stepDetectMinusThree = 0;
+    int stepDetectMinusFour = 0;
+    int stepDetectMinusFive = 0;
+    int stepDetectMinusSix = 0;
+
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dailyDatabaseReference;
@@ -93,7 +110,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
-
+        barChartStep = findViewById(R.id.barChartStep);
+        createBarChart();
 
         user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -163,6 +181,39 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    public void createBarChart() {
+        // ArrayList for the shown data
+        ArrayList<BarEntry> graphData = new ArrayList<>();
+        graphData.add(new BarEntry(1, stepDetectMinusSix));
+        graphData.add(new BarEntry(2, stepDetectMinusFive));
+        graphData.add(new BarEntry(3, stepDetectMinusFour));
+        graphData.add(new BarEntry(4, stepDetectMinusThree));
+        graphData.add(new BarEntry(5, stepDetectMinusTwo));
+        graphData.add(new BarEntry(6, stepDetectMinusOne));
+        graphData.add(new BarEntry(7, stepDetect));
+
+        // Layout of the bar chart
+        BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
+        barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
+        barDataSetStep.setValueTextColor(Color.BLACK);
+        barDataSetStep.setValueTextSize(16f);
+        BarData barDataVeggie = new BarData(barDataSetStep);
+        barChartStep.setFitBars(true);
+        barChartStep.setData(barDataVeggie);
+        barChartStep.getDescription().setText("Step progress over the last 7 days");
+        barChartStep.animateY(200);
+    }
+
+    public void switchDays() {
+        stepDetectMinusSix = stepDetectMinusFive;
+        stepDetectMinusFive = stepDetectMinusFour;
+        stepDetectMinusFour = stepDetectMinusThree;
+        stepDetectMinusThree = stepDetectMinusTwo;
+        stepDetectMinusTwo = stepDetectMinusOne;
+        stepDetectMinusOne = stepDetect;
+        stepDetect = 0;
+    }
+
     public void dailyResetAlarm() {
         Intent intent = new Intent(StepActivity.this, AlarmReceiverStepDetector.class);
         Log.d("waitCheck", "It works");
@@ -174,8 +225,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
         setCalendar.set(Calendar.HOUR_OF_DAY, 15);
-        setCalendar.set(Calendar.MINUTE, 23);
-        setCalendar.set(Calendar.SECOND, 1);
+        setCalendar.set(Calendar.MINUTE, 45);
+        setCalendar.set(Calendar.SECOND, 45);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){
@@ -207,8 +258,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 //        simpleProgressBar.setProgress(stepCount);
 
         int remaining = 7000 - stepDetect;
-        progress.setText("You walked" + stepDetect + " steps today out of the " +
-                "recommended 7000 per day. Only" + remaining + " steps remain till the next checkpoint.");
+        progress.setText("You walked " + stepDetect + " steps today out of the " +
+                "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+
+        createBarChart();
     }
 
     @Override
