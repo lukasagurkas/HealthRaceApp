@@ -6,6 +6,7 @@ public class User {
     private int year, month, day;
     private int dailyNumberOfSteps;
     private int weeklyNumberOfSteps;
+    private int amountOfVeg, amountOfWater, amountOfFruit;
 
     public User(){}
 
@@ -82,5 +83,29 @@ public class User {
 
     public void setWeeklyNumberOfSteps(int weeklyNumberOfSteps) {
         this.weeklyNumberOfSteps = weeklyNumberOfSteps;
+    }
+
+    public int getAmountOfVeg() {
+        return amountOfVeg;
+    }
+
+    public void setAmountOfVeg(int amountOfVeg) {
+        this.amountOfVeg = amountOfVeg;
+    }
+
+    public int getAmountOfWater() {
+        return amountOfWater;
+    }
+
+    public void setAmountOfWater(int amountOfWater) {
+        this.amountOfWater = amountOfWater;
+    }
+
+    public int getAmountOfFruit() {
+        return amountOfFruit;
+    }
+
+    public void setAmountOfFruit(int amountOfFruit) {
+        this.amountOfFruit = amountOfFruit;
     }
 }

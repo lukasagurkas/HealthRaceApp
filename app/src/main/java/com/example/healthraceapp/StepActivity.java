@@ -35,8 +35,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -97,7 +100,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private DatabaseReference dailyDatabaseReference;
     private DatabaseReference weeklyDatabaseReference;
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private String userID;
     User user;
 
@@ -128,22 +130,33 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         dailyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
         weeklyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklyNumberOfSteps");
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
+        dailyDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("ViewDatabase", "onAuthStateChanged:signed_in:" + user.getUid());
-                    toastMessage("Successfully signed in with: " + user.getEmail());
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetect = dataFromDatabase;
+                textViewStepDetector.setText(String.valueOf(stepDetect));
+                simpleProgressBar.setProgress(stepDetect);
+
+                if ((7000 - stepDetect) < 0) {
+                    remaining = 0;
                 } else {
-                    // User is signed out
-                    Log.d("ViewDatabase", "onAuthStateChanged:signed_out");
-                    toastMessage("Successfully signed out.");
+                    remaining = 7000 - stepDetect;
                 }
+                progress.setText("You walked " + stepDetect + " steps today out of the " +
+                        "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+
+                createBarChart();
 
             }
-        };
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
 
 
         // Give the user information about their step progress in a text view
@@ -258,6 +271,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Sets the progressBar
     public void prog() {
         simpleProgressBar  = (ProgressBar) findViewById(R.id.StepProgress);
+        simpleProgressBar.setMax(7000);
     }
 
     // Changes the shows value in the textView to current amount of steps
@@ -318,19 +332,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(mAuthListener);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            firebaseAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }

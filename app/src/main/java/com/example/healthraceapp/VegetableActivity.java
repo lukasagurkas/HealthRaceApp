@@ -1,5 +1,6 @@
 package com.example.healthraceapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -19,6 +20,13 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.warkiz.tickseekbar.OnSeekChangeListener;
 import com.warkiz.tickseekbar.SeekParams;
 import com.warkiz.tickseekbar.TickSeekBar;
@@ -50,6 +58,13 @@ public class VegetableActivity extends AppCompatActivity {
 
     // Initialize value for information text view
     int remaining = 500;
+
+    //initialize instances for writing and reading data from the database
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference vegReference;
+    private FirebaseAuth firebaseAuth;
+    private String userID;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +120,7 @@ public class VegetableActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
+                vegReference.setValue(totalProgress);
                 if ((500 - totalProgress) < 0) {
                     remaining = 0;
                 } else {
@@ -114,6 +130,40 @@ public class VegetableActivity extends AppCompatActivity {
                         "recommended 500 g. Only " + remaining + " grams of vegetables remains.");
 
                 createBarChart();
+            }
+        });
+
+        user = new User();
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        userID = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+
+        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
+
+        vegReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                totalProgress = dataFromDatabase;
+                progressBar.setProgress(totalProgress);
+                tvProgressLabel.setText("" + progress);
+                vegReference.setValue(totalProgress);
+                if ((500 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - totalProgress;
+                }
+                intakeProgress.setText("You ate " + totalProgress + " g of vegetables today out of the " +
+                        "recommended 500 g. Only " + remaining + " grams of vegetables remains.");
+                Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
     }
