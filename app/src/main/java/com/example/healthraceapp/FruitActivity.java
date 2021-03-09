@@ -155,8 +155,8 @@ public class FruitActivity extends AppCompatActivity {
         fruitReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int fruitFromDatabase = snapshot.getValue(int.class);
-                totalProgress = fruitFromDatabase;
+                int dataFromDatabase = snapshot.getValue(int.class);
+                totalProgress = dataFromDatabase;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
                 fruitReference.setValue(totalProgress);
@@ -167,7 +167,7 @@ public class FruitActivity extends AppCompatActivity {
                 }
                 intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                         "recommended 500 g. Only " + remaining + " grams of fruit remains.");
-                Log.d("Fruitchecker", String.valueOf(fruitFromDatabase));
+                Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
                 createBarChart();
             }
 

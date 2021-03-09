@@ -140,8 +140,8 @@ public class WaterActivity extends AppCompatActivity {
         waterReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int waterFromDatabase = snapshot.getValue(int.class);
-                totalProgress = waterFromDatabase;
+                int dataFromDatabase = snapshot.getValue(int.class);
+                totalProgress = dataFromDatabase;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
                 waterReference.setValue(totalProgress);
@@ -152,13 +152,13 @@ public class WaterActivity extends AppCompatActivity {
                 }
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
                         "recommended 2000 ml. Only " + remaining + " ml of water remains.");
-                Log.d("Fruitchecker", String.valueOf(waterFromDatabase));
+                Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
                 createBarChart();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
     }
