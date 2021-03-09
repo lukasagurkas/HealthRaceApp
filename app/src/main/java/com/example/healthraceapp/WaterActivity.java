@@ -40,7 +40,7 @@ public class WaterActivity extends AppCompatActivity {
     TextView milliliters;
     Button buttonAdd; //button to add water quantity
     ProgressBar progressBar; //progress bar for user to enter water intake
-    static int totalProgress; //initiate total progress
+    int totalProgress; //initiate total progress
     int progress; //initiate progress value
 
     // Initiate bar chart
