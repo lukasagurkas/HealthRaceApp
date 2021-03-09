@@ -81,13 +81,16 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Initiate bar chart
     BarChart barChartStep;
 
+    // Initialize value for information text view
+    int remaining = 7000;
+
     // Initialize values for barChart
-    int stepDetectMinusOne = 0;
-    int stepDetectMinusTwo = 0;
-    int stepDetectMinusThree = 0;
-    int stepDetectMinusFour = 0;
-    int stepDetectMinusFive = 0;
-    int stepDetectMinusSix = 0;
+    int stepDetectMinusOne;
+    int stepDetectMinusTwo;
+    int stepDetectMinusThree;
+    int stepDetectMinusFour;
+    int stepDetectMinusFive;
+    int stepDetectMinusSix;
 
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
@@ -145,7 +148,13 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         // Give the user information about their step progress in a text view
         progress = findViewById(R.id.progress);
-        int remaining = 7000 - stepDetect;
+
+
+        if ((7000 - stepDetect) < 0) {
+            remaining = 0;
+        } else {
+            remaining = 7000 - stepDetect;
+        }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
                 "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
 
@@ -218,6 +227,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepDetectMinusTwo = stepDetectMinusOne;
         stepDetectMinusOne = stepDetect;
         stepDetect = 0;
+//        textViewStepDetector.setText(String.valueOf(stepDetect));
+//        simpleProgressBar.setProgress(stepDetect);
     }
 
     public void dailyResetAlarm() {
@@ -231,8 +242,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 15);
-        setCalendar.set(Calendar.MINUTE, 45);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 12);
+        setCalendar.set(Calendar.MINUTE, 50);
         setCalendar.set(Calendar.SECOND, 45);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
@@ -264,7 +275,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         simpleProgressBar.setProgress(stepDetect);
 //        simpleProgressBar.setProgress(stepCount);
 
-        int remaining = 7000 - stepDetect;
+        if ((7000 - stepDetect) < 0) {
+            remaining = 0;
+        } else {
+            remaining = 7000 - stepDetect;
+        }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
                 "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
 
@@ -296,9 +311,11 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void resetCount() {
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
+//        simpleProgressBar.setProgress(stepDetect);
         //simpleProgressBar.setProgress(stepDetect);
         // reset the number of steps in the Firebase database
         //dailyDatabaseReference.setValue(stepDetect);
+
     }
 
     @Override
