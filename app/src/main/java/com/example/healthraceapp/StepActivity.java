@@ -35,8 +35,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -126,6 +129,32 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         dailyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
         weeklyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklyNumberOfSteps");
+
+        dailyDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetect = dataFromDatabase;
+                textViewStepDetector.setText(String.valueOf(stepDetect));
+                simpleProgressBar.setProgress(stepDetect);
+
+                if ((7000 - stepDetect) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 7000 - stepDetect;
+                }
+                progress.setText("You walked " + stepDetect + " steps today out of the " +
+                        "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+
+                createBarChart();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
 
@@ -242,6 +271,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Sets the progressBar
     public void prog() {
         simpleProgressBar  = (ProgressBar) findViewById(R.id.StepProgress);
+        simpleProgressBar.setMax(7000);
     }
 
     // Changes the shows value in the textView to current amount of steps
