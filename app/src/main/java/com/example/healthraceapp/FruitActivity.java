@@ -1,5 +1,6 @@
 package com.example.healthraceapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -21,8 +22,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -61,7 +65,7 @@ public class FruitActivity extends AppCompatActivity {
     int progress;
 
     //initiate total progress
-    static int totalProgress;
+    int totalProgress;
 
     // Initialize value for information text view
     int remaining = 500;
@@ -148,6 +152,31 @@ public class FruitActivity extends AppCompatActivity {
 
         fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
 
+        fruitReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int fruitFromDatabase = snapshot.getValue(int.class);
+                totalProgress = fruitFromDatabase;
+                progressBar.setProgress(totalProgress);
+                tvProgressLabel.setText("" + progress);
+                fruitReference.setValue(totalProgress);
+                if ((500 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - totalProgress;
+                }
+                intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
+                        "recommended 500 g. Only " + remaining + " grams of fruit remains.");
+                Log.d("Fruitchecker", String.valueOf(fruitFromDatabase));
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("error", "loadPost:onCancelled", error.toException());
+            }
+        });
+
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -204,4 +233,6 @@ public class FruitActivity extends AppCompatActivity {
         fruitMinusOne = progress;
         totalProgress = 0;
     }
+
+
 }
