@@ -21,6 +21,10 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -48,6 +52,14 @@ public class WaterActivity extends AppCompatActivity {
 
     // Initialize value for information text view
     int remaining = 2000;
+
+    //initialize instances for writing and reading data from the database
+    private static final String TAG = "ViewDatabase";
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference waterReference;
+    private FirebaseAuth firebaseAuth;
+    private String userID;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +110,7 @@ public class WaterActivity extends AppCompatActivity {
                 totalProgress = totalProgress + progress;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
+                waterReference.setValue(totalProgress);
 
                 if ((2000 - totalProgress) < 0) {
                     remaining = 0;
@@ -110,6 +123,15 @@ public class WaterActivity extends AppCompatActivity {
                 createBarChart();
             }
         });
+
+        user = new User();
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+        userID = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+
+        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

@@ -97,7 +97,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private DatabaseReference dailyDatabaseReference;
     private DatabaseReference weeklyDatabaseReference;
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private String userID;
     User user;
 
@@ -128,22 +127,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         dailyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
         weeklyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklyNumberOfSteps");
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d("ViewDatabase", "onAuthStateChanged:signed_in:" + user.getUid());
-                    toastMessage("Successfully signed in with: " + user.getEmail());
-                } else {
-                    // User is signed out
-                    Log.d("ViewDatabase", "onAuthStateChanged:signed_out");
-                    toastMessage("Successfully signed out.");
-                }
 
-            }
-        };
 
 
         // Give the user information about their step progress in a text view
@@ -318,19 +302,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(mAuthListener);
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            firebaseAuth.removeAuthStateListener(mAuthListener);
-        }
-    }
     private void toastMessage(String message){
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
     }
