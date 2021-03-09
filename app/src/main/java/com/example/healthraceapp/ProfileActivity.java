@@ -1,19 +1,24 @@
 package com.example.healthraceapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseError;
@@ -41,6 +46,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase firebaseDatabase;
+    FirebaseUser user;
 
     private String currentUserId;
     private TextView username;
@@ -57,31 +63,77 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+        user = mAuth.getCurrentUser();
 
-//        buttonLogout.setOnClickListener((View.OnClickListener) this);
+        buttonLogout = findViewById(R.id.buttonLogout);
+        buttonChangePassword = findViewById(R.id.buttonChangePassword);
+        buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
 
-//        buttonChangePassword.setOnClickListener((View.OnClickListener) this);
+        buttonLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                finish();
+                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+            }
+        });
 
-//        buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-//                user.delete()
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if (task.isSuccessful()) {
-//                                    Log.d(TAG, "User account deleted.");
-//                                    startActivity(new Intent(ProfileActivity.this,
-//                                            RegisterActivity.class));
-//                                }
-//                            }
-//                        });
-//
-//            }
-//        });
+        buttonChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final EditText changePassword = new EditText(v.getContext());
+                final AlertDialog.Builder changePasswordDialog = new AlertDialog.Builder(v.getContext());
+                changePasswordDialog.setTitle("Reset Password");
+                changePasswordDialog.setMessage("Enter your new password");
+                changePasswordDialog.setView(changePassword);
 
+                changePasswordDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String newPassword = changePassword.getText().toString().trim();
+                        user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(ProfileActivity.this, "Password reset successful", Toast.LENGTH_LONG).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(ProfileActivity.this, "Password reset failed", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                });
 
+                changePasswordDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+                changePasswordDialog.create().show();
+            }
+        });
+
+        buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                user.delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User account deleted.");
+                                    startActivity(new Intent(ProfileActivity.this,
+                                            RegisterActivity.class));
+                                }
+                            }
+                        });
+
+            }
+        });
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -145,20 +197,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
-    }
-
-    public void onClick(View view) {
-        if (view == buttonLogout) {
-            mAuth.signOut();
-            finish();
-            startActivity(new Intent(this, LoginActivity.class));
-        }
-
-        if (view == buttonChangePassword) {
-            finish();
-            startActivity(new Intent(ProfileActivity.this, PopupForgotPassword.class));
-        }
 
     }
 
