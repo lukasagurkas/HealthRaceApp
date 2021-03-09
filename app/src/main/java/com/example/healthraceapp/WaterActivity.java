@@ -1,5 +1,6 @@
 package com.example.healthraceapp;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,8 +24,11 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -132,6 +136,31 @@ public class WaterActivity extends AppCompatActivity {
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+
+        waterReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int waterFromDatabase = snapshot.getValue(int.class);
+                totalProgress = waterFromDatabase;
+                progressBar.setProgress(totalProgress);
+                tvProgressLabel.setText("" + progress);
+                waterReference.setValue(totalProgress);
+                if ((2000 - totalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 2000 - totalProgress;
+                }
+                waterProgress.setText("You drank " + totalProgress + " ml of water today out of the " +
+                        "recommended 2000 ml. Only " + remaining + " ml of water remains.");
+                Log.d("Fruitchecker", String.valueOf(waterFromDatabase));
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
