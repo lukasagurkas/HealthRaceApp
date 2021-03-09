@@ -68,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
+        userProfileImage = findViewById(R.id.userProfileImage);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
