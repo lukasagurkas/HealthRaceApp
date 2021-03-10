@@ -152,7 +152,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
 

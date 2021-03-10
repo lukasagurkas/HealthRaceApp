@@ -161,6 +161,7 @@ public class WaterActivity extends AppCompatActivity {
                 Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
+        Log.d("waterCheck", String.valueOf(totalProgress));
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
