@@ -30,7 +30,8 @@
             android:name=".AlarmReceiverStepDetector"
             android:enabled="true"
             android:exported="false"></receiver>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity">
+        </activity>
         <activity
             android:name=".WaterActivity"
             android:label="@string/title_activity_water"
