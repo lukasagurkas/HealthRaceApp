@@ -1,8 +1,11 @@
 package com.example.healthraceapp;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,6 +35,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.awt.font.NumericShaper;
 
@@ -38,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView email, usernamle, day, month, year, gender;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
+    private FloatingActionButton buttonAddPhoto;
     private ImageView userProfileImage;
     private  String userID;
 
@@ -46,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase firebaseDatabase;
+    StorageReference storageReference;
     FirebaseUser user;
 
     private String currentUserId;
@@ -60,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Profile");
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         mAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
@@ -68,7 +77,9 @@ public class ProfileActivity extends AppCompatActivity {
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
+        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
         userProfileImage = findViewById(R.id.userProfileImage);
+//        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
 
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +147,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        buttonAddPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent, 1000);
+            }
+        });
+
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
         day = (TextView) findViewById(R.id.textDay);
@@ -144,24 +163,6 @@ public class ProfileActivity extends AppCompatActivity {
         gender = (TextView) findViewById(R.id.textGender);
 
 
-//        profileUserRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange( DataSnapshot snapshot) {
-//                    String myUsername = snapshot.child("username").getValue(String.class);
-//                    Log.d("check", myUsername);
-//                    String myEmail = snapshot.child("email").getValue(String.class);
-//                    Log.d("check", myEmail);
-//
-//                    username.setText(myUsername);
-//                    email.setText(myEmail);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NotNull DatabaseError error) {
-////                Log.w(TAG, "Failed to read value.", error.toException());
-//            }
-//
-//        });
         String uID = mAuth.getCurrentUser().getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(uID);
@@ -200,6 +201,34 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == 1000){
+//            if (resultCode == Activity.RESULT_OK){
+//                Uri imageUri = data.getData();
+//                userProfileImage.setImageURI(imageUri);
+//
+////                uploadImageToFirebase(imageUri);
+//            }
+//        }
+//    }
+
+//    private void uploadImageToFirebase(Uri imageUri) {
+//        StorageReference fileReference = storageReference.child("profile.jpg");
+//        fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                Toast.makeText(ProfileActivity.this, "Image uploaded", Toast.LENGTH_LONG).show();
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(ProfileActivity.this, "Image did not upload", Toast.LENGTH_LONG).show();
+//            }
+//        });
+//    }
 
     private static final String TAG = "username";
 
