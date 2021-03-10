@@ -33,29 +33,28 @@
 
     <Button
         android:id="@+id/buttonLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="228dp"
+        android:layout_width="94dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="24dp"
         android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.084"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonChangePassword"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonChangePassword"
+        app:layout_constraintStart_toEndOf="@+id/buttonDeleteAccount"
+        app:layout_constraintTop_toBottomOf="@+id/textGender" />
 
     <Button
         android:id="@+id/buttonDeleteAccount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="180dp"
+        android:layout_width="107dp"
+        android:layout_height="57dp"
         android:text="Delete account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.103"
+        app:layout_constraintHorizontal_bias="0.092"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonLogout"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textGender"
+        app:layout_constraintVertical_bias="0.311" />
+
 
     <TextView
         android:id="@+id/textYear"
@@ -64,7 +63,7 @@
         android:layout_marginTop="44dp"
         android:text="Year"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.324"
+        app:layout_constraintHorizontal_bias="0.214"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -75,7 +74,7 @@
         android:layout_marginTop="44dp"
         android:text="Month"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.256"
+        app:layout_constraintHorizontal_bias="0.175"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -86,10 +85,9 @@
         android:layout_marginTop="44dp"
         android:text="Day"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.193"
+        app:layout_constraintHorizontal_bias="0.141"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
-
 
     <ImageView
         android:id="@+id/userProfileImage"
@@ -141,26 +139,27 @@
 
     <TextView
         android:id="@+id/textEmailProfile"
-        android:layout_width="357dp"
-        android:layout_height="20dp"
+        android:layout_width="332dp"
+        android:layout_height="22dp"
         android:text="@string/email_profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.136"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textUsernameProfile"
-        app:layout_constraintVertical_bias="0.031" />
+        app:layout_constraintVertical_bias="0.082" />
 
     <Button
         android:id="@+id/buttonChangePassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="123dp"
+        android:layout_height="62dp"
         android:text="Change Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.111"
+        app:layout_constraintHorizontal_bias="0.485"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textGender"
-        app:layout_constraintVertical_bias="0.088" />
+        app:layout_constraintVertical_bias="0.363" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonAddPhoto"
