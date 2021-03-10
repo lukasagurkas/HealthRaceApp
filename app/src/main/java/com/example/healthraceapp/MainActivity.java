@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        FirebaseUser user = mAuth.getCurrentUser();
 
         //initializing views
-        buttonLogout = findViewById(R.id.buttonLogout);
+//        buttonLogout = findViewById(R.id.buttonLogout);
 
         buttonStep =  findViewById(R.id.buttonStep);
 //        stepText = findViewById(R.id.stepText);
@@ -91,57 +91,35 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
 
         //adding listener to button
-        buttonLogout.setOnClickListener(this);
-        buttonStep.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, StepActivity.class));
-            }
-        });
-        buttonFruit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, FruitActivity.class));
-            }
-        });
-        buttonProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            }
-        });
-        buttonVeggie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, VegetableActivity.class));
-            }
-        });
-        buttonWater.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, WaterActivity.class));
-            }
-        });
-        buttonGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, GroupActivity.class));
-
-            }
-        });
-
-
+//        buttonLogout.setOnClickListener(this);
+        buttonStep.setOnClickListener(this);
+        buttonFruit.setOnClickListener(this);
+        buttonProfile.setOnClickListener(this);
+        buttonVeggie.setOnClickListener(this);
+        buttonWater.setOnClickListener(this);
+        buttonGroup.setOnClickListener(this);
     }
 
-    public void onClick(View view) {
-        //if logout is pressed
-        if(view == buttonLogout){
-            //logging out the user
-            mAuth.signOut();
-            //closing activity
-            finish();
-            //starting login activity
-            startActivity(new Intent(this, LoginActivity.class));
+    @Override
+    public void onClick(View v) {
+        if (v == buttonFruit){
+            startActivity(new Intent(MainActivity.this, FruitActivity.class));
+        }
+        if (v == buttonVeggie) {
+            startActivity(new Intent(MainActivity.this, VegetableActivity.class));
+        }
+        if (v == buttonStep){
+            startActivity(new Intent(MainActivity.this, StepActivity.class));
+        }
+        if (v == buttonWater) {
+            startActivity(new Intent(MainActivity.this, WaterActivity.class));
+        }
+        if (v == buttonProfile){
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        }
+        if (v == buttonGroup) {
+            startActivity(new Intent(MainActivity.this, GroupActivity.class));
         }
     }
+
 }
