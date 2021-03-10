@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -202,18 +203,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == 1000){
-//            if (resultCode == Activity.RESULT_OK){
-//                Uri imageUri = data.getData();
-//                userProfileImage.setImageURI(imageUri);
-//
-////                uploadImageToFirebase(imageUri);
-//            }
-//        }
-//    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1000){
+            if (resultCode == Activity.RESULT_OK){
+                Uri imageUri = data.getData();
+                userProfileImage.setImageURI(imageUri);
+
+//                uploadImageToFirebase(imageUri);
+            }
+        }
+    }
 
 //    private void uploadImageToFirebase(Uri imageUri) {
 //        StorageReference fileReference = storageReference.child("profile.jpg");
