@@ -24,7 +24,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.HealthRaceApp">
+        android:theme="@style/Theme.HealthRaceApp"
+        android:testOnly="false">
         <receiver
             android:name=".AlarmReceiverStepDetector"
             android:enabled="true"

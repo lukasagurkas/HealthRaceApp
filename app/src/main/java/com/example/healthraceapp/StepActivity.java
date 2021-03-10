@@ -255,8 +255,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 12);
-        setCalendar.set(Calendar.MINUTE, 50);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 13);
+        setCalendar.set(Calendar.MINUTE, 41);
         setCalendar.set(Calendar.SECOND, 45);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
@@ -325,7 +325,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void resetCount() {
         stepDetect = 0;
         textViewStepDetector.setText(String.valueOf(stepDetect));
-//        simpleProgressBar.setProgress(stepDetect);
+        prog();
+        simpleProgressBar.setProgress(0);
         //simpleProgressBar.setProgress(stepDetect);
         // reset the number of steps in the Firebase database
         //dailyDatabaseReference.setValue(stepDetect);
