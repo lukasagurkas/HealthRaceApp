@@ -1,40 +1,30 @@
 package com.example.healthraceapp;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import java.security.acl.Group;
+import java.util.Calendar;
+
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,11 +33,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //view objects
     private TextView textViewUserEmail;
-//    private TextView stepText;
-    private Button buttonLogout, buttonStep, buttonFruit, buttonProfile, buttonVeggie, buttonWater, buttonGroup;
+    //    private TextView stepText;
+    private Button buttonLogout, buttonProfile, buttonGroup;
+
+    //variables for water widget
+    LinearLayout layout_water;
+
+    //variables for step widget
+    LinearLayout layout_step;
+
+    //variables for fruit widget
+    LinearLayout layout_fruit;
+
+    //variables for vegetable widget
+    LinearLayout layout_vegetable;
+
+    ProgressBar progressBar_water, progressBar_veg, progressBar_fruit, progressBar_step;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
+
+    //initialize instances for writing and reading data from the database
+    private FirebaseDatabase firebaseDatabase;
+    static private DatabaseReference reference;
+    private String userID;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Home Page");
+
+        dailyResetAlarm();
 
         //initializing firebase authentication object
         mAuth = FirebaseAuth.getInstance();
@@ -71,55 +83,161 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //getting current user
 //        FirebaseUser user = mAuth.getCurrentUser();
 
-        //initializing views
-//        buttonLogout = findViewById(R.id.buttonLogout);
+        user = new User();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        userID = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+        reference = firebaseDatabase.getReference().child("Users").child(userID);
 
-        buttonStep =  findViewById(R.id.buttonStep);
+        //initializing views
+        buttonLogout = findViewById(R.id.buttonLogout);
+
 //        stepText = findViewById(R.id.stepText);
 
-        buttonFruit = findViewById(R.id.buttonFruit);
-
         buttonProfile = findViewById(R.id.buttonProfile);
-
-        buttonVeggie = findViewById(R.id.buttonVeggie);
-
-        buttonWater = findViewById(R.id.buttonWater);
-
         buttonGroup = findViewById(R.id.buttonGroup);
+
+        //layout for the step page
+        layout_step = (LinearLayout)findViewById(R.id.layout_step);
+        progressBar_step = findViewById(R.id.progressBar_step);
+
+        //layout for the water page
+        layout_water = (LinearLayout)findViewById(R.id.layout_water);
+        progressBar_water = findViewById(R.id.progressBar_water);
+
+        //layout for the fruit page
+        layout_fruit = (LinearLayout)findViewById(R.id.layout_fruit);
+        progressBar_fruit = findViewById(R.id.progressBar_fruit);
+
+        //layout for the vegetable page
+        layout_vegetable = (LinearLayout)findViewById(R.id.layout_vegetable);
+        progressBar_veg = findViewById(R.id.progressBar_veg);
+
+        createProgressBar(progressBar_step, "dailyNumberOfSteps", 7000);
+        createProgressBar(progressBar_water, "amountOfWater", 2000);
+        createProgressBar(progressBar_fruit, "amountOfFruit", 500);
+        createProgressBar(progressBar_veg, "amountOfVeg", 500);
+
 
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
 
         //adding listener to button
-//        buttonLogout.setOnClickListener(this);
-        buttonStep.setOnClickListener(this);
-        buttonFruit.setOnClickListener(this);
-        buttonProfile.setOnClickListener(this);
-        buttonVeggie.setOnClickListener(this);
-        buttonWater.setOnClickListener(this);
-        buttonGroup.setOnClickListener(this);
+        //buttonLogout.setOnClickListener(this);
+
+        //listens for changes on step counter page widget
+        layout_step.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, StepActivity.class));
+            }
+        });
+
+        //listens for changes on fruit page widget
+        layout_fruit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, FruitActivity.class));
+            }
+        });
+
+        //listens for changes on vegetable page widget
+        layout_vegetable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, VegetableActivity.class));
+            }
+        });
+
+        //listens for changes on water page widget
+        layout_water.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, WaterActivity.class));
+            }
+        });
+
+        buttonProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
+        });
+
+        buttonGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, GroupActivity.class));
+
+            }
+        });
+
+
     }
 
-    @Override
-    public void onClick(View v) {
-        if (v == buttonFruit){
-            startActivity(new Intent(MainActivity.this, FruitActivity.class));
-        }
-        if (v == buttonVeggie) {
-            startActivity(new Intent(MainActivity.this, VegetableActivity.class));
-        }
-        if (v == buttonStep){
-            startActivity(new Intent(MainActivity.this, StepActivity.class));
-        }
-        if (v == buttonWater) {
-            startActivity(new Intent(MainActivity.this, WaterActivity.class));
-        }
-        if (v == buttonProfile){
-            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-        }
-        if (v == buttonGroup) {
-            startActivity(new Intent(MainActivity.this, GroupActivity.class));
+    private void createProgressBar(ProgressBar progressBar, String progressValue, int max) {
+        progressBar.setMax(max);
+
+        reference.child(progressValue).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                progressBar.setProgress(dataFromDatabase);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("error", "loadPost:onCancelled", error.toException());
+            }
+        });
+    }
+
+
+
+    public void onClick(View view) {
+        //if logout is pressed
+        if(view == buttonLogout){
+            //logging out the user
+            mAuth.signOut();
+            //closing activity
+            finish();
+            //starting login activity
+            startActivity(new Intent(this, LoginActivity.class));
         }
     }
+
+    public static void reset(){
+        reference.child("amountOfVeg").setValue(0);
+        reference.child("amountOfFruit").setValue(0);
+        reference.child("amountOfWater").setValue(0);
+        reference.child("dailyNumberOfSteps").setValue(0);
+    }
+
+    public void dailyResetAlarm() {
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        Log.d("waitCheck", "It works");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        // Set calender for a set time in the day
+        Calendar setCalendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        setCalendar.setTimeInMillis(System.currentTimeMillis());
+        setCalendar.set(Calendar.HOUR_OF_DAY, 16);
+        setCalendar.set(Calendar.MINUTE, 27);
+        setCalendar.set(Calendar.SECOND, 0);
+        Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
+
+        if (setCalendar.before(calendar)){
+            setCalendar.add(Calendar.DATE, 1);
+        }
+        Log.d("TimeCheck after fix", String.valueOf(setCalendar.getTime()));
+
+        alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+
+
 
 }
