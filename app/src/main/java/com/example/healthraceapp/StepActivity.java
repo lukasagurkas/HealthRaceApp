@@ -20,6 +20,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -98,7 +99,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private static final String TAG = "ViewDatabase";
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference dailyDatabaseReference;
-    private DatabaseReference weeklyDatabaseReference;
+    private DatabaseReference minusOneDatabaseReference;
+    private DatabaseReference minusTwoDatabaseReference;
+    private DatabaseReference minusThreeDatabaseReference;
+    private DatabaseReference minusFourDatabaseReference;
+    private DatabaseReference minusFiveDatabaseReference;
+    private DatabaseReference minusSixDatabaseReference;
     private FirebaseAuth firebaseAuth;
     private String userID;
     User user;
@@ -120,6 +126,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         barChartStep = findViewById(R.id.barChartStep);
         createBarChart();
 
+
+
         user = new User();
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -128,7 +136,103 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
         dailyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
-        weeklyDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklyNumberOfSteps");
+        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
+        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusTwo");
+        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusThree");
+        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusFour");
+        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusFive");
+        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusSix");
+
+//        setData(minusOneDatabaseReference, stepDetectMinusOne);
+//        setData(minusTwoDatabaseReference, stepDetectMinusTwo);
+//        setData(minusThreeDatabaseReference, stepDetectMinusThree);
+//        setData(minusFourDatabaseReference, stepDetectMinusFour);
+//        setData(minusFiveDatabaseReference, stepDetectMinusFive);
+//        setData(minusSixDatabaseReference, stepDetectMinusSix);
+
+        minusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetectMinusOne = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetectMinusTwo = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetectMinusThree = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetectMinusFour = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetectMinusFive = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                stepDetectMinusSix = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         dailyDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -147,7 +251,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
 
                 createBarChart();
-
             }
 
             @Override
@@ -155,6 +258,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
+
 
 
 
@@ -181,7 +285,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         prog();
-        dailyResetAlarm();
 
         // Check if step counter is present in device
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
@@ -206,6 +309,26 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             isDetectorSensorPresent = false;
         }
     }
+
+//    public void setData(DatabaseReference databaseReference, int valueName) {
+//        databaseReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                int dataFromDatabase = snapshot.getValue(int.class);
+//                valueName = dataFromDatabase;
+//
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+
+
 
     public void createBarChart() {
         // ArrayList for the shown data
@@ -244,29 +367,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 //        simpleProgressBar.setProgress(stepDetect);
     }
 
-    public void dailyResetAlarm() {
-        Intent intent = new Intent(StepActivity.this, AlarmReceiverStepDetector.class);
-        Log.d("waitCheck", "It works");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(StepActivity.this, 0, intent, 0);
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-        // Set calender for a set time in the day
-        Calendar setCalendar = Calendar.getInstance();
-        Calendar calendar = Calendar.getInstance();
-        setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 13);
-        setCalendar.set(Calendar.MINUTE, 41);
-        setCalendar.set(Calendar.SECOND, 45);
-        Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
-
-        if (setCalendar.before(calendar)){
-            setCalendar.add(Calendar.DATE, 1);
-        }
-        Log.d("TimeCheck after fix", String.valueOf(setCalendar.getTime()));
-
-        alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-    }
 
     // Sets the progressBar
     public void prog() {
