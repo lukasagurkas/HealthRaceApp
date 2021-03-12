@@ -106,5 +106,18 @@
         app:layout_constraintTop_toBottomOf="@+id/buttonSignIn"
         app:layout_constraintVertical_bias="0.259" />
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="276dp"
+        android:layout_height="228dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.474"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.24"
+        app:srcCompat="@drawable/logo" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
