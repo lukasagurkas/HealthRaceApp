@@ -196,7 +196,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                                 if (task.isSuccessful()){
                                                     Toast.makeText(RegisterActivity.this,
                                                             "Registered successfully." +
-                                                                    " Please verify your email",
+                                                                    " Please check your email and verify the account",
                                                             Toast.LENGTH_LONG).show();
                                                 } else {
                                                     // If the email has not been sent - show error
