@@ -58,12 +58,12 @@
 
     <TextView
         android:id="@+id/textYear"
-        android:layout_width="31dp"
-        android:layout_height="18dp"
+        android:layout_width="55dp"
+        android:layout_height="19dp"
         android:layout_marginTop="44dp"
         android:text="Year"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.214"
+        app:layout_constraintHorizontal_bias="0.218"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -80,12 +80,12 @@
 
     <TextView
         android:id="@+id/textDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="19dp"
+        android:layout_height="19dp"
         android:layout_marginTop="44dp"
         android:text="Day"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.141"
+        app:layout_constraintHorizontal_bias="0.146"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
-        android:text="@string/DoB"
+        android:text="DoB:"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.075"
         app:layout_constraintStart_toStartOf="parent"

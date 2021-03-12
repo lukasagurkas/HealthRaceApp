@@ -1,43 +1,29 @@
 package com.example.healthraceapp;
 
-import android.Manifest;
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
-import java.security.acl.Group;
+import java.util.Calendar;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -69,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //initialize instances for writing and reading data from the database
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference reference;
-    private FirebaseAuth firebaseAuth;
+    static private DatabaseReference reference;
     private String userID;
     User user;
 
@@ -81,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Home Page");
+
+        dailyResetAlarm();
 
         //initializing firebase authentication object
         mAuth = FirebaseAuth.getInstance();
@@ -96,6 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //getting current user
 //        FirebaseUser user = mAuth.getCurrentUser();
 
+        user = new User();
+        FirebaseUser firebaseUser = mAuth.getCurrentUser();
+        userID = firebaseUser.getUid();
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+        reference = firebaseDatabase.getReference().child("Users").child(userID);
+
         //initializing views
         buttonLogout = findViewById(R.id.buttonLogout);
 
@@ -103,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         buttonProfile = findViewById(R.id.buttonProfile);
         buttonGroup = findViewById(R.id.buttonGroup);
-
 
         //layout for the step page
         layout_step = (LinearLayout)findViewById(R.id.layout_step);
@@ -127,12 +120,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         createProgressBar(progressBar_veg, "amountOfVeg", 500);
 
 
-
         //displaying logged in user name
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
 
         //adding listener to button
-        buttonLogout.setOnClickListener(this);
+        //buttonLogout.setOnClickListener(this);
 
         //listens for changes on step counter page widget
         layout_step.setOnClickListener(new View.OnClickListener() {
@@ -186,16 +178,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void createProgressBar(ProgressBar progressBar, String progressValue, int max) {
         progressBar.setMax(max);
-        user = new User();
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        userID = firebaseUser.getUid();
-        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
-        reference = firebaseDatabase.getReference().child("Users").child(userID).child(progressValue);
-
-        reference.addValueEventListener(new ValueEventListener() {
+        reference.child(progressValue).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -221,6 +205,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //starting login activity
             startActivity(new Intent(this, LoginActivity.class));
         }
+    }
+
+    public static void reset(){
+        reference.child("amountOfVeg").setValue(0);
+        reference.child("amountOfFruit").setValue(0);
+        reference.child("amountOfWater").setValue(0);
+        reference.child("dailyNumberOfSteps").setValue(0);
+    }
+
+    public void dailyResetAlarm() {
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        Log.d("waitCheck", "It works");
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        // Set calender for a set time in the day
+        Calendar setCalendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();
+        setCalendar.setTimeInMillis(System.currentTimeMillis());
+        setCalendar.set(Calendar.HOUR_OF_DAY, 16);
+        setCalendar.set(Calendar.MINUTE, 27);
+        setCalendar.set(Calendar.SECOND, 0);
+        Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
+
+        if (setCalendar.before(calendar)){
+            setCalendar.add(Calendar.DATE, 1);
+        }
+        Log.d("TimeCheck after fix", String.valueOf(setCalendar.getTime()));
+
+        alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
 

@@ -5,8 +5,15 @@ public class User {
     private boolean male;
     private int year, month, day;
     private int dailyNumberOfSteps;
-    private int weeklyNumberOfSteps;
     private int amountOfVeg, amountOfWater, amountOfFruit;
+    private int stepDetectMinusOne, StepDetectMinusTwo, StepDetectMinusThree, StepDetectMinusFour
+            , StepDetectMinusFive, StepDetectMinusSix;
+    private int waterMinusOne, waterMinusTwo, waterMinusThree, waterMinusFour
+            , waterMinusFive, waterMinusSix;
+    private int veggieMinusOne, veggieMinusTwo, veggieMinusThree, veggieMinusFour
+            , veggieMinusFive, veggieMinusSix;
+    private int fruitMinusOne, fruitMinusTwo, fruitMinusThree, fruitMinusFour
+            , fruitMinusFive, fruitMinusSix;
 
     public User(){}
 
@@ -77,14 +84,6 @@ public class User {
         this.dailyNumberOfSteps = dailyNumberOfSteps;
     }
 
-    public int getWeeklyNumberOfSteps() {
-        return weeklyNumberOfSteps;
-    }
-
-    public void setWeeklyNumberOfSteps(int weeklyNumberOfSteps) {
-        this.weeklyNumberOfSteps = weeklyNumberOfSteps;
-    }
-
     public int getAmountOfVeg() {
         return amountOfVeg;
     }
@@ -107,5 +106,185 @@ public class User {
 
     public void setAmountOfFruit(int amountOfFruit) {
         this.amountOfFruit = amountOfFruit;
+    }
+
+    public int getStepDetectMinusOne() { return stepDetectMinusOne; }
+
+    public void setStepDetectMinusOne(int stepDetectMinusOne) {
+        this.stepDetectMinusOne = stepDetectMinusOne;
+    }
+
+    public int getStepDetectMinusTwo() {
+        return StepDetectMinusTwo; }
+
+    public void setStepDetectMinusTwo(int stepDetectMinusTwo) {
+        StepDetectMinusTwo = stepDetectMinusTwo; }
+
+    public int getStepDetectMinusThree() {
+        return StepDetectMinusThree; }
+
+    public void setStepDetectMinusThree(int stepDetectMinusThree) {
+        StepDetectMinusThree = stepDetectMinusThree; }
+
+    public int getStepDetectMinusFour() {
+        return StepDetectMinusFour; }
+
+    public void setStepDetectMinusFour(int stepDetectMinusFour) {
+        StepDetectMinusFour = stepDetectMinusFour; }
+
+    public int getStepDetectMinusFive() {
+        return StepDetectMinusFive; }
+
+    public void setStepDetectMinusFive(int stepDetectMinusFive) {
+        StepDetectMinusFive = stepDetectMinusFive; }
+
+    public int getStepDetectMinusSix() {
+        return StepDetectMinusSix; }
+
+    public void setStepDetectMinusSix(int stepDetectMinusSix) {
+        StepDetectMinusSix = stepDetectMinusSix; }
+
+    public int getWaterMinusOne() {
+        return waterMinusOne;
+    }
+
+    public void setWaterMinusOne(int waterMinusOne) {
+        this.waterMinusOne = waterMinusOne;
+    }
+
+    public int getWaterMinusTwo() {
+        return waterMinusTwo;
+    }
+
+    public void setWaterMinusTwo(int waterMinusTwo) {
+        this.waterMinusTwo = waterMinusTwo;
+    }
+
+    public int getWaterMinusThree() {
+        return waterMinusThree;
+    }
+
+    public void setWaterMinusThree(int waterMinusThree) {
+        this.waterMinusThree = waterMinusThree;
+    }
+
+    public int getWaterMinusFour() {
+        return waterMinusFour;
+    }
+
+    public void setWaterMinusFour(int waterMinusFour) {
+        this.waterMinusFour = waterMinusFour;
+    }
+
+    public int getWaterMinusFive() {
+        return waterMinusFive;
+    }
+
+    public void setWaterMinusFive(int waterMinusFive) {
+        this.waterMinusFive = waterMinusFive;
+    }
+
+    public int getWaterMinusSix() {
+        return waterMinusSix;
+    }
+
+    public void setWaterMinusSix(int waterMinusSix) {
+        this.waterMinusSix = waterMinusSix;
+    }
+
+    public int getVeggieMinusOne() {
+        return veggieMinusOne;
+    }
+
+    public void setVeggieMinusOne(int veggieMinusOne) {
+        this.veggieMinusOne = veggieMinusOne;
+    }
+
+    public int getVeggieMinusTwo() {
+        return veggieMinusTwo;
+    }
+
+    public void setVeggieMinusTwo(int veggieMinusTwo) {
+        this.veggieMinusTwo = veggieMinusTwo;
+    }
+
+    public int getVeggieMinusThree() {
+        return veggieMinusThree;
+    }
+
+    public void setVeggieMinusThree(int veggieMinusThree) {
+        this.veggieMinusThree = veggieMinusThree;
+    }
+
+    public int getVeggieMinusFour() {
+        return veggieMinusFour;
+    }
+
+    public void setVeggieMinusFour(int veggieMinusFour) {
+        this.veggieMinusFour = veggieMinusFour;
+    }
+
+    public int getVeggieMinusFive() {
+        return veggieMinusFive;
+    }
+
+    public void setVeggieMinusFive(int veggieMinusFive) {
+        this.veggieMinusFive = veggieMinusFive;
+    }
+
+    public int getVeggieMinusSix() {
+        return veggieMinusSix;
+    }
+
+    public void setVeggieMinusSix(int veggieMinusSix) {
+        this.veggieMinusSix = veggieMinusSix;
+    }
+
+    public int getFruitMinusOne() {
+        return fruitMinusOne;
+    }
+
+    public void setFruitMinusOne(int fruitMinusOne) {
+        this.fruitMinusOne = fruitMinusOne;
+    }
+
+    public int getFruitMinusTwo() {
+        return fruitMinusTwo;
+    }
+
+    public void setFruitMinusTwo(int fruitMinusTwo) {
+        this.fruitMinusTwo = fruitMinusTwo;
+    }
+
+    public int getFruitMinusThree() {
+        return fruitMinusThree;
+    }
+
+    public void setFruitMinusThree(int fruitMinusThree) {
+        this.fruitMinusThree = fruitMinusThree;
+    }
+
+    public int getFruitMinusFour() {
+        return fruitMinusFour;
+    }
+
+    public void setFruitMinusFour(int fruitMinusFour) {
+        this.fruitMinusFour = fruitMinusFour;
+    }
+
+    public int getFruitMinusFive() {
+        return fruitMinusFive;
+    }
+
+    public void setFruitMinusFive(int fruitMinusFive) {
+        this.fruitMinusFive = fruitMinusFive;
+    }
+
+    public int getFruitMinusSix() {
+        return fruitMinusSix;
+    }
+
+    public void setFruitMinusSix(int fruitMinusSix) {
+        this.fruitMinusSix = fruitMinusSix;
     }
 }

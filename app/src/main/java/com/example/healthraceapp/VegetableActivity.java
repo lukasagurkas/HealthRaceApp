@@ -66,6 +66,14 @@ public class VegetableActivity extends AppCompatActivity {
     private String userID;
     User user;
 
+    private DatabaseReference dailyDatabaseReference;
+    private DatabaseReference minusOneDatabaseReference;
+    private DatabaseReference minusTwoDatabaseReference;
+    private DatabaseReference minusThreeDatabaseReference;
+    private DatabaseReference minusFourDatabaseReference;
+    private DatabaseReference minusFiveDatabaseReference;
+    private DatabaseReference minusSixDatabaseReference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +149,12 @@ public class VegetableActivity extends AppCompatActivity {
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
         vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
+        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
+        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
+        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
+        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFour");
+        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFive");
+        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusSix");
 
         vegReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -164,6 +178,90 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.w("error", "loadPost:onCancelled", error.toException());
+            }
+        });
+
+        minusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                veggieMinusOne = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                veggieMinusTwo = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                veggieMinusThree = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                veggieMinusFour = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                veggieMinusFive = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                veggieMinusSix = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

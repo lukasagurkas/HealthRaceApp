@@ -47,12 +47,20 @@ public class WaterActivity extends AppCompatActivity {
     BarChart barChartWater;
 
     // Initialize values for barChart
-    int waterMinusOne = 0;
-    int waterMinusTwo = 0;
-    int waterMinusThree = 0;
-    int waterMinusFour = 0;
-    int waterMinusFive = 0;
-    int waterMinusSix = 0;
+    int waterMinusOne;
+    int waterMinusTwo;
+    int waterMinusThree;
+    int waterMinusFour;
+    int waterMinusFive;
+    int waterMinusSix;
+
+    private DatabaseReference dailyDatabaseReference;
+    private DatabaseReference minusOneDatabaseReference;
+    private DatabaseReference minusTwoDatabaseReference;
+    private DatabaseReference minusThreeDatabaseReference;
+    private DatabaseReference minusFourDatabaseReference;
+    private DatabaseReference minusFiveDatabaseReference;
+    private DatabaseReference minusSixDatabaseReference;
 
     // Initialize value for information text view
     int remaining = 2000;
@@ -136,6 +144,12 @@ public class WaterActivity extends AppCompatActivity {
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
+        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
+        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
+        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFour");
+        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFive");
+        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
 
         waterReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -162,6 +176,90 @@ public class WaterActivity extends AppCompatActivity {
             }
         });
         Log.d("waterCheck", String.valueOf(totalProgress));
+
+        minusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                waterMinusOne = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                waterMinusTwo = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                waterMinusThree = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                waterMinusFour = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                waterMinusFive = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        minusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int dataFromDatabase = snapshot.getValue(int.class);
+                waterMinusSix = dataFromDatabase;
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

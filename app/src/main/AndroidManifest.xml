@@ -27,7 +27,7 @@
         android:theme="@style/Theme.HealthRaceApp"
         android:testOnly="false">
         <receiver
-            android:name=".AlarmReceiverStepDetector"
+            android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="false"></receiver>
         <activity android:name=".MainActivity">
