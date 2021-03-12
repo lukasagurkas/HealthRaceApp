@@ -38,6 +38,7 @@ import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.awt.font.NumericShaper;
 
@@ -50,10 +51,11 @@ public class ProfileActivity extends AppCompatActivity {
     private  String userID;
 
     private DatabaseReference mDatabase;
-    private DatabaseReference profileUserRef;
+    private DatabaseReference mRef;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase firebaseDatabase;
+    FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseUser user;
 
@@ -69,11 +71,22 @@ public class ProfileActivity extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Profile");
-        storageReference = FirebaseStorage.getInstance().getReference();
 
         mAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference profileRef = storageReference.child("Users/" +  mAuth.getCurrentUser().getUid() + "/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(userProfileImage);
+            }
+        });
+
+
+
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
         user = mAuth.getCurrentUser();
+//        StorageReference storageRef = storage.getReference();
 
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
@@ -82,12 +95,30 @@ public class ProfileActivity extends AppCompatActivity {
         userProfileImage = findViewById(R.id.userProfileImage);
 //        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
 
+
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mAuth.signOut();
-                finish();
-                startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                final AlertDialog.Builder logoutDialog = new AlertDialog.Builder(v.getContext());
+                logoutDialog.setTitle("Log Out");
+                logoutDialog.setMessage("Are you sure you want to log out?");
+
+                logoutDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAuth.signOut();
+                        finish();
+                        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                    }
+                });
+
+                logoutDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                logoutDialog.create().show();
             }
         });
 
@@ -132,25 +163,42 @@ public class ProfileActivity extends AppCompatActivity {
         buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                user.delete()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User account deleted.");
-                                    startActivity(new Intent(ProfileActivity.this,
-                                            RegisterActivity.class));
-                                }
-                            }
-                        });
+                final AlertDialog.Builder deleteAccountDialog = new AlertDialog.Builder(v.getContext());
+                deleteAccountDialog.setTitle("Delete Account");
+                deleteAccountDialog.setMessage("Are you sure you want to delete your account?");
 
-            }
-        });
+                deleteAccountDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                        user.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User account deleted.");
+                                            startActivity(new Intent(ProfileActivity.this,
+                                                    RegisterActivity.class));
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+                deleteAccountDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                deleteAccountDialog.create().show();
+                }
+            });
 
         buttonAddPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                
                 Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(openGalleryIntent, 1000);
             }
@@ -209,27 +257,33 @@ public class ProfileActivity extends AppCompatActivity {
         if (requestCode == 1000){
             if (resultCode == Activity.RESULT_OK){
                 Uri imageUri = data.getData();
-                userProfileImage.setImageURI(imageUri);
+//                userProfileImage.setImageURI(imageUri);
 
-//                uploadImageToFirebase(imageUri);
+                uploadImageToFirebase(imageUri);
             }
         }
     }
 
-//    private void uploadImageToFirebase(Uri imageUri) {
-//        StorageReference fileReference = storageReference.child("profile.jpg");
-//        fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+    private void uploadImageToFirebase(Uri imageUri) {
+        final StorageReference fileReference = storageReference.child("users/" +  mAuth.getCurrentUser().getUid() + "/profile.jp");
+        fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 //                Toast.makeText(ProfileActivity.this, "Image uploaded", Toast.LENGTH_LONG).show();
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(ProfileActivity.this, "Image did not upload", Toast.LENGTH_LONG).show();
-//            }
-//        });
-//    }
+                fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).into(userProfileImage);
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(ProfileActivity.this, "Image did not upload", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     private static final String TAG = "username";
 
