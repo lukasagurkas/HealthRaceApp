@@ -15,7 +15,16 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d("Time", "Alarm is triggered");
 
-       // StepActivity.switchDays();
+        WaterActivity waterActivity = new WaterActivity();
+        VegetableActivity vegetableActivity = new VegetableActivity();
+        FruitActivity fruitActivity = new FruitActivity();
+        StepActivity stepActivity = new StepActivity();
+
+        waterActivity.switchDays();
+        vegetableActivity.switchDays();
+        fruitActivity.switchDays();
+        stepActivity.switchDays();
+
         MainActivity.reset();
 
 

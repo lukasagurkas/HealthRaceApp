@@ -1,18 +1,13 @@
 package com.example.healthraceapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.app.Activity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -22,6 +17,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -47,12 +44,13 @@ public class WaterActivity extends AppCompatActivity {
     BarChart barChartWater;
 
     // Initialize values for barChart
-    int waterMinusOne;
-    int waterMinusTwo;
-    int waterMinusThree;
-    int waterMinusFour;
-    int waterMinusFive;
-    int waterMinusSix;
+    long waterMinusOne;
+    long waterMinusTwo;
+    long waterMinusThree;
+    long waterMinusFour;
+    long waterMinusFive;
+    long waterMinusSix;
+
 
     private DatabaseReference dailyDatabaseReference;
     private DatabaseReference minusOneDatabaseReference;
@@ -67,11 +65,16 @@ public class WaterActivity extends AppCompatActivity {
 
     //initialize instances for writing and reading data from the database
     private static final String TAG = "ViewDatabase";
-    private FirebaseDatabase firebaseDatabase;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
     private DatabaseReference waterReference;
-    private FirebaseAuth firebaseAuth;
-    private String userID;
-    User user;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    private String userID = firebaseUser.getUid();
+    User user = new User();
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,13 +139,6 @@ public class WaterActivity extends AppCompatActivity {
             }
         });
 
-        user = new User();
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        userID = firebaseUser.getUid();
-        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
@@ -158,7 +154,7 @@ public class WaterActivity extends AppCompatActivity {
                 totalProgress = dataFromDatabase;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
-                waterReference.setValue(totalProgress);
+            //    waterReference.setValue(totalProgress);
                 if ((2000 - totalProgress) < 0) {
                     remaining = 0;
                 } else {
@@ -305,16 +301,100 @@ public class WaterActivity extends AppCompatActivity {
         barChartWater.animateY(200);
     }
 
+
+
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     public void switchDays() {
-        waterMinusSix = waterMinusFive;
-        waterMinusFive = waterMinusFour;
-        waterMinusFour = waterMinusThree;
-        waterMinusThree = waterMinusTwo;
-        waterMinusTwo = waterMinusOne;
-        waterMinusOne = progress;
-        totalProgress = 0;
+
+        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
+        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
+        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
+        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFour");
+        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFive");
+        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
+        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+
+
+        minusFiveDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusSixDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusFourDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusThreeDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusFourDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusTwoDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusOneDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        waterReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusOneDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+
     }
 
 }
