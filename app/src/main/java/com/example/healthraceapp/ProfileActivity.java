@@ -86,6 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
         user = mAuth.getCurrentUser();
+        userID = user.getUid();
 //        StorageReference storageRef = storage.getReference();
 
         buttonLogout = findViewById(R.id.buttonLogout);
@@ -170,18 +171,8 @@ public class ProfileActivity extends AppCompatActivity {
                 deleteAccountDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        user.delete()
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "User account deleted.");
-                                            startActivity(new Intent(ProfileActivity.this,
-                                                    RegisterActivity.class));
-                                        }
-                                    }
-                                });
+                        deleteUser();
+
                     }
                 });
 
@@ -251,13 +242,61 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    private void deleteUserRealtime() {
+        DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
+                "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(userID);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot userSnapshot: snapshot.getChildren()){
+                    userSnapshot.getRef().removeValue();
+                }
+                Toast.makeText(ProfileActivity.this, "Account deleted from realtime database", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+    }
+
+    private void deleteUserAuth() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User account deleted.");
+                            startActivity(new Intent(ProfileActivity.this,
+                                    RegisterActivity.class));
+                            Toast.makeText(ProfileActivity.this, "Account deleted from authentication details", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private void deleteUser() {
+        new Thread() {
+            public void run() {
+                deleteUserRealtime();
+            }
+        }.start();
+        new Thread() {
+            public void run() {
+                deleteUserAuth();
+            }
+        }.start();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1000){
             if (resultCode == Activity.RESULT_OK){
                 Uri imageUri = data.getData();
-//                userProfileImage.setImageURI(imageUri);
+                userProfileImage.setImageURI(imageUri);
 
                 uploadImageToFirebase(imageUri);
             }
