@@ -20,6 +20,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -59,12 +61,15 @@ public class VegetableActivity extends AppCompatActivity {
     // Initialize value for information text view
     int remaining = 500;
 
+
     //initialize instances for writing and reading data from the database
-    private FirebaseDatabase firebaseDatabase;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
     private DatabaseReference vegReference;
-    private FirebaseAuth firebaseAuth;
-    private String userID;
-    User user;
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    private String userID = firebaseUser.getUid();
+    User user = new User();
 
     private DatabaseReference dailyDatabaseReference;
     private DatabaseReference minusOneDatabaseReference;
@@ -141,12 +146,6 @@ public class VegetableActivity extends AppCompatActivity {
             }
         });
 
-        user = new User();
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-        userID = firebaseUser.getUid();
-        firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
 
         vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
@@ -163,7 +162,6 @@ public class VegetableActivity extends AppCompatActivity {
                 totalProgress = dataFromDatabase;
                 progressBar.setProgress(totalProgress);
                 tvProgressLabel.setText("" + progress);
-                vegReference.setValue(totalProgress);
                 if ((500 - totalProgress) < 0) {
                     remaining = 0;
                 } else {
@@ -338,13 +336,93 @@ public class VegetableActivity extends AppCompatActivity {
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     public void switchDays() {
-        veggieMinusSix = veggieMinusFive;
-        veggieMinusFive = veggieMinusFour;
-        veggieMinusFour = veggieMinusThree;
-        veggieMinusThree = veggieMinusTwo;
-        veggieMinusTwo = veggieMinusOne;
-        veggieMinusOne = progress;
-        totalProgress = 0;
+
+        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
+        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
+        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
+        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFour");
+        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFive");
+        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusSix");
+        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
+
+
+        minusFiveDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusSixDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusFourDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusThreeDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusFourDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusTwoDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        minusOneDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
+
+        vegReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    minusOneDatabaseReference.setValue(task.getResult().getValue());
+                }
+            }
+        }
+        );
     }
 
 }
