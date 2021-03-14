@@ -58,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private static final String TAG = "RegisterActivity";
 
+    // Used for checking username uniqueness
     private final ArrayList<String> allUsernames = new ArrayList<>();;
 
     @Override
@@ -119,8 +120,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", error.toException());
+                // Getting data was canceled
+                Log.w(TAG, "onCancelled", error.toException());
             }
         });
     }

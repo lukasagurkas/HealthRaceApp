@@ -31,4 +31,6 @@
     <string name="card_view_email">Email:</string>
     <string name="card_view_filler_email">email@example.com</string>
     <string name="card_view_filler_username">ExampleUsername</string>
+    <string name="create_new_group_button">Create New Group</string>
+    <string name="create_group">You are not a part of any group. You can either create your own group by going to the overflow menu in the action bar (the three dots). Or you can get added to a group.</string>
 </resources>
