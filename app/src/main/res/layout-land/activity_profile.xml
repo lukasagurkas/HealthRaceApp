@@ -31,6 +31,7 @@
     <!--        app:layout_constraintTop_toBottomOf="@+id/textView4"-->
     <!--        app:layout_constraintVertical_bias="0.0" />-->
 
+
     <Button
         android:id="@+id/buttonLogout"
         android:layout_width="94dp"
@@ -40,8 +41,10 @@
         android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonChangePassword"
+        app:layout_constraintHorizontal_bias="0.517"
         app:layout_constraintStart_toEndOf="@+id/buttonDeleteAccount"
-        app:layout_constraintTop_toBottomOf="@+id/textGender" />
+        app:layout_constraintTop_toBottomOf="@+id/textGender"
+        app:layout_constraintVertical_bias="0.122" />
 
     <Button
         android:id="@+id/buttonDeleteAccount"
@@ -50,11 +53,10 @@
         android:text="Delete account"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.092"
+        app:layout_constraintHorizontal_bias="0.423"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textGender"
-        app:layout_constraintVertical_bias="0.311" />
-
+        app:layout_constraintVertical_bias="0.17" />
 
     <TextView
         android:id="@+id/textYear"
@@ -63,7 +65,7 @@
         android:layout_marginTop="44dp"
         android:text="Year"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.218"
+        app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -74,7 +76,7 @@
         android:layout_marginTop="44dp"
         android:text="Month"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.175"
+        app:layout_constraintHorizontal_bias="0.426"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -85,20 +87,20 @@
         android:layout_marginTop="44dp"
         android:text="Day"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.146"
+        app:layout_constraintHorizontal_bias="0.396"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
     <ImageView
         android:id="@+id/userProfileImage"
-        android:layout_width="169dp"
-        android:layout_height="150dp"
+        android:layout_width="139dp"
+        android:layout_height="124dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintHorizontal_bias="0.027"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.096"
+        app:layout_constraintVertical_bias="0.069"
         app:srcCompat="@drawable/profile"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -110,10 +112,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.349"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
-        app:layout_constraintVertical_bias="0.07" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.042" />
 
     <TextView
         android:id="@+id/textDoB"
@@ -122,7 +124,7 @@
         android:layout_marginTop="44dp"
         android:text="DoB:"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintHorizontal_bias="0.31"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
@@ -133,7 +135,7 @@
         android:layout_marginTop="12dp"
         android:text="@string/gender"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintHorizontal_bias="0.318"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textDoB" />
 
@@ -144,10 +146,10 @@
         android:text="@string/email_profile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.136"
+        app:layout_constraintHorizontal_bias="0.546"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textUsernameProfile"
-        app:layout_constraintVertical_bias="0.082" />
+        app:layout_constraintVertical_bias="0.023" />
 
     <Button
         android:id="@+id/buttonChangePassword"
@@ -156,10 +158,10 @@
         android:text="Change Password"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
+        app:layout_constraintHorizontal_bias="0.904"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textGender"
-        app:layout_constraintVertical_bias="0.363" />
+        app:layout_constraintVertical_bias="0.15" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/buttonAddPhoto"

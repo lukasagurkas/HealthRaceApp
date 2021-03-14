@@ -6,20 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/buttonLogout"
-        android:layout_width="95dp"
-        android:layout_height="38dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="428dp"
-        android:text="Logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.949"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.058" />
-
     <FrameLayout
         android:layout_width="250dp"
         android:layout_height="50dp"
@@ -292,11 +278,11 @@
         android:id="@+id/buttonProfile"
         android:layout_width="148dp"
         android:layout_height="40dp"
-        android:layout_marginBottom="336dp"
+        android:layout_marginBottom="288dp"
         android:text="Profile Page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.946"
+        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
@@ -304,11 +290,11 @@
         android:id="@+id/buttonGroup"
         android:layout_width="130dp"
         android:layout_height="38dp"
-        android:layout_marginBottom="296dp"
+        android:layout_marginBottom="192dp"
         android:text="@string/button_group_activity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
+        app:layout_constraintHorizontal_bias="0.918"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
 
