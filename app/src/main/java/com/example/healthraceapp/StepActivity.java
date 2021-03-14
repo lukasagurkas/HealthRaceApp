@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener {
-    // If permission is granted
+    // If permission to use physical activity is granted
     private int PERMISSION_CODE = 1;
 
     // Text field for the amount of stepCounter
@@ -90,7 +90,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Initialize value for information text view
     int remaining = 7000;
 
-    // Initialize values for barChart
+    // Initialize values for barChart, minusN symbolizes the amount of days since the current day
     int stepDetectMinusOne;
     int stepDetectMinusTwo;
     int stepDetectMinusThree;
@@ -98,7 +98,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     int stepDetectMinusFive;
     int stepDetectMinusSix;
 
-
+    // Database reference for all values in the bar chart
+    private DatabaseReference stepReference;
     private DatabaseReference minusOneDatabaseReference;
     private DatabaseReference minusTwoDatabaseReference;
     private DatabaseReference minusThreeDatabaseReference;
@@ -106,10 +107,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private DatabaseReference minusFiveDatabaseReference;
     private DatabaseReference minusSixDatabaseReference;
 
-    //initialize instances for writing and reading data from the database
+    // initialize instances for writing and reading data from the database
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
             "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-    private DatabaseReference stepReference;
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
     private String userID = firebaseUser.getUid();
@@ -118,23 +118,25 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        // Ask for permission to track physical movement
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACTIVITY_RECOGNITION},PERMISSION_CODE);
+        // Ask with a popup for permission to track physical activity
+        ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        // Add stepCounter counter to activity
         textViewStepCounter = findViewById(R.id.textViewStepCounter);
+
+        // Add stepDetector counter to activity
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
 
         // Add bar chart to activity and enter the corresponding data
         barChartStep = findViewById(R.id.barChartStep);
         createBarChart();
 
-
-
-
+        // Give the right data path to the corresponding reference
         stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusTwo");
@@ -143,18 +145,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusFive");
         minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusSix");
 
-//        setData(minusOneDatabaseReference, stepDetectMinusOne);
-//        setData(minusTwoDatabaseReference, stepDetectMinusTwo);
-//        setData(minusThreeDatabaseReference, stepDetectMinusThree);
-//        setData(minusFourDatabaseReference, stepDetectMinusFour);
-//        setData(minusFiveDatabaseReference, stepDetectMinusFive);
-//        setData(minusSixDatabaseReference, stepDetectMinusSix);
-
+        // If the value of stepDetectMinusOne in the database changes
+        // It takes the value from stepDetectMinusOne in the database
+        // And saves it in the variable stepDetectMinusOne
+        // And create a new barChart
         minusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                stepDetectMinusOne = dataFromDatabase;
+                stepDetectMinusOne = snapshot.getValue(int.class);
                 createBarChart();
             }
 
@@ -164,11 +162,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // If the value of stepDetectMinusTwo in the database changes
+        // It takes the value from stepDetectMinusTwo in the database
+        // And saves it in the variable stepDetectMinusTwo
+        // And create a new barChart
         minusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                stepDetectMinusTwo = dataFromDatabase;
+                stepDetectMinusTwo = snapshot.getValue(int.class);
                 createBarChart();
             }
 
@@ -178,11 +179,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // If the value of stepDetectMinusThree in the database changes
+        // It takes the value from stepDetectMinusThree in the database
+        // And saves it in the variable stepDetectMinusThree
+        // And create a new barChart
         minusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                stepDetectMinusThree = dataFromDatabase;
+                stepDetectMinusThree = snapshot.getValue(int.class);
                 createBarChart();
             }
 
@@ -192,11 +196,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // If the value of stepDetectMinusFour in the database changes
+        // It takes the value from stepDetectMinusFour in the database
+        // And saves it in the variable stepDetectMinusFour
+        // And create a new barChart
         minusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                stepDetectMinusFour = dataFromDatabase;
+                stepDetectMinusFour = snapshot.getValue(int.class);
                 createBarChart();
             }
 
@@ -206,11 +213,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // If the value of stepDetectMinusFive in the database changes
+        // It takes the value from stepDetectMinusFive in the database
+        // And saves it in the variable stepDetectMinusFive
+        // And create a new barChart
         minusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                stepDetectMinusFive = dataFromDatabase;
+                stepDetectMinusFive = snapshot.getValue(int.class);
                 createBarChart();
             }
 
@@ -220,6 +230,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // If the value of stepDetectMinusSix in the database changes
+        // It takes the value from stepDetectMinusSix in the database
+        // And saves it in the variable stepDetectMinusSix
+        // And create a new barChart
         minusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -234,22 +248,32 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        // If the value of dailyNumberOfSteps in the database changes
+        // It takes the value from dailyNumberOfSteps in the database
+        // And saves it in the variable stepDetect
         stepReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                stepDetect = dataFromDatabase;
+                stepDetect = snapshot.getValue(int.class);
+
+                // Show value of stepDetect in textView
                 textViewStepDetector.setText(String.valueOf(stepDetect));
+
+                // Update progressBar with the new value
                 simpleProgressBar.setProgress(stepDetect);
 
+                // Informational textView, showing how many steps the user should still take
+                // Of course, this remaining value cannot be a negative number
                 if ((7000 - stepDetect) < 0) {
                     remaining = 0;
                 } else {
                     remaining = 7000 - stepDetect;
                 }
                 progress.setText("You walked " + stepDetect + " steps today out of the " +
-                        "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+                                 "recommended 7000 per day. Only " + remaining +
+                                 " steps remain till the next checkpoint.");
 
+                // Create a new barChart
                 createBarChart();
             }
 
@@ -259,21 +283,19 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
-
-
-
-
         // Give the user information about their step progress in a text view
         progress = findViewById(R.id.progress);
 
-
+        // Informational textView, showing how many steps the user should still take
+        // Of course, this remaining value cannot be a negative number
         if ((7000 - stepDetect) < 0) {
             remaining = 0;
         } else {
             remaining = 7000 - stepDetect;
         }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
-                "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+                         "recommended 7000 per day. Only " + remaining +
+                         " steps remain till the next checkpoint.");
 
         // Set the layout for this information text view
         progress.setTextColor(Color.WHITE);
@@ -282,11 +304,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
 
+        // TODO: add comment
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
+        // Initiate the progressBar
         prog();
 
         // Check if step counter is present in device
+        // If it is not present, the textView will notify the user
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
             myStepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
             isCounterSensorPresent = true;
@@ -296,6 +321,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
 
         // Check if step detector is present in device
+        // If it is not present, the textView will notify the user
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             myStepDetector = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
             simpleProgressBar.setProgress(stepDetect);
@@ -303,33 +329,13 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         } else {
             //for testing purposes
             textViewStepDetector.setText(String.valueOf(stepDetect));
-
             simpleProgressBar.setProgress(stepDetect);
-            //textViewStepDetector.setText("Detector sensor is not present");
+            textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
 
-//    public void setData(DatabaseReference databaseReference, int valueName) {
-//        databaseReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int dataFromDatabase = snapshot.getValue(int.class);
-//                valueName = dataFromDatabase;
-//
-//
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
-
-
+    // Function the create the barChart and insert data into it
     public void createBarChart() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
@@ -342,21 +348,31 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         graphData.add(new BarEntry(7, stepDetect));
 
         // Layout for the bar chart
+        // Create a new dataset for the barChart with the graphData
         BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
+        // Set Bar Colors
         barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
+        // Set Text Color
         barDataSetStep.setValueTextColor(Color.BLACK);
+        // Set Text Size
         barDataSetStep.setValueTextSize(16f);
-        BarData barDataVeggie = new BarData(barDataSetStep);
+        BarData barDataStep = new BarData(barDataSetStep);
+        // Adds half of the bar width to each side of the x-axis range in order to
+        // allow the bars of the barchart to be fully displayed
         barChartStep.setFitBars(true);
-        barChartStep.setData(barDataVeggie);
+        // Set a new data object for the barChart
+        barChartStep.setData(barDataStep);
+        // Set description
         barChartStep.getDescription().setText("Step progress over the last 7 days");
+        // The barChart will show a vertical animation with a duration of 200 ms
+        // every time the data changes
         barChartStep.animateY(200);
     }
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     public void switchDays() {
-
+        // Give the right data path to the corresponding reference
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusThree");
@@ -365,8 +381,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusSix");
         stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
 
-
-        minusFiveDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        // Gives the value of stepDetectMinusFive to stepDetectMinusSix
+        minusFiveDatabaseReference.get().addOnCompleteListener(
+                                                            new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -379,7 +396,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
         );
 
-        minusFourDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        // Gives the value of stepDetectMinusFour to stepDetectMinusFive
+        minusFourDatabaseReference.get().addOnCompleteListener(
+                                                            new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -392,7 +411,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
         );
 
-        minusThreeDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        // Gives the value of stepDetectMinusThree to stepDetectMinusFour
+        minusThreeDatabaseReference.get().addOnCompleteListener(
+                                                            new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -405,7 +426,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
         );
 
-        minusTwoDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        // Gives the value of stepDetectMinusTwo to stepDetectMinusThree
+        minusTwoDatabaseReference.get().addOnCompleteListener(
+                                                            new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -418,7 +441,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
         );
 
-        minusOneDatabaseReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        // Gives the value of stepDetectMinusOne to stepDetectMinusTwo
+        minusOneDatabaseReference.get().addOnCompleteListener(
+                                                            new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -431,6 +456,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
         );
 
+        // Gives the value of stepDetect to stepDetectMinusOne
         stepReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -443,11 +469,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             }
         }
         );
-
-
     }
-
-
 
     // Sets the progressBar
     public void prog() {
@@ -458,26 +480,33 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // Changes the shows value in the textView to current amount of steps
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+        // Update the textView of stepCount when the user steps
         if (sensorEvent.sensor == myStepCounter){
             stepCount = (int) sensorEvent.values[0];
             textViewStepCounter.setText(String.valueOf(stepCount));
+        // Update the textView of stepDetect when the user steps
         } else if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
             textViewStepDetector.setText(String.valueOf(stepDetect));
             stepReference.setValue(stepDetect);
         }
 
+        // Set the progress of the progressbar to the value of stepDetect
         simpleProgressBar.setProgress(stepDetect);
 //        simpleProgressBar.setProgress(stepCount);
 
+        // Informational textView, showing how many steps the user should still take
+        // Of course, this remaining value cannot be a negative number
         if ((7000 - stepDetect) < 0) {
             remaining = 0;
         } else {
             remaining = 7000 - stepDetect;
         }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
-                "recommended 7000 per day. Only " + remaining + " steps remain till the next checkpoint.");
+                         "recommended 7000 per day. Only " + remaining +
+                         " steps remain till the next checkpoint.");
 
+        // Create a new barChart
         createBarChart();
     }
 
@@ -489,12 +518,14 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onResume() {
         super.onResume();
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null){
-            sensorManager.registerListener(this, myStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null) {
+            sensorManager.registerListener(this,
+                                                myStepCounter, SensorManager.SENSOR_DELAY_NORMAL);
         }
 
-        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null){
-            sensorManager.registerListener(this, myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+        if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
+            sensorManager.registerListener(this,
+                                                myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
@@ -503,15 +534,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
     }
 
-
-
-    private void toastMessage(String message){
-        Toast.makeText(this,message,Toast.LENGTH_SHORT).show();
+    private void toastMessage(String message) {
+        Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
     }
-
-
-
-
-
 }
 
