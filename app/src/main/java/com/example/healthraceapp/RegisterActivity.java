@@ -249,7 +249,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if(v == buttonRegister){
             // Retrieving all usernames from the database to check if the username is unique
             // then calling the method registerUser() if username is unique
-            retrieveAllUsernames();
+            registerUser();
         }
     }
 
