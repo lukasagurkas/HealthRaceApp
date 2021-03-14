@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reference.child(progressValue).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int dataFromDatabase = snapshot.getValue(int.class);
-//                progressBar.setProgress(dataFromDatabase);
+                int dataFromDatabase = snapshot.getValue(int.class);
+                progressBar.setProgress(dataFromDatabase);
             }
 
             @Override
