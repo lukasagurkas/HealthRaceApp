@@ -6,282 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:layout_width="302dp"
-        android:layout_height="91dp"
-        android:background="@color/purple_500"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:id="@+id/layout_step"
-            android:layout_width="300dp"
-            android:layout_height="51dp"
-            android:layout_marginBottom="428dp"
-            android:background="@color/purple_500"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.422"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:ignore="MissingConstraints">
-
-            <ImageView
-                android:layout_width="71dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/pedestrian_smaller" />
-
-
-            <ProgressBar
-                android:id="@+id/progressBar_step"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="205dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progressbar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.841"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.084"
-                tools:ignore="MissingConstraints" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Steps: +50 points"
-            android:textColor="@color/white">
-
-        </TextView>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="302dp"
-        android:layout_height="91dp"
-        android:background="@color/purple_500"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.479"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:id="@+id/layout_fruit"
-            android:layout_width="292dp"
-            android:layout_height="66dp"
-            android:layout_marginBottom="320dp"
-            android:background="@color/purple_500"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.987"
-            tools:ignore="MissingConstraints">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="71dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/fruit_smaller" />
-
-            <ProgressBar
-                android:id="@+id/progressBar_fruit"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="205dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progressbar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.841"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.084"
-                tools:ignore="MissingConstraints" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
-            android:text="Fruit: +100 points"
-            android:textColor="@color/white">
-
-        </TextView>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="302dp"
-        android:layout_height="91dp"
-        android:background="@color/purple_500"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.662"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:id="@+id/layout_vegetable"
-            android:layout_width="292dp"
-            android:layout_height="51dp"
-            android:layout_marginBottom="230dp"
-            android:background="@color/purple_500"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.987"
-            tools:ignore="MissingConstraints">
-
-            <ImageView
-                android:layout_width="71dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/vegetable_smaller" />
-
-            <ProgressBar
-                android:id="@+id/progressBar_veg"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="205dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="5dp"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progressbar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.841"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.084"
-                tools:ignore="MissingConstraints" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="25dp"
-            android:text="Vegetables: +100 points"
-            android:textColor="@color/white">
-
-        </TextView>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="302dp"
-        android:layout_height="91dp"
-        android:background="@color/purple_500"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.84"
-        tools:ignore="MissingConstraints">
-
-        <LinearLayout
-            android:id="@+id/layout_water"
-            android:layout_width="287dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="150dp"
-            android:background="@color/purple_500"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.524"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:ignore="MissingConstraints">
-
-            <ImageView
-                android:layout_width="71dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/waterglass_smaller" />
-
-            <ProgressBar
-                android:id="@+id/progressBar_water"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="205dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="5dp"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="0"
-                android:progressDrawable="@drawable/progressbar"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.841"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.084"
-                tools:ignore="MissingConstraints" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Water: +75 points"
-            android:textColor="@color/white">
-
-        </TextView>
-
-    </FrameLayout>
-
     <Button
         android:id="@+id/buttonProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="620dp"
+        android:layout_marginBottom="656dp"
         android:text="Profile Page"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -293,12 +22,302 @@
         android:id="@+id/buttonGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="572dp"
+        android:layout_marginBottom="600dp"
         android:text="@string/button_group_activity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.943"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="27dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="91dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/purple_500"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.3"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:id="@+id/layout_step"
+                    android:layout_width="300dp"
+                    android:layout_height="51dp"
+                    android:layout_marginBottom="428dp"
+                    android:background="@color/purple_500"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.422"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:ignore="MissingConstraints">
+
+                    <ImageView
+                        android:layout_width="71dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/pedestrian_smaller" />
+
+
+                    <ProgressBar
+                        android:id="@+id/progressBar_step"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="205dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progressbar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.841"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.084"
+                        tools:ignore="MissingConstraints" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Steps: +50 points"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="91dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/purple_500"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.479"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:id="@+id/layout_fruit"
+                    android:layout_width="298dp"
+                    android:layout_height="66dp"
+                    android:layout_marginBottom="320dp"
+                    android:background="@color/purple_500"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.987"
+                    tools:ignore="MissingConstraints">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="71dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        app:srcCompat="@drawable/fruit_smaller" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar_fruit"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="205dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progressbar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.841"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.084"
+                        tools:ignore="MissingConstraints" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="25dp"
+                    android:text="Fruit: +100 points"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="91dp"
+                android:layout_marginBottom="20dp"
+                android:background="@color/purple_500"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.662"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:id="@+id/layout_vegetable"
+                    android:layout_width="292dp"
+                    android:layout_height="51dp"
+                    android:layout_marginBottom="230dp"
+                    android:background="@color/purple_500"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.987"
+                    tools:ignore="MissingConstraints">
+
+                    <ImageView
+                        android:layout_width="71dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/vegetable_smaller" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar_veg"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="205dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="5dp"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progressbar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.841"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.084"
+                        tools:ignore="MissingConstraints" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="25dp"
+                    android:text="Vegetables: +100 points"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="91dp"
+                android:background="@color/purple_500"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.495"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.84"
+                tools:ignore="MissingConstraints">
+
+                <LinearLayout
+                    android:id="@+id/layout_water"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="150dp"
+                    android:background="@color/purple_500"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.524"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0"
+                    tools:ignore="MissingConstraints">
+
+                    <ImageView
+                        android:layout_width="71dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="5dp"
+                        app:srcCompat="@drawable/waterglass_smaller" />
+
+                    <ProgressBar
+                        android:id="@+id/progressBar_water"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="205dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="5dp"
+                        android:indeterminate="false"
+                        android:max="100"
+                        android:progress="0"
+                        android:progressDrawable="@drawable/progressbar"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.841"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.084"
+                        tools:ignore="MissingConstraints" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Water: +75 points"
+                    android:textColor="@color/white">
+
+                </TextView>
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
