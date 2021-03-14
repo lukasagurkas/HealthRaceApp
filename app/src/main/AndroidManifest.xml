@@ -29,9 +29,8 @@
         <receiver
             android:name=".AlarmReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
-        <activity android:name=".MainActivity">
-        </activity>
+            android:exported="true"></receiver>
+        <activity android:name=".MainActivity" />
         <activity
             android:name=".WaterActivity"
             android:label="@string/title_activity_water"
