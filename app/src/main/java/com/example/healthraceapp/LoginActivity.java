@@ -110,7 +110,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } else {
                             // If the user has not been signed in show exception
                             Toast.makeText(LoginActivity.this,
-                                    task.getException().getMessage(),
+                                    Objects.requireNonNull(task.getException()).getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
                         progressDialog.dismiss();
@@ -122,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void checkIfEmailVerified() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        assert user != null;
         if (user.isEmailVerified()) {
             // If the users email has been verified start the main page
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
