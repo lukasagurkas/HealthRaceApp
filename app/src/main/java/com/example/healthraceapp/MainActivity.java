@@ -24,6 +24,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
+import java.util.Objects;
+
+import static java.util.Objects.*;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setTitle("Home Page");
 
         dailyResetAlarm();
@@ -173,7 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            }
 //        });
 
-
     }
 
     private void createProgressBar(ProgressBar progressBar, String progressValue, int max) {
@@ -182,8 +185,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reference.child(progressValue).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int dataFromDatabase = snapshot.getValue(int.class);
-                progressBar.setProgress(dataFromDatabase);
+                try {
+                    int dataFromDatabase = requireNonNull(snapshot).getValue(int.class);
+                    progressBar.setProgress(dataFromDatabase);
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
             }
 
             @Override
