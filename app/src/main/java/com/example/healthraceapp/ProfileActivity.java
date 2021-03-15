@@ -47,6 +47,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.font.NumericShaper;
 import java.io.ByteArrayOutputStream;
+import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -259,7 +260,16 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot userSnapshot: snapshot.getChildren()){
-                    userSnapshot.getRef().removeValue();
+                    userSnapshot.getRef().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Log.d(TAG, String.valueOf(task.getResult()) + "qwz");
+                            } else {
+                                Log.d(TAG, String.valueOf(task.getException()) + "zwq");
+                            }
+                        }
+                    });
                 }
                 mAuth.signOut();
                 Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
