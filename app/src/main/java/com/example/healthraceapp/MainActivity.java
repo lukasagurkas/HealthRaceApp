@@ -24,6 +24,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
+import java.util.Objects;
+
+import static java.util.Objects.*;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setTitle("Home Page");
 
         dailyResetAlarm();
@@ -165,14 +169,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        buttonGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, GroupActivity.class));
-
-            }
-        });
-
+//        buttonGroup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, GroupActivity.class));
+//
+//            }
+//        });
 
     }
 
@@ -182,8 +185,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reference.child(progressValue).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int dataFromDatabase = snapshot.getValue(int.class);
-//                progressBar.setProgress(dataFromDatabase);
+                try {
+                    int dataFromDatabase = requireNonNull(snapshot).getValue(int.class);
+                    progressBar.setProgress(dataFromDatabase);
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
             }
 
             @Override
@@ -225,9 +232,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        setCalendar.set(Calendar.MINUTE, 0);
-        setCalendar.set(Calendar.SECOND, 0);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 15);
+        setCalendar.set(Calendar.MINUTE, 18);
+        setCalendar.set(Calendar.SECOND, 30);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){
@@ -237,5 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
+
+
 
 }
