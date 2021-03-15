@@ -192,9 +192,6 @@ public class WaterActivity extends AppCompatActivity {
                 // Sets the progressbar to the totalProgress value in the database
                 progressBar.setProgress(totalProgress);
 
-                // TODO: check if this line can be deleted
-                tvProgressLabel.setText("" + progress);
-
                 // Informational textView, showing how many milliliter of water the user
                 // should still take. Of course, this remaining value cannot be a negative number
                 if ((2000 - totalProgress) < 0) {

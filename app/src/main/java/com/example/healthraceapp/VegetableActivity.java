@@ -202,9 +202,6 @@ public class VegetableActivity extends AppCompatActivity {
                 // Sets the progressbar to the totalProgress value in the database
                 progressBar.setProgress(totalProgress);
 
-                // TODO: check if this line can be deleted
-                tvProgressLabel.setText("" + progress);
-
                 // Informational textView, showing how many grams of veggies the user should
                 // still take of course, this remaining value cannot be a negative number
                 if ((500 - totalProgress) < 0) {
