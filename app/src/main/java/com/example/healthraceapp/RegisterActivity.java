@@ -89,12 +89,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         //gets current user state and whether they are logged in or not
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            // User is signed in
-            Intent i = new Intent(RegisterActivity.this, MainActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(i);
-        }
+//        if (user != null) {
+//            // User is signed in
+//            Intent i = new Intent(RegisterActivity.this, MainActivity.class);
+//            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(i);
+//        }
 
     }
 

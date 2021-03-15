@@ -84,13 +84,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference profileRef = storageReference.child("Users/" +  mAuth.getCurrentUser().getUid() + "/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).into(userProfileImage);
-            }
-        });
 
 
 
@@ -106,7 +99,6 @@ public class ProfileActivity extends AppCompatActivity {
 //        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
 
         if (user != null) {
-
             if (user.getPhotoUrl() != null) {
                 Glide.with(this)
                         .load(user.getPhotoUrl())
@@ -188,7 +180,8 @@ public class ProfileActivity extends AppCompatActivity {
                 deleteAccountDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteUser();
+                        deleteUserAuth();
+
 
                     }
                 });
@@ -227,26 +220,26 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                user = mAuth.getCurrentUser();
+                if (user != null) {
+                    String myUsername = snapshot.child("username").getValue(String.class);
+                    String myEmail = snapshot.child("email").getValue(String.class);
+                    Boolean myGender = (Boolean) snapshot.child("male").getValue();
+                    String myDay = String.valueOf(snapshot.child("day").getValue());
+                    String myMonth = String.valueOf(snapshot.child("month").getValue());
+                    String myYear = String.valueOf(snapshot.child("year").getValue());
 
-                String myUsername = snapshot.child("username").getValue(String.class);
-                String myEmail = snapshot.child("email").getValue(String.class);
-                Boolean myGender = (Boolean) snapshot.child("male").getValue();
-                String myDay = String.valueOf(snapshot.child("day").getValue());
-                String myMonth = String.valueOf(snapshot.child("month").getValue());
-                String myYear = String.valueOf(snapshot.child("year").getValue());
-
-                username.setText("@" + myUsername);
-                email.setText("Email: " + myEmail);
-                day.setText(myDay);
-                month.setText("/" + myMonth);
-                year.setText("/" + myYear);
-                if (myGender){
-                    gender.setText("Gender: male");
-                }else{
-                    gender.setText("Gender: female");
+                    username.setText("@" + myUsername);
+                    email.setText("Email: " + myEmail);
+                    day.setText(myDay);
+                    month.setText("/" + myMonth);
+                    year.setText("/" + myYear);
+                    if (myGender){
+                        gender.setText("Gender: male");
+                    }else{
+                        gender.setText("Gender: female");
+                    }
                 }
-
-
             }
 
             @Override
@@ -268,7 +261,10 @@ public class ProfileActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot: snapshot.getChildren()){
                     userSnapshot.getRef().removeValue();
                 }
-                Toast.makeText(ProfileActivity.this, "Account deleted from realtime database", Toast.LENGTH_LONG).show();
+                mAuth.signOut();
+                Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(ProfileActivity.this,
+                        RegisterActivity.class));
             }
 
             @Override
@@ -286,9 +282,7 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "User account deleted.");
-                            startActivity(new Intent(ProfileActivity.this,
-                                    RegisterActivity.class));
-                            Toast.makeText(ProfileActivity.this, "Account deleted from authentication details", Toast.LENGTH_LONG).show();
+                            deleteUserRealtime();
                         }
                     }
                 });
