@@ -52,7 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView email, usernamle, day, month, year, gender;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
-    private FloatingActionButton buttonAddPhoto;
+    private FloatingActionButton updateProfileButton;
     private ImageView userProfileImage;
     private  String userID;
 
@@ -102,7 +102,6 @@ public class ProfileActivity extends AppCompatActivity {
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
-        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
         userProfileImage = findViewById(R.id.userProfileImage);
 //        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
 
@@ -204,14 +203,14 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
-        buttonAddPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent, 1000);
-            }
-        });
+//        buttonAddPhoto.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                startActivityForResult(openGalleryIntent, 1000);
+//            }
+//        });
 
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -348,7 +347,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: ",e.getCause() );
+                        Log.e(TAG, "onFailure: ", e.getCause() );
                     }
                 });
     }

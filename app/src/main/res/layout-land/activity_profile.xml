@@ -163,17 +163,4 @@
         app:layout_constraintTop_toBottomOf="@+id/textGender"
         app:layout_constraintVertical_bias="0.15" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/buttonAddPhoto"
-        android:layout_width="32dp"
-        android:layout_height="36dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
-        app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/userProfileImage"
-        app:layout_constraintTop_toTopOf="@+id/userProfileImage"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@android:drawable/ic_menu_add" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
