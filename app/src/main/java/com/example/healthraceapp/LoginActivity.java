@@ -26,6 +26,7 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // Instances of all UI elements
     private Button buttonRegister, buttonSignIn;
     private EditText editTextEmail, editTextPassword;
     private ProgressDialog progressDialog;
@@ -60,18 +61,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
-        TextView textForgotPassword = (TextView) findViewById(R.id.textForgotPassword);
+        textForgotPassword = (TextView) findViewById(R.id.textForgotPassword);
 
         progressDialog = new ProgressDialog(this);
 
-        // Attaching click listener
+        // Attaching click listener to forgot password text
         textForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, PopupForgotPassword.class));
             }
         });
+        // OnClick listener to sign in button
         buttonSignIn.setOnClickListener(this);
+        // OnClick listener to register button
         buttonRegister.setOnClickListener(this);
 
     }
@@ -119,6 +122,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    // Check whether email is verified
     private void checkIfEmailVerified() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -133,6 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    // OnClick listeners of sign in and register buttons
     public void onClick(View view) {
         if (view == buttonSignIn) {
             userLogin();

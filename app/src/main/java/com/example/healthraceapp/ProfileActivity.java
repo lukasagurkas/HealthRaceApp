@@ -1,5 +1,6 @@
 package com.example.healthraceapp;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,26 +54,24 @@ import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private TextView email, usernamle, day, month, year, gender;
+    // Instances of all UI elements
+    private TextView email, username, day, month, year, gender;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
-    private FloatingActionButton updateProfileButton;
     private ImageView userProfileImage;
-    private  String userID;
+    private ImageButton buttonAddGroup;
 
-    private DatabaseReference mDatabase;
-    private DatabaseReference mRef;
+    private String userID;
+
+    // Firebase instances
     private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase firebaseDatabase;
-    FirebaseStorage storage;
     StorageReference storageReference;
     FirebaseUser user;
 
-    private String currentUserId;
-    private TextView username;
-    private String emailProfile;
-
+    // Tag  value for debugging
     private static final String TAG = "ProfileActivity";
+
+    //Instances for profile image
     String PROFILE_IMAGE_URL = null;
     int TAKE_IMAGE_CODE = 10001;
 
@@ -80,25 +81,30 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Create title for the page
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("Profile");
 
+        // Firebase instantiations
         mAuth = FirebaseAuth.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-
-
-
-        firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+        firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb." +
+                "europe-west1.firebasedatabase.app/");
         user = mAuth.getCurrentUser();
         userID = user.getUid();
-//        StorageReference storageRef = storage.getReference();
+        String uID = mAuth.getCurrentUser().getUid();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
+                getReference("Users").child(uID);
 
+        // Buttons and image reference to the UI
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         userProfileImage = findViewById(R.id.userProfileImage);
-//        buttonAddPhoto = findViewById(R.id.buttonAddPhoto);
+        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
 
+        // If there is a user a profile image should be fetched from storage
         if (user != null) {
             if (user.getPhotoUrl() != null) {
                 Glide.with(this)
@@ -107,11 +113,12 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
+        // OnClick listener for the log out button
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder logoutDialog = new AlertDialog.Builder(v.getContext());
-                logoutDialog.setTitle("Log Out");
+                logoutDialog.setTitle("Log out");
                 logoutDialog.setMessage("Are you sure you want to log out?");
 
                 logoutDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -119,7 +126,8 @@ public class ProfileActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         mAuth.signOut();
                         finish();
-                        startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                        startActivity(new Intent(ProfileActivity.this,
+                                LoginActivity.class));
                     }
                 });
 
@@ -133,34 +141,41 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // OnClick listener for the change password button
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final EditText changePassword = new EditText(v.getContext());
-                final AlertDialog.Builder changePasswordDialog = new AlertDialog.Builder(v.getContext());
+                final AlertDialog.Builder changePasswordDialog =
+                        new AlertDialog.Builder(v.getContext());
                 changePasswordDialog.setTitle("Reset Password");
                 changePasswordDialog.setMessage("Enter your new password");
                 changePasswordDialog.setView(changePassword);
 
-                changePasswordDialog.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
+                changePasswordDialog.setPositiveButton("Submit",
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String newPassword = changePassword.getText().toString().trim();
-                        user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        user.updatePassword(newPassword)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(ProfileActivity.this, "Password reset successful", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ProfileActivity.this,
+                                        "Password reset successful", Toast.LENGTH_LONG).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ProfileActivity.this, "Password reset failed", Toast.LENGTH_LONG).show();
+                                Toast.makeText(ProfileActivity.this,
+                                        "Password reset failed", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
                 });
 
-                changePasswordDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                changePasswordDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -171,14 +186,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        // OnClick listener for the delete account button
         buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder deleteAccountDialog = new AlertDialog.Builder(v.getContext());
+                final AlertDialog.Builder deleteAccountDialog =
+                        new AlertDialog.Builder(v.getContext());
                 deleteAccountDialog.setTitle("Delete Account");
                 deleteAccountDialog.setMessage("Are you sure you want to delete your account?");
 
-                deleteAccountDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                deleteAccountDialog.setPositiveButton("Yes",
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         deleteUserAuth();
@@ -187,7 +205,8 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
-                deleteAccountDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                deleteAccountDialog.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -197,15 +216,15 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
-//        buttonAddPhoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                startActivityForResult(openGalleryIntent, 1000);
-//            }
-//        });
+        // OnClick listener for the add group button
+        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: create new group
+            }
+        });
 
+        //TextView references from the UI
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
         day = (TextView) findViewById(R.id.textDay);
@@ -213,11 +232,7 @@ public class ProfileActivity extends AppCompatActivity {
         year = (TextView) findViewById(R.id.textYear);
         gender = (TextView) findViewById(R.id.textGender);
 
-
-        String uID = mAuth.getCurrentUser().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(uID);
-
+        // Get the values for username, email, gender and DoB from Realtime Database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -249,18 +264,19 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
-
-
     }
 
+    // Delete user from Realtime database
     private void deleteUserRealtime() {
         DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
-                "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users").child(userID);
+                "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
+                .child(userID);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot userSnapshot: snapshot.getChildren()){
-                    userSnapshot.getRef().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                    userSnapshot.getRef().removeValue()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()){
@@ -283,6 +299,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    // Delete user's authentication details
     private void deleteUserAuth() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -298,19 +315,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
-    private void deleteUser() {
-        new Thread() {
-            public void run() {
-                deleteUserRealtime();
-            }
-        }.start();
-        new Thread() {
-            public void run() {
-                deleteUserAuth();
-            }
-        }.start();
-    }
-
+    // Handle a click on Profile Image
     public void handleImageClick(View view) {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -318,6 +323,7 @@ public class ProfileActivity extends AppCompatActivity {
             startActivityForResult(intent, TAKE_IMAGE_CODE);
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -331,6 +337,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // Upload the image to storage
     private void handleUpload(Bitmap bitmap) {
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -356,6 +363,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    // Get the URL of the image
     private void getDownloadUrl(StorageReference reference) {
         reference.getDownloadUrl()
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -367,6 +375,7 @@ public class ProfileActivity extends AppCompatActivity {
                 });
     }
 
+    // Set the image as user's profile image
     private void setUserProfileUrl(Uri uri) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -378,21 +387,17 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(ProfileActivity.this, "Updated succesfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, "Updated succesfully",
+                                Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfileActivity.this, "Profile image failed...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, "Profile image failed...",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
-
-
-//    private static final String TAG = "username";
-
-
 
 }
