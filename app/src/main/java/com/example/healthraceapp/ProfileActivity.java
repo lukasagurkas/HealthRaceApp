@@ -145,24 +145,24 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final EditText changePassword = new EditText(v.getContext());
+
+                final EditText emailEntered = new EditText(v.getContext());
                 final AlertDialog.Builder changePasswordDialog =
                         new AlertDialog.Builder(v.getContext());
                 changePasswordDialog.setTitle("Reset Password");
-                changePasswordDialog.setMessage("Enter your new password");
-                changePasswordDialog.setView(changePassword);
+                changePasswordDialog.setMessage("Would you like to reset your password");
+                changePasswordDialog.setView(emailEntered);
 
-                changePasswordDialog.setPositiveButton("Submit",
+                changePasswordDialog.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String newPassword = changePassword.getText().toString().trim();
-                        user.updatePassword(newPassword)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        String email = emailEntered.getText().toString().trim();
+                        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
-                            public void onSuccess(Void aVoid) {
+                            public void onComplete(@NonNull Task<Void> task) {
                                 Toast.makeText(ProfileActivity.this,
-                                        "Password reset successful", Toast.LENGTH_LONG).show();
+                                        "Password reset email sent", Toast.LENGTH_LONG).show();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -174,7 +174,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
 
-                changePasswordDialog.setNegativeButton("Cancel",
+                changePasswordDialog.setNegativeButton("No",
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
