@@ -192,9 +192,6 @@ public class WaterActivity extends AppCompatActivity {
                 // Sets the progressbar to the totalProgress value in the database
                 progressBar.setProgress(totalProgress);
 
-                // TODO: check if this line can be deleted
-                tvProgressLabel.setText("" + progress);
-
                 // Informational textView, showing how many milliliter of water the user
                 // should still take. Of course, this remaining value cannot be a negative number
                 if ((2000 - totalProgress) < 0) {
@@ -216,6 +213,7 @@ public class WaterActivity extends AppCompatActivity {
             }
         });
         Log.d("waterCheck", String.valueOf(totalProgress));
+
 
         // If the value of fruitMinusOne in the database changes
         // It takes the value from fruitMinusOne in the database
@@ -324,6 +322,7 @@ public class WaterActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     // Adds listener for the slider
@@ -344,6 +343,21 @@ public class WaterActivity extends AppCompatActivity {
             // called after the user finishes moving the SeekBar
         }
     };
+
+    public void setBarChart(DatabaseReference ds, int day) {
+        ds.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int value = snapshot.getValue(int.class);
+                createBarChart();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     // Function the create the barChart and insert data into it
     public void createBarChart() {
@@ -379,6 +393,21 @@ public class WaterActivity extends AppCompatActivity {
         barChartWater.animateY(200);
     }
 
+    //This function copies the value of database reference ds1 to ds2
+    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    ds2.setValue(task.getResult().getValue());
+                }
+            }
+        });
+    }
+
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     public void switchDays() {
@@ -391,92 +420,105 @@ public class WaterActivity extends AppCompatActivity {
         minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
 
-        // Gives the value of fruitMinusFive to fruitMinusSix
-        minusFiveDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
+        // Gives the value of waterMinusFive to waterMinusSix
+        switchValues(minusFiveDatabaseReference, minusSixDatabaseReference);
+        // Gives the value of waterMinusFour to waterMinusFive
+        switchValues(minusFourDatabaseReference, minusFiveDatabaseReference);
+        // Gives the value of waterMinusThree to waterMinusFour
+        switchValues(minusThreeDatabaseReference, minusFourDatabaseReference);
+        // Gives the value of waterMinusTwo to waterMinusThree
+        switchValues(minusTwoDatabaseReference, minusThreeDatabaseReference);
+        // Gives the value of waterMinusOne to waterMinusTwo
+        switchValues(minusOneDatabaseReference, minusTwoDatabaseReference);
+        // Gives the value of waterReference to waterMinusOne
+        switchValues(waterReference, minusOneDatabaseReference);
 
-        // Gives the value of fruitMinusFour to fruitMinusFive
-        minusFourDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of fruitMinusThree to fruitMinusFour
-        minusThreeDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-        // Gives the value of fruitMinusTwo to fruitMinusThree
-        minusTwoDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of fruitMinusOne to fruitMinusTwo
-        minusOneDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of totalProgress to fruitMinusOne
-        waterReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
+//        // Gives the value of fruitMinusFive to fruitMinusSix
+//        minusFiveDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of fruitMinusFour to fruitMinusFive
+//        minusFourDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of fruitMinusThree to fruitMinusFour
+//        minusThreeDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//        // Gives the value of fruitMinusTwo to fruitMinusThree
+//        minusTwoDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of fruitMinusOne to fruitMinusTwo
+//        minusOneDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of totalProgress to fruitMinusOne
+//        waterReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
     }
 }

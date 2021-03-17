@@ -202,9 +202,6 @@ public class VegetableActivity extends AppCompatActivity {
                 // Sets the progressbar to the totalProgress value in the database
                 progressBar.setProgress(totalProgress);
 
-                // TODO: check if this line can be deleted
-                tvProgressLabel.setText("" + progress);
-
                 // Informational textView, showing how many grams of veggies the user should
                 // still take of course, this remaining value cannot be a negative number
                 if ((500 - totalProgress) < 0) {
@@ -383,6 +380,21 @@ public class VegetableActivity extends AppCompatActivity {
         barChartVeggie.animateY(200);
     }
 
+    //This function copies the value of database reference ds1 to ds2
+    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    ds2.setValue(task.getResult().getValue());
+                }
+            }
+        });
+    }
+
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     public void switchDays() {
@@ -396,92 +408,105 @@ public class VegetableActivity extends AppCompatActivity {
         vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
 
         // Gives the value of veggieMinusFive to veggieMinusSix
-        minusFiveDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
+        switchValues(minusFiveDatabaseReference, minusSixDatabaseReference);
         // Gives the value of veggieMinusFour to veggieMinusFive
-        minusFourDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
+        switchValues(minusFourDatabaseReference, minusFiveDatabaseReference);
         // Gives the value of veggieMinusThree to veggieMinusFour
-        minusThreeDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
+        switchValues(minusThreeDatabaseReference, minusFourDatabaseReference);
         // Gives the value of veggieMinusTwo to veggieMinusThree
-        minusTwoDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
+        switchValues(minusTwoDatabaseReference, minusThreeDatabaseReference);
         // Gives the value of veggieMinusOne to veggieMinusTwo
-        minusOneDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
+        switchValues(minusOneDatabaseReference, minusTwoDatabaseReference);
+        // Gives the value of vegReference to veggieMinusOne
+        switchValues(vegReference, minusOneDatabaseReference);
 
-        // Gives the value of totalProgress to veggieMinusOne
-        vegReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
+//        // Gives the value of veggieMinusFive to veggieMinusSix
+//        minusFiveDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of veggieMinusFour to veggieMinusFive
+//        minusFourDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of veggieMinusThree to veggieMinusFour
+//        minusThreeDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of veggieMinusTwo to veggieMinusThree
+//        minusTwoDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of veggieMinusOne to veggieMinusTwo
+//        minusOneDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of totalProgress to veggieMinusOne
+//        vegReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
     }
 }

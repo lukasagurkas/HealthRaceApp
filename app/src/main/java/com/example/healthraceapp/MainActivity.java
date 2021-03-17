@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         createProgressBar(progressBar_veg, "amountOfVeg", 500);
 
 
-        //displaying logged in user name
+        //displaying logged in user email
 //        textViewUserEmail.setText("Welcome "+ user.getEmail());
 
         //adding listener to button
@@ -224,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void dailyResetAlarm() {
         Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
         Log.d("waitCheck", "It works");
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,
+                0, intent, 0);
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -232,9 +233,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 15);
-        setCalendar.set(Calendar.MINUTE, 18);
-        setCalendar.set(Calendar.SECOND, 30);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        setCalendar.set(Calendar.MINUTE, 0);
+        setCalendar.set(Calendar.SECOND, 0);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){
@@ -242,7 +243,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         Log.d("TimeCheck after fix", String.valueOf(setCalendar.getTime()));
 
-        alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
 

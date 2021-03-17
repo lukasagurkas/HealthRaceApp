@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+
+    // Instances of all UI elements
     private Button buttonRegister, buttonSignIn;
     private EditText editTextUsername, editTextEmail, editTextPassword;
     private ProgressDialog progressDialog;
@@ -70,20 +72,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         assert actionBar != null;
         actionBar.setTitle("Registration");
 
+        // Firebase auth instantiation
         mAuth = FirebaseAuth.getInstance();
-
+        // Instantiation of progress dialog
         progressDialog = new ProgressDialog(this);
 
+        // Initializing views
         editTextUsername = (EditText) findViewById(R.id.editTextUsername);
         editTextEmail = (EditText) findViewById(R.id.editTextEmail);
         editTextPassword = (EditText) findViewById(R.id.editTextPassword);
-
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
-
         buttonRegister.setOnClickListener(this);
         buttonSignIn.setOnClickListener(this);
-
         radioButtonMale = (RadioButton) findViewById(R.id.radioButtonMale);
         radioButtonFemale = (RadioButton) findViewById(R.id.radioButtonFemale);
 
@@ -98,10 +99,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
+    // Retreive all usernames to check if the entered username is unique
     private void retrieveAllUsernames() {
         // Defining DatabaseReference object
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users");
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference("Users");
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -131,32 +134,38 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-
+        // Check is username is already in use
         if (allUsernames.contains(username)) {
-            Toast.makeText(this, "Username is already in use", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Username is already in use",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
         // Checking if username, email and passwords are empty
         if (TextUtils.isEmpty(username)) {
-            Toast.makeText(this, "Please enter your username", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter your username",
+                    Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Please enter your email address", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter your email address",
+                    Toast.LENGTH_LONG).show();
             return;
         }
         if (TextUtils.isEmpty(password) || password.length() < 6) {
-            Toast.makeText(this, "Please enter your password longer than 6 characters", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please enter your password" +
+                    " longer than 6 characters", Toast.LENGTH_LONG).show();
             return;
         }
 
         // Checking if a date of birth was set
         if (!dateOfBirthSet) {
-            Toast.makeText(this, "Please set the date of birth", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please set the date of birth",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
+        // Checking if one of the radio buttons is checked
         boolean checkedMale = ((RadioButton) radioButtonMale).isChecked();
         boolean checkedFemale = ((RadioButton) radioButtonFemale).isChecked();
 
@@ -166,8 +175,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             return;
         }
 
+        // Check that username is less than 16 characters
         if (username.length() > 16){
-            Toast.makeText(this, "Username has to be less than 16 characters", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Username has to be less than 16 characters",
+                    Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -194,24 +205,31 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
                             // Add the additional attributes to the Firebase user
                             firebaseDatabase.getReference("Users")
-                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    .child(Objects.requireNonNull(FirebaseAuth.getInstance().
+                                            getCurrentUser()).getUid())
+                                    .setValue(user)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         // If the attributes have been added then send a email
                                         // address verification email
-                                        Objects.requireNonNull(mAuth.getCurrentUser()).sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        Objects.requireNonNull(mAuth.getCurrentUser())
+                                                .sendEmailVerification()
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()){
                                                     Toast.makeText(RegisterActivity.this,
                                                             "Registered successfully." +
-                                                                    " Please check your email and verify the account",
+                                                                    " Please check your email" +
+                                                                    " and verify the account",
                                                             Toast.LENGTH_LONG).show();
                                                 } else {
                                                     // If the email has not been sent - show error
-                                                    Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                                    Toast.makeText(RegisterActivity.this,
+                                                            Objects.requireNonNull(task
+                                                                    .getException()).getMessage(),
                                                             Toast.LENGTH_LONG).show();
                                                 }
                                             }
@@ -219,14 +237,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     } else {
                                         // If the additional attributes were not added to the user -
                                         // show error
-                                        Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
+                                        Toast.makeText(RegisterActivity.this,
+                                                Objects.requireNonNull(task.getException())
+                                                        .getMessage(),
                                                 Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
                         } else {
                             // If the Firebase user could not be created - show error
-                            Toast.makeText(RegisterActivity.this, Objects.requireNonNull(task.getException()).getMessage(),
+                            Toast.makeText(RegisterActivity.this,
+                                    Objects.requireNonNull(task.getException()).getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
                         // Ending progress dialog
@@ -249,10 +270,11 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if(v == buttonRegister){
             // Retrieving all usernames from the database to check if the username is unique
             // then calling the method registerUser() if username is unique
-            registerUser();
+            retrieveAllUsernames();
         }
     }
 
+    // Setting the date of birth
     public void setDateOfBirth(int year, int month, int day) {
         dateOfBirthSet = true;
         this.year = year;
