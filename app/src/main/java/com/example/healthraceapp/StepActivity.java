@@ -347,6 +347,21 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         barChartStep.animateY(200);
     }
 
+    //This function copies the value of database reference ds1 to ds2
+    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    ds2.setValue(task.getResult().getValue());
+                }
+            }
+        });
+    }
+
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     public void switchDays() {
@@ -359,94 +374,107 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusSix");
         stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
 
-        // Gives the value of stepDetectMinusFive to stepDetectMinusSix
-        minusFiveDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
+        // Gives the value of stepMinusFive to stepMinusSix
+        switchValues(minusFiveDatabaseReference, minusSixDatabaseReference);
+        // Gives the value of stepMinusFour to stepMinusFive
+        switchValues(minusFourDatabaseReference, minusFiveDatabaseReference);
+        // Gives the value of stepMinusThree to stepMinusFour
+        switchValues(minusThreeDatabaseReference, minusFourDatabaseReference);
+        // Gives the value of stepMinusTwo to stepMinusThree
+        switchValues(minusTwoDatabaseReference, minusThreeDatabaseReference);
+        // Gives the value of stepMinusOne to stepMinusTwo
+        switchValues(minusOneDatabaseReference, minusTwoDatabaseReference);
+        // Gives the value of stepReference to stepMinusOne
+        switchValues(stepReference, minusOneDatabaseReference);
 
-        // Gives the value of stepDetectMinusFour to stepDetectMinusFive
-        minusFourDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of stepDetectMinusThree to stepDetectMinusFour
-        minusThreeDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of stepDetectMinusTwo to stepDetectMinusThree
-        minusTwoDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of stepDetectMinusOne to stepDetectMinusTwo
-        minusOneDatabaseReference.get().addOnCompleteListener(
-                                                            new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
-
-        // Gives the value of stepDetect to stepDetectMinusOne
-        stepReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-                }
-            }
-        }
-        );
+//        // Gives the value of stepDetectMinusFive to stepDetectMinusSix
+//        minusFiveDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of stepDetectMinusFour to stepDetectMinusFive
+//        minusFourDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of stepDetectMinusThree to stepDetectMinusFour
+//        minusThreeDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of stepDetectMinusTwo to stepDetectMinusThree
+//        minusTwoDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of stepDetectMinusOne to stepDetectMinusTwo
+//        minusOneDatabaseReference.get().addOnCompleteListener(
+//                                                            new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
+//
+//        // Gives the value of stepDetect to stepDetectMinusOne
+//        stepReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
+//                }
+//            }
+//        }
+//        );
     }
 
     // Sets the progressBar
