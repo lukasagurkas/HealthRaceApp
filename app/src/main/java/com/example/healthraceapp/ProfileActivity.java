@@ -145,45 +145,22 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final EditText emailEntered = new EditText(v.getContext());
-                final AlertDialog.Builder changePasswordDialog =
-                        new AlertDialog.Builder(v.getContext());
-                changePasswordDialog.setTitle("Reset Password");
-                changePasswordDialog.setMessage("Would you like to reset your password");
-                changePasswordDialog.setView(emailEntered);
-
-                changePasswordDialog.setPositiveButton("Yes",
-                        new DialogInterface.OnClickListener() {
+                String email = user.getEmail();
+                mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String email = emailEntered.getText().toString().trim();
-                        mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(ProfileActivity.this,
-                                        "Password reset email sent", Toast.LENGTH_LONG).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(ProfileActivity.this,
-                                        "Password reset failed", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Toast.makeText(ProfileActivity.this,
+                                "Password reset email sent", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this,
+                                "Password reset failed", Toast.LENGTH_LONG).show();
                     }
                 });
-
-                changePasswordDialog.setNegativeButton("No",
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                });
-
-                changePasswordDialog.create().show();
             }
+
         });
 
         // OnClick listener for the delete account button
