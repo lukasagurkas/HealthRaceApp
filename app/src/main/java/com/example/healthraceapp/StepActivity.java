@@ -47,7 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class StepActivity extends AppCompatActivity implements SensorEventListener {
+public class StepActivity extends AppCompatActivity implements SensorEventListener, Intake{
     // If permission to use physical activity is granted
     private int PERMISSION_CODE = 1;
 
@@ -314,6 +314,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
     // Function the create the barChart and insert data into it
+    @Override
     public void createBarChart() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
@@ -348,6 +349,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
     //This function copies the value of database reference ds1 to ds2
+    @Override
     public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
         ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -364,6 +366,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
+    @Override
     public void switchDays() {
         // Give the right data path to the corresponding reference
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
