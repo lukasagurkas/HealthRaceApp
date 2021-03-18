@@ -32,7 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class FruitActivity extends AppCompatActivity {
+public class FruitActivity extends AppCompatActivity implements Intake{
     // Stores the progress on the slider
     TextView tvProgressLabel;
 
@@ -106,7 +106,7 @@ public class FruitActivity extends AppCompatActivity {
 
         // Add bar chart to activity and enter the corresponding data
         barChartFruit = findViewById(R.id.barChartFruit);
-        createBarChart();
+        createBarChart(barChartFruit, getGraphData());
 
 
         // Finds slider in activity page
@@ -171,7 +171,7 @@ public class FruitActivity extends AppCompatActivity {
                         " grams of fruit remains.");
 
                 // Creates a new barChart
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
         });
 
@@ -209,7 +209,7 @@ public class FruitActivity extends AppCompatActivity {
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
                 // Creates a new barChart
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -227,7 +227,7 @@ public class FruitActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 fruitMinusOne = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -245,7 +245,7 @@ public class FruitActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 fruitMinusTwo = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -263,7 +263,7 @@ public class FruitActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 fruitMinusThree = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -281,7 +281,7 @@ public class FruitActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 fruitMinusFour = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -299,7 +299,7 @@ public class FruitActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 fruitMinusFive = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -317,7 +317,7 @@ public class FruitActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 fruitMinusSix = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartFruit, getGraphData());
             }
 
             @Override
@@ -348,8 +348,8 @@ public class FruitActivity extends AppCompatActivity {
         }
     };
 
-    // Function the create the barChart and insert data into it
-    public void createBarChart() {
+    @Override
+    public ArrayList getGraphData() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
         graphData.add(new BarEntry(1, fruitMinusSix));
@@ -360,45 +360,62 @@ public class FruitActivity extends AppCompatActivity {
         graphData.add(new BarEntry(6, fruitMinusOne));
         graphData.add(new BarEntry(7, totalProgress));
 
-        // Layout for the bar chart
-        // Create a new dataset for the barChart with the graphData
-        BarDataSet barDataSetFruit = new BarDataSet(graphData, "Days");
-        // Set Bar Colors
-        barDataSetFruit.setColors(ColorTemplate.MATERIAL_COLORS);
-        // Set Text Color
-        barDataSetFruit.setValueTextColor(Color.BLACK);
-        // Set Text Size
-        barDataSetFruit.setValueTextSize(16f);
-        BarData barDataFruit = new BarData(barDataSetFruit);
-        // Adds half of the bar width to each side of the x-axis range in order to
-        // allow the bars of the barchart to be fully displayed
-        barChartFruit.setFitBars(true);
-        // Set a new data object for the barChart
-        barChartFruit.setData(barDataFruit);
-        // Set description
-        barChartFruit.getDescription().setText("Fruit intake progress over the last 7 days");
-        // The barChart will show a vertical animation with a duration of 200 ms
-        // every time the data changes
-        barChartFruit.animateY(200);
+        return graphData;
     }
 
-    //This function copies the value of database reference ds1 to ds2
-    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    ds2.setValue(task.getResult().getValue());
-                }
-            }
-        });
-    }
+//    // Function the create the barChart and insert data into it
+//    public void createBarChart() {
+//        // ArrayList for the shown data
+//        ArrayList<BarEntry> graphData = new ArrayList<>();
+//        graphData.add(new BarEntry(1, fruitMinusSix));
+//        graphData.add(new BarEntry(2, fruitMinusFive));
+//        graphData.add(new BarEntry(3, fruitMinusFour));
+//        graphData.add(new BarEntry(4, fruitMinusThree));
+//        graphData.add(new BarEntry(5, fruitMinusTwo));
+//        graphData.add(new BarEntry(6, fruitMinusOne));
+//        graphData.add(new BarEntry(7, totalProgress));
+//
+//        // Layout for the bar chart
+//        // Create a new dataset for the barChart with the graphData
+//        BarDataSet barDataSetFruit = new BarDataSet(graphData, "Days");
+//        // Set Bar Colors
+//        barDataSetFruit.setColors(ColorTemplate.MATERIAL_COLORS);
+//        // Set Text Color
+//        barDataSetFruit.setValueTextColor(Color.BLACK);
+//        // Set Text Size
+//        barDataSetFruit.setValueTextSize(16f);
+//        BarData barDataFruit = new BarData(barDataSetFruit);
+//        // Adds half of the bar width to each side of the x-axis range in order to
+//        // allow the bars of the barchart to be fully displayed
+//        barChartFruit.setFitBars(true);
+//        // Set a new data object for the barChart
+//        barChartFruit.setData(barDataFruit);
+//        // Set description
+//        barChartFruit.getDescription().setText("Fruit intake progress over the last 7 days");
+//        // The barChart will show a vertical animation with a duration of 200 ms
+//        // every time the data changes
+//        barChartFruit.animateY(200);
+//    }
+
+//    //This function copies the value of database reference ds1 to ds2
+//    @Override
+//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    ds2.setValue(task.getResult().getValue());
+//                }
+//            }
+//        });
+//    }
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
+    @Override
     public void switchDays() {
 
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");

@@ -47,7 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class StepActivity extends AppCompatActivity implements SensorEventListener {
+public class StepActivity extends AppCompatActivity implements SensorEventListener, Intake{
     // If permission to use physical activity is granted
     private int PERMISSION_CODE = 1;
 
@@ -122,7 +122,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         // Add bar chart to activity and enter the corresponding data
         barChartStep = findViewById(R.id.barChartStep);
-        createBarChart();
+        createBarChart(barChartStep, getGraphData());
 
         // Give the right data path to the corresponding reference
         stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
@@ -141,7 +141,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stepDetectMinusOne = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -158,7 +158,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stepDetectMinusTwo = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -175,7 +175,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stepDetectMinusThree = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -192,7 +192,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stepDetectMinusFour = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -209,7 +209,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 stepDetectMinusFive = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -227,7 +227,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 stepDetectMinusSix = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -262,7 +262,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                                  " steps remain till the next checkpoint.");
 
                 // Create a new barChart
-                createBarChart();
+                createBarChart(barChartStep, getGraphData());
             }
 
             @Override
@@ -313,8 +313,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
-    // Function the create the barChart and insert data into it
-    public void createBarChart() {
+    @Override
+    public ArrayList getGraphData() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
         graphData.add(new BarEntry(1, stepDetectMinusSix));
@@ -325,45 +325,62 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         graphData.add(new BarEntry(6, stepDetectMinusOne));
         graphData.add(new BarEntry(7, stepDetect));
 
-        // Layout for the bar chart
-        // Create a new dataset for the barChart with the graphData
-        BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
-        // Set Bar Colors
-        barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
-        // Set Text Color
-        barDataSetStep.setValueTextColor(Color.BLACK);
-        // Set Text Size
-        barDataSetStep.setValueTextSize(16f);
-        BarData barDataStep = new BarData(barDataSetStep);
-        // Adds half of the bar width to each side of the x-axis range in order to
-        // allow the bars of the barchart to be fully displayed
-        barChartStep.setFitBars(true);
-        // Set a new data object for the barChart
-        barChartStep.setData(barDataStep);
-        // Set description
-        barChartStep.getDescription().setText("Step progress over the last 7 days");
-        // The barChart will show a vertical animation with a duration of 200 ms
-        // every time the data changes
-        barChartStep.animateY(200);
+        return graphData;
     }
 
-    //This function copies the value of database reference ds1 to ds2
-    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    ds2.setValue(task.getResult().getValue());
-                }
-            }
-        });
-    }
+//    // Function the create the barChart and insert data into it
+//    public void createBarChart() {
+//        // ArrayList for the shown data
+//        ArrayList<BarEntry> graphData = new ArrayList<>();
+//        graphData.add(new BarEntry(1, stepDetectMinusSix));
+//        graphData.add(new BarEntry(2, stepDetectMinusFive));
+//        graphData.add(new BarEntry(3, stepDetectMinusFour));
+//        graphData.add(new BarEntry(4, stepDetectMinusThree));
+//        graphData.add(new BarEntry(5, stepDetectMinusTwo));
+//        graphData.add(new BarEntry(6, stepDetectMinusOne));
+//        graphData.add(new BarEntry(7, stepDetect));
+//
+//        // Layout for the bar chart
+//        // Create a new dataset for the barChart with the graphData
+//        BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
+//        // Set Bar Colors
+//        barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
+//        // Set Text Color
+//        barDataSetStep.setValueTextColor(Color.BLACK);
+//        // Set Text Size
+//        barDataSetStep.setValueTextSize(16f);
+//        BarData barDataStep = new BarData(barDataSetStep);
+//        // Adds half of the bar width to each side of the x-axis range in order to
+//        // allow the bars of the barchart to be fully displayed
+//        barChartStep.setFitBars(true);
+//        // Set a new data object for the barChart
+//        barChartStep.setData(barDataStep);
+//        // Set description
+//        barChartStep.getDescription().setText("Step progress over the last 7 days");
+//        // The barChart will show a vertical animation with a duration of 200 ms
+//        // every time the data changes
+//        barChartStep.animateY(200);
+//    }
+
+//    //This function copies the value of database reference ds1 to ds2
+//    @Override
+//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    ds2.setValue(task.getResult().getValue());
+//                }
+//            }
+//        });
+//    }
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
+    @Override
     public void switchDays() {
         // Give the right data path to the corresponding reference
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
@@ -508,7 +525,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                          " steps remain till the next checkpoint.");
 
         // Create a new barChart
-        createBarChart();
+        createBarChart(barChartStep, getGraphData());
     }
 
     @Override

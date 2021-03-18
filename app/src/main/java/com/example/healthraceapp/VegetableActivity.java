@@ -3,25 +3,17 @@ package com.example.healthraceapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.app.Activity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,13 +21,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.warkiz.tickseekbar.OnSeekChangeListener;
-import com.warkiz.tickseekbar.SeekParams;
-import com.warkiz.tickseekbar.TickSeekBar;
 
 import java.util.ArrayList;
 
-public class VegetableActivity extends AppCompatActivity {
+public class VegetableActivity extends AppCompatActivity implements Intake{
 
     private static final String TAG = "";
 
@@ -111,7 +100,7 @@ public class VegetableActivity extends AppCompatActivity {
 
         // Add bar chart to activity and enter the corresponding data
         barChartVeggie = findViewById(R.id.barChartVeggie);
-        createBarChart();
+        createBarChart(barChartVeggie, getGraphData());
 
         // Finds slider in activity page
         SeekBar seekBar = findViewById(R.id.seekBar);
@@ -176,7 +165,7 @@ public class VegetableActivity extends AppCompatActivity {
                         "Only " + remaining + " grams of vegetables remains.");
 
                 // Creates a new barChart
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
         });
 
@@ -215,7 +204,7 @@ public class VegetableActivity extends AppCompatActivity {
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
                 // Creates a new barChart
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -232,7 +221,7 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusOne = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -249,7 +238,7 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusTwo = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -266,7 +255,7 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusThree = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -283,7 +272,7 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusFour = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -300,7 +289,7 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusFive = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -317,7 +306,7 @@ public class VegetableActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusSix = snapshot.getValue(int.class);
-                createBarChart();
+                createBarChart(barChartVeggie, getGraphData());
             }
 
             @Override
@@ -346,8 +335,8 @@ public class VegetableActivity extends AppCompatActivity {
         }
     };
 
-    // Function the create the barChart and insert data into it
-    public void createBarChart() {
+    @Override
+    public ArrayList getGraphData() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
         graphData.add(new BarEntry(1, veggieMinusSix));
@@ -358,45 +347,61 @@ public class VegetableActivity extends AppCompatActivity {
         graphData.add(new BarEntry(6, veggieMinusOne));
         graphData.add(new BarEntry(7, totalProgress));
 
-        // Layout for the bar chart
-        // Create a new dataset for the barChart with the graphData
-        BarDataSet barDataSetVeggie = new BarDataSet(graphData, "Days");
-        // Set Bar Colors
-        barDataSetVeggie.setColors(ColorTemplate.MATERIAL_COLORS);
-        // Set Text Color
-        barDataSetVeggie.setValueTextColor(Color.BLACK);
-        // Set Text Size
-        barDataSetVeggie.setValueTextSize(16f);
-        BarData barDataVeggie = new BarData(barDataSetVeggie);
-        // Adds half of the bar width to each side of the x-axis range in order to
-        // allow the bars of the barchart to be fully displayed
-        barChartVeggie.setFitBars(true);
-        // Set a new data object for the barChart
-        barChartVeggie.setData(barDataVeggie);
-        // Set description
-        barChartVeggie.getDescription().setText("Vegetable intake progress over the last 7 days");
-        // The barChart will show a vertical animation with a duration of 200 ms
-        // every time the data changes
-        barChartVeggie.animateY(200);
+        return graphData;
     }
+//    // Function the create the barChart and insert data into it
+//    public void createBarChart() {
+//        // ArrayList for the shown data
+//        ArrayList<BarEntry> graphData = new ArrayList<>();
+//        graphData.add(new BarEntry(1, veggieMinusSix));
+//        graphData.add(new BarEntry(2, veggieMinusFive));
+//        graphData.add(new BarEntry(3, veggieMinusFour));
+//        graphData.add(new BarEntry(4, veggieMinusThree));
+//        graphData.add(new BarEntry(5, veggieMinusTwo));
+//        graphData.add(new BarEntry(6, veggieMinusOne));
+//        graphData.add(new BarEntry(7, totalProgress));
+//
+//        // Layout for the bar chart
+//        // Create a new dataset for the barChart with the graphData
+//        BarDataSet barDataSetVeggie = new BarDataSet(graphData, "Days");
+//        // Set Bar Colors
+//        barDataSetVeggie.setColors(ColorTemplate.MATERIAL_COLORS);
+//        // Set Text Color
+//        barDataSetVeggie.setValueTextColor(Color.BLACK);
+//        // Set Text Size
+//        barDataSetVeggie.setValueTextSize(16f);
+//        BarData barDataVeggie = new BarData(barDataSetVeggie);
+//        // Adds half of the bar width to each side of the x-axis range in order to
+//        // allow the bars of the barchart to be fully displayed
+//        barChartVeggie.setFitBars(true);
+//        // Set a new data object for the barChart
+//        barChartVeggie.setData(barDataVeggie);
+//        // Set description
+//        barChartVeggie.getDescription().setText("Vegetable intake progress over the last 7 days");
+//        // The barChart will show a vertical animation with a duration of 200 ms
+//        // every time the data changes
+//        barChartVeggie.animateY(200);
+//    }
 
-    //This function copies the value of database reference ds1 to ds2
-    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    ds2.setValue(task.getResult().getValue());
-                }
-            }
-        });
-    }
+//    //This function copies the value of database reference ds1 to ds2
+//    @Override
+//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    ds2.setValue(task.getResult().getValue());
+//                }
+//            }
+//        });
+//    }
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
+    @Override
     public void switchDays() {
         // Give the right data path to the corresponding reference
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");

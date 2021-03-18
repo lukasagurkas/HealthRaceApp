@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void reset(){
+        Log.d("ResetAlarm", "Reset works");
         reference.child("amountOfVeg").setValue(0);
         reference.child("amountOfFruit").setValue(0);
         reference.child("amountOfWater").setValue(0);
