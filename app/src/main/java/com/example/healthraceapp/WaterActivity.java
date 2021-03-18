@@ -13,12 +13,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -102,7 +97,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
         // Add bar chart to activity and enter the corresponding data
         barChartWater = findViewById(R.id.barChartWater);
-        createBarChart();
+        createBarChart(barChartWater, getGraphData());
 
         // Finds slider in activity page
         SeekBar seekBar = findViewById(R.id.seekBar);
@@ -166,7 +161,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
 
                 // Creates a new barChart
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
         });
 
@@ -204,7 +199,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
                 // Creates a new barChart
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -224,7 +219,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 waterMinusOne = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -242,7 +237,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 waterMinusTwo = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -260,7 +255,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 waterMinusThree = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -278,7 +273,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 waterMinusFour = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -296,7 +291,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 waterMinusFive = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -314,7 +309,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
                 waterMinusSix = dataFromDatabase;
-                createBarChart();
+                createBarChart(barChartWater, getGraphData());
             }
 
             @Override
@@ -345,10 +340,8 @@ public class WaterActivity extends AppCompatActivity implements Intake{
     };
 
 
-
-    // Function the create the barChart and insert data into it
     @Override
-    public void createBarChart() {
+    public ArrayList getGraphData() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
         graphData.add(new BarEntry(1, waterMinusSix));
@@ -359,43 +352,59 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         graphData.add(new BarEntry(6, waterMinusOne));
         graphData.add(new BarEntry(7, totalProgress));
 
-        // Layout for the bar chart
-        // Create a new dataset for the barChart with the graphData
-        BarDataSet barDataSetWater = new BarDataSet(graphData, "Days");
-        // Set Bar Colors
-        barDataSetWater.setColors(ColorTemplate.MATERIAL_COLORS);
-        // Set Text Color
-        barDataSetWater.setValueTextColor(Color.BLACK);
-        // Set Text Size
-        barDataSetWater.setValueTextSize(16f);
-        BarData barDataWater = new BarData(barDataSetWater);
-        // Adds half of the bar width to each side of the x-axis range in order to
-        // allow the bars of the barchart to be fully displayed
-        barChartWater.setFitBars(true);
-        // Set a new data object for the barChart
-        barChartWater.setData(barDataWater);
-        // Set description
-        barChartWater.getDescription().setText("Water intake progress over the last 7 days");
-        // The barChart will show a vertical animation with a duration of 200 ms
-        // every time the data changes
-        barChartWater.animateY(200);
+        return graphData;
     }
 
-    //This function copies the value of database reference ds1 to ds2
-    @Override
-    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    ds2.setValue(task.getResult().getValue());
-                }
-            }
-        });
-    }
+//    // Function the create the barChart and insert data into it
+//    @Override
+//    public void createBarChart() {
+//        // ArrayList for the shown data
+//        ArrayList<BarEntry> graphData = new ArrayList<>();
+//        graphData.add(new BarEntry(1, waterMinusSix));
+//        graphData.add(new BarEntry(2, waterMinusFive));
+//        graphData.add(new BarEntry(3, waterMinusFour));
+//        graphData.add(new BarEntry(4, waterMinusThree));
+//        graphData.add(new BarEntry(5, waterMinusTwo));
+//        graphData.add(new BarEntry(6, waterMinusOne));
+//        graphData.add(new BarEntry(7, totalProgress));
+//
+//        // Layout for the bar chart
+//        // Create a new dataset for the barChart with the graphData
+//        BarDataSet barDataSetWater = new BarDataSet(graphData, "Days");
+//        // Set Bar Colors
+//        barDataSetWater.setColors(ColorTemplate.MATERIAL_COLORS);
+//        // Set Text Color
+//        barDataSetWater.setValueTextColor(Color.BLACK);
+//        // Set Text Size
+//        barDataSetWater.setValueTextSize(16f);
+//        BarData barDataWater = new BarData(barDataSetWater);
+//        // Adds half of the bar width to each side of the x-axis range in order to
+//        // allow the bars of the barchart to be fully displayed
+//        barChartWater.setFitBars(true);
+//        // Set a new data object for the barChart
+//        barChartWater.setData(barDataWater);
+//        // Set description
+//        barChartWater.getDescription().setText("Water intake progress over the last 7 days");
+//        // The barChart will show a vertical animation with a duration of 200 ms
+//        // every time the data changes
+//        barChartWater.animateY(200);
+//    }
+
+//    //This function copies the value of database reference ds1 to ds2
+//    @Override
+//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
+//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                }
+//                else {
+//                    ds2.setValue(task.getResult().getValue());
+//                }
+//            }
+//        });
+//    }
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day

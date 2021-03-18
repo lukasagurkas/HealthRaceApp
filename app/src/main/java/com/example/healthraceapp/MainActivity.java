@@ -215,6 +215,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void reset(){
+        Log.d("ResetAlarm", "Reset works");
         reference.child("amountOfVeg").setValue(0);
         reference.child("amountOfFruit").setValue(0);
         reference.child("amountOfWater").setValue(0);
@@ -233,8 +234,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 16);
-        setCalendar.set(Calendar.MINUTE, 4);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        setCalendar.set(Calendar.MINUTE, 0);
         setCalendar.set(Calendar.SECOND, 0);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
