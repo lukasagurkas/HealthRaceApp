@@ -35,7 +35,7 @@ import com.warkiz.tickseekbar.TickSeekBar;
 
 import java.util.ArrayList;
 
-public class VegetableActivity extends AppCompatActivity {
+public class VegetableActivity extends AppCompatActivity implements Intake{
 
     private static final String TAG = "";
 
@@ -347,6 +347,7 @@ public class VegetableActivity extends AppCompatActivity {
     };
 
     // Function the create the barChart and insert data into it
+    @Override
     public void createBarChart() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
@@ -381,6 +382,7 @@ public class VegetableActivity extends AppCompatActivity {
     }
 
     //This function copies the value of database reference ds1 to ds2
+    @Override
     public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
         ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -397,6 +399,7 @@ public class VegetableActivity extends AppCompatActivity {
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
+    @Override
     public void switchDays() {
         // Give the right data path to the corresponding reference
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");

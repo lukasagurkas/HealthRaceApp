@@ -29,7 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class WaterActivity extends AppCompatActivity {
+public class WaterActivity extends AppCompatActivity implements Intake{
     // Stores the progress on the slider
     TextView tvProgressLabel;
 
@@ -344,22 +344,10 @@ public class WaterActivity extends AppCompatActivity {
         }
     };
 
-    public void setBarChart(DatabaseReference ds, int day) {
-        ds.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int value = snapshot.getValue(int.class);
-                createBarChart();
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
     // Function the create the barChart and insert data into it
+    @Override
     public void createBarChart() {
         // ArrayList for the shown data
         ArrayList<BarEntry> graphData = new ArrayList<>();
@@ -394,6 +382,7 @@ public class WaterActivity extends AppCompatActivity {
     }
 
     //This function copies the value of database reference ds1 to ds2
+    @Override
     public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
         ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -410,6 +399,7 @@ public class WaterActivity extends AppCompatActivity {
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
+    @Override
     public void switchDays() {
         // Give the right data path to the corresponding reference
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
@@ -521,4 +511,5 @@ public class WaterActivity extends AppCompatActivity {
 //        }
 //        );
     }
+
 }
