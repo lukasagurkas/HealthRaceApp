@@ -19,7 +19,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="button_group_activity">Group Page</string>
     <string name="title_activity_step_counter">Step Counter Activity</string>
-    <string name="title_activity_group">Group Activity</string>
+    <string name="title_activity_group">Groups</string>
     <string name="title_activity_vegetable">Vegetable Activity</string>
     <string name="title_activity_water">Water Activity</string>
     <string name="title_activity_profile">Profile Activity</string>
@@ -33,4 +33,8 @@
     <string name="card_view_filler_username">ExampleUsername</string>
     <string name="create_new_group_button">Create New Group</string>
     <string name="create_group">You are not a part of any group. You can either create your own group by going to the overflow menu in the action bar (the three dots). Or you can get added to a group.</string>
+    <string name="select_group">Select Group</string>
+    <string name="add_user_to_group">Add User To Group</string>
+    <string name="remove_user_from_group">Remove User From Group</string>
+    <string name="delete_group">Delete Selected Group</string>
 </resources>

@@ -5,4 +5,24 @@
         android:id="@+id/createGroupButton"
         android:title="@string/create_new_group_button"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/addUserToGroup"
+        android:title="@string/add_user_to_group"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/removeUserFromGroup"
+        android:title="@string/remove_user_from_group"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/deleteGroup"
+        android:title="@string/delete_group"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/selectGroupSpinner"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.Spinner"
+        android:title="@string/select_group" />
 </menu>

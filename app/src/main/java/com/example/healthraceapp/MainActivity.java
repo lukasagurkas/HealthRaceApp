@@ -169,13 +169,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-//        buttonGroup.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(MainActivity.this, GroupActivity.class));
-//
-//            }
-//        });
+        buttonGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, GroupActivity.class));
+
+            }
+        });
 
     }
 

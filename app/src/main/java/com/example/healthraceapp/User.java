@@ -1,5 +1,7 @@
 package com.example.healthraceapp;
 
+import java.util.ArrayList;
+
 public class User {
     private String username, email;
     private boolean male;
@@ -15,6 +17,10 @@ public class User {
     private int fruitMinusOne, fruitMinusTwo, fruitMinusThree, fruitMinusFour
             , fruitMinusFive, fruitMinusSix;
 
+    // Names of groups that the user is part of
+    private ArrayList<String> groupNames;
+
+    // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User(){}
 
     public User(String username, String email) {}
@@ -26,6 +32,9 @@ public class User {
         this.year = year;
         this.month = month ;
         this.day = day;
+
+        groupNames = new ArrayList<>();
+        groupNames.add("");
     }
 
     public String getUsername() {
@@ -286,5 +295,17 @@ public class User {
 
     public void setFruitMinusSix(int fruitMinusSix) {
         this.fruitMinusSix = fruitMinusSix;
+    }
+
+    public ArrayList<String> getGroupNames() {
+        return groupNames;
+    }
+
+    public void addGroup(String group) {
+        groupNames.add(group);
+    }
+
+    public void exitGroup(String group) {
+        groupNames.remove(group);
     }
 }
