@@ -2,15 +2,23 @@ package com.example.healthraceapp;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
@@ -52,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout layout_vegetable;
 
     ProgressBar progressBar_water, progressBar_veg, progressBar_fruit, progressBar_step;
+
+    MaterialToolbar topAppBar;
 
     // If permission is granted
     private int PERMISSION_CODE = 1;
@@ -99,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 //        stepText = findViewById(R.id.stepText);
 
-        buttonProfile = findViewById(R.id.buttonProfile);
+//        buttonProfile = findViewById(R.id.buttonProfile);
         buttonGroup = findViewById(R.id.buttonGroup);
 
         //layout for the step page
@@ -124,11 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         createProgressBar(progressBar_veg, "amountOfVeg", 500);
 
 
-        //displaying logged in user email
-//        textViewUserEmail.setText("Welcome "+ user.getEmail());
-
-        //adding listener to button
-        //buttonLogout.setOnClickListener(this);
 
         //listens for changes on step counter page widget
         layout_step.setOnClickListener(new View.OnClickListener() {
@@ -162,12 +168,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        buttonProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
-            }
-        });
+//        buttonProfile.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+//            }
+//        });
 
         buttonGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,6 +184,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
     }
+
+    // Create an ActionBar button
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Instantiate XML file into its corresponding View object
+        getMenuInflater().inflate(R.menu.top_app_bar, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // Handle ActionBar requests
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.profile_page) {
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        } else {}
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void createProgressBar(ProgressBar progressBar, String progressValue, int max) {
         progressBar.setMax(max);
