@@ -171,7 +171,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if(task.isSuccessful()){
                                             Toast.makeText(LoginActivity.this,
-                                                    "Password has been sent to your email",
+                                                    "You are able to change your password " +
+                                                            "in the sent email",
                                                     Toast.LENGTH_LONG).show();
                                         }else {
                                             Toast.makeText(LoginActivity.this,
