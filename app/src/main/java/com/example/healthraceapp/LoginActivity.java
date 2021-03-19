@@ -2,9 +2,11 @@ package com.example.healthraceapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,6 +17,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -45,7 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         actionBar.setTitle("Login");
 
         // Defining FirebaseAuth object
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // If the FirebaseAuth object getCurrentUser() method is not null then the user is already
         // logged in
@@ -66,12 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressDialog = new ProgressDialog(this);
 
         // Attaching click listener to forgot password text
-        textForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, PopupForgotPassword.class));
-            }
-        });
+        textForgotPassword.setOnClickListener(this);
         // OnClick listener to sign in button
         buttonSignIn.setOnClickListener(this);
         // OnClick listener to register button
@@ -146,6 +144,54 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (view == buttonRegister) {
             finish();
             startActivity(new Intent(this, RegisterActivity.class));
+        }
+
+        if (view == textForgotPassword) {
+            final EditText editUserEmail = new EditText(view.getContext());
+            final AlertDialog.Builder forgotPasswordDialog =
+                    new AlertDialog.Builder(view.getContext());
+            forgotPasswordDialog.setTitle("Forgot Password");
+            forgotPasswordDialog.setMessage("Please enter your email");
+            forgotPasswordDialog.setView(editUserEmail);
+
+            forgotPasswordDialog.setPositiveButton("Submit",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String userEmail = editUserEmail.getText().toString().trim();
+
+                            if(TextUtils.isEmpty(userEmail)){
+                                Toast.makeText(LoginActivity.this,
+                                        "Please enter your email address",
+                                        Toast.LENGTH_LONG).show();
+                            } else {
+                                mAuth.sendPasswordResetEmail(userEmail)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if(task.isSuccessful()){
+                                            Toast.makeText(LoginActivity.this,
+                                                    "Password has been sent to your email",
+                                                    Toast.LENGTH_LONG).show();
+                                        }else {
+                                            Toast.makeText(LoginActivity.this,
+                                                    task.getException().getMessage(),
+                                                    Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+            forgotPasswordDialog.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
+            forgotPasswordDialog.create().show();
         }
 
     }

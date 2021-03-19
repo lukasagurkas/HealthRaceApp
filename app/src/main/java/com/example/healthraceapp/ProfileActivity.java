@@ -58,7 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView email, username, day, month, year, gender;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
     private ImageView userProfileImage;
-    private ImageButton buttonAddGroup;
+//    private ImageButton buttonAddGroup;
 
     private String userID;
 
@@ -102,7 +102,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         userProfileImage = findViewById(R.id.userProfileImage);
-        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
+//        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
 
         // If there is a user a profile image should be fetched from storage
         if (user != null) {
@@ -194,12 +194,12 @@ public class ProfileActivity extends AppCompatActivity {
             });
 
         // OnClick listener for the add group button
-        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: create new group
-            }
-        });
+//        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO: create new group
+//            }
+//        });
 
         //TextView references from the UI
         username = (TextView) findViewById(R.id.textUsernameProfile);
@@ -364,7 +364,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(ProfileActivity.this, "Updated succesfully",
+                        Toast.makeText(ProfileActivity.this, "Updated successfully",
                                 Toast.LENGTH_SHORT).show();
                     }
                 })

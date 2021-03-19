@@ -7,13 +7,24 @@
     tools:context=".ProfileActivity">
 
     <TextView
+        android:id="@+id/textPoints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Today's points: "
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.084"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDoB" />
+
+    <TextView
         android:id="@+id/textGroups"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="84dp"
-        android:text="Groups"
+        android:layout_marginTop="68dp"
+        android:text="Part of group: "
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
+        app:layout_constraintHorizontal_bias="0.084"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textDoB" />
 
@@ -24,10 +35,9 @@
         android:text="Log out"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonDeleteAccount"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/buttonChangePassword"
         app:layout_constraintTop_toBottomOf="@+id/textEmailProfile"
-        app:layout_constraintVertical_bias="0.538" />
+        app:layout_constraintVertical_bias="0.536" />
 
     <Button
         android:id="@+id/buttonDeleteAccount"
@@ -86,57 +96,70 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
+    <!--    <ImageView-->
+<!--            android:id="@+id/userProfileImage"-->
+<!--            android:layout_width="169dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:onClick="handleImageClick"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintHorizontal_bias="0.512"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintVertical_bias="0.096"-->
+<!--            app:srcCompat="@drawable/profile"-->
+<!--            tools:srcCompat="@tools:sample/avatars" />-->
 
-        <ImageView
-            android:id="@+id/userProfileImage"
-            android:layout_width="169dp"
-            android:layout_height="150dp"
-            android:onClick="handleImageClick"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.512"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.096"
-            app:srcCompat="@drawable/profile"
-            tools:srcCompat="@tools:sample/avatars" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userProfileImage"
+        android:layout_width="156dp"
+        android:layout_height="134dp"
+        android:layout_marginTop="32dp"
+        android:onClick="handleImageClick"
+        android:src="@drawable/profile"
+        app:civ_border_color="#FF000000"
+        app:civ_border_width="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/textUsernameProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/username"
-            android:textSize="24sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
-            app:layout_constraintVertical_bias="0.07" />
+    <TextView
+        android:id="@+id/textUsernameProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/username"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
+        app:layout_constraintVertical_bias="0.029" />
 
-        <TextView
-            android:id="@+id/textDoB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:text="@string/DoB"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.075"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
+    <TextView
+        android:id="@+id/textDoB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="@string/DoB"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
-        <TextView
-            android:id="@+id/textGender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/gender"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.079"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textDoB" />
+    <TextView
+        android:id="@+id/textGender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/gender"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDoB" />
 
-        <TextView
+    <TextView
             android:id="@+id/textEmailProfile"
             android:layout_width="357dp"
             android:layout_height="20dp"
@@ -148,18 +171,17 @@
             app:layout_constraintVertical_bias="0.031" />
 
 
-
-        <ImageButton
-            android:id="@+id/imageButtonAddGroup"
-            android:layout_width="29dp"
-            android:layout_height="30dp"
-            app:layout_constraintBottom_toTopOf="@+id/buttonChangePassword"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.075"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textGender"
-            app:layout_constraintVertical_bias="0.118"
-            app:srcCompat="@drawable/add_user_smaller" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/imageButtonAddGroup"-->
+<!--        android:layout_width="29dp"-->
+<!--        android:layout_height="30dp"-->
+<!--        android:layout_marginStart="28dp"-->
+<!--        android:layout_marginLeft="28dp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/buttonChangePassword"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textGender"-->
+<!--        app:layout_constraintVertical_bias="0.312"-->
+<!--        app:srcCompat="@drawable/add_user_smaller" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

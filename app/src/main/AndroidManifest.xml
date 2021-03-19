@@ -90,9 +90,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PopupForgotPassword"
-            android:theme="@style/Theme_Translucent" />
-        <activity
             android:name=".GroupActivity"
             android:label="@string/title_activity_group"
             android:parentActivityName=".MainActivity">
