@@ -85,10 +85,6 @@ public class GroupActivity extends AppCompatActivity {
         currentUserReference = databaseReference.child("Users").child(userID);
 
         getUserInitializeView();
-
-        Toast.makeText(this, "OnCreate", Toast.LENGTH_SHORT).show();
-
-
     }
 
     /*@Override
