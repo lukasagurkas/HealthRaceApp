@@ -11,9 +11,9 @@ public class Group {
 
     public Group() {}
 
-    public Group(String adminUID, User admin, String groupName) {
+    public Group(String adminUsername, String adminUID, User admin, String groupName) {
         this.adminUID = adminUID;
-        members.put(adminUID, admin);
+        members.put(adminUsername, admin);
         admin.addGroup(groupName);
         this.groupName = groupName;
     }
@@ -26,13 +26,13 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public void addMember(String UID, User user, String groupName) {
-        members.put(UID, user);
+    public void addMember(String username, User user, String groupName) {
+        members.put(username, user);
         user.addGroup(groupName);
     }
 
-    public void removeMember(String UID, User user, String groupName) {
-        members.remove(UID);
+    public void removeMember(String username, User user, String groupName) {
+        members.remove(username);
         user.exitGroup(groupName);
     }
 

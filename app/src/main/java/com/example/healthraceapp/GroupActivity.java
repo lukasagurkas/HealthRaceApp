@@ -37,6 +37,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class GroupActivity extends AppCompatActivity {
@@ -60,7 +61,7 @@ public class GroupActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
 
     // User for checking group name uniqueness
-    private final ArrayList<String> allGroupNames = new ArrayList<>();
+    private ArrayList<String> allGroupNames = new ArrayList<>();
 
     // Used to get the group name of a new group from the AlertDialog
     private String newGroupName = "";
@@ -85,8 +86,17 @@ public class GroupActivity extends AppCompatActivity {
 
         getUserInitializeView();
 
+        Toast.makeText(this, "OnCreate", Toast.LENGTH_SHORT).show();
+
 
     }
+
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        userID = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
+        getUserInitializeView();
+    }*/
 
     private void getUserInitializeView() {
         databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -110,6 +120,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void setRecycleView() {
+        // Clearing all the views
         viewGroup.removeAllViews();
         viewGroup.addView(View.inflate(getApplicationContext(), R.layout.activity_group, null));
 
@@ -188,43 +199,59 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void initializeSpinner() {
-        // Defining DatabaseReference object
-        DatabaseReference databaseReferenceGroups = firebaseDatabase.getReference("Groups");
-
-        databaseReferenceGroups.addValueEventListener(new ValueEventListener() {
+        databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    String temporaryGroupName = dataSnapshot.child("groupName").getValue(String.class);
-                    if (!allGroupNames.contains(temporaryGroupName)) {
-                        // Adding all unique group names to the ArrayList allGroupNames
-                        allGroupNames.add(temporaryGroupName);
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+                    user = task.getResult().getValue(User.class);
+                    // Getting all the groups that the user is part of
+                    assert user != null;
+                    allGroupNames = user.getGroupNames();
+
+                    if (allGroupNames.size() < 2) {
+                        ArrayList<String> temporaryList = new ArrayList<>();
+                        temporaryList.add("Join a group");
+                        Spinner spinner = (Spinner) findViewById(R.id.selectGroupSpinner);
+                        ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, temporaryList);
+                        addressAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(addressAdapter);
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                Toast.makeText(GroupActivity.this, "To select a group you first need to create a group or be added to one", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                                // Auto-generated method
+                            }
+                        });
+                    } else {
+                        allGroupNames.remove("");
+                        // After retrieving all the group names set up the Spinner
+                        Spinner spinner = (Spinner) findViewById(R.id.selectGroupSpinner);
+                        ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, allGroupNames);
+                        addressAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(addressAdapter);
+
+                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                currentlySelectedGroup = parent.getItemAtPosition(position).toString();
+                                setRecycleView(); // Once the group is selected we need to set the RecyclerView
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+                                // Auto-generated method
+                            }
+                        });
                     }
                 }
-                // After retrieving all the group names set up the Spinner
-                Spinner spinner = (Spinner) findViewById(R.id.selectGroupSpinner);
-                ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, allGroupNames);
-                addressAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(addressAdapter);
-
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        currentlySelectedGroup = parent.getItemAtPosition(position).toString();
-                        setRecycleView(); // Once the group is selected we need to set the RecyclerView
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        // Auto-generated method
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Getting data was canceled
-                Log.w(TAG, "onCancelled", error.toException());
             }
         });
     }
@@ -269,7 +296,7 @@ public class GroupActivity extends AppCompatActivity {
             });
 
             builder.show();
-        } else {
+        } else if (item.getItemId() == R.id.addUserToGroup || item.getItemId() == R.id.removeUserFromGroup || item.getItemId() == R.id.deleteGroup) {
             databaseReference.child("Groups").child(currentlySelectedGroup).child("adminUID").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -341,13 +368,38 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void addUserToGroup(String username) {
-        boolean userExists;
+        // Has to be final boolean array because it is accessed from an inner class
+        final boolean[] userExists = new boolean[1];
         firebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                    String temporaryUsername = dataSnapshot.child("username").getValue(String.class);
-                    //if ()
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child("username").getValue(String.class).equals(username)) {
+                        userExists[0] = true;
+                        User selectedUser = dataSnapshot.getValue(User.class);
+
+                        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("firebase", "Error getting data", task.getException());
+                                } else {
+                                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                                    Group selectedGroup = task.getResult().getValue(Group.class);
+
+                                    // Adding the new member to the group
+                                    selectedGroup.addMember(selectedUser.getUsername(), selectedUser, currentlySelectedGroup);
+
+                                    databaseReference.child("Groups").child(currentlySelectedGroup).child("members").child(selectedUser.getUsername()).setValue(selectedUser);
+
+                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
+                                }
+                            }
+                        });
+                    }
+                }
+                if (!userExists[0]) {
+                    Toast.makeText(GroupActivity.this, "A user with this username does not exist", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -360,13 +412,83 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void removeUserFromGroup(String username) {
-        Toast.makeText(GroupActivity.this, "removing User", Toast.LENGTH_LONG).show();
+        // Has to be final boolean array because it is accessed from an inner class
+        final boolean[] userExists = new boolean[1];
+        firebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.child("username").getValue(String.class).equals(username)) {
+                        userExists[0] = true;
+                        User selectedUser = dataSnapshot.getValue(User.class);
 
+                        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                                if (!task.isSuccessful()) {
+                                    Log.e("firebase", "Error getting data", task.getException());
+                                } else {
+                                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                                    Group selectedGroup = task.getResult().getValue(Group.class);
+
+                                    // Adding the new member to the group
+                                    selectedGroup.removeMember(selectedUser.getUsername(), selectedUser, currentlySelectedGroup);
+
+                                    databaseReference.child("Groups").child(currentlySelectedGroup).child("members").child(selectedUser.getUsername()).removeValue();
+
+                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
+                                }
+                            }
+                        });
+                    }
+                }
+                if (!userExists[0]) {
+                    Toast.makeText(GroupActivity.this, "A user with this username does not exist", Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Getting data was canceled
+                Log.w(TAG, "onCancelled", error.toException());
+            }
+        });
     }
 
     private void deleteGroup(String groupName) {
-        Toast.makeText(GroupActivity.this, "deleting User", Toast.LENGTH_LONG).show();
+        databaseReference.child("Groups").child(groupName).child("members").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+                    HashMap<String, User> allMembers = (HashMap<String, User>) task.getResult().getValue();
 
+                    databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                                if (allMembers.containsKey(dataSnapshot.child("username").getValue(String.class))) {
+                                    User tempUser = dataSnapshot.getValue(User.class);
+                                    tempUser.exitGroup(groupName);
+                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(tempUser);
+                                }
+                            }
+                            databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
+
+                            getUserInitializeView();
+                            initializeSpinner();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void checkGroupNameUniqueness() {
@@ -413,7 +535,7 @@ public class GroupActivity extends AppCompatActivity {
         }
 
         // New group
-        Group newGroup = new Group(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user, newGroupName);
+        Group newGroup = new Group(user.getUsername(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user, newGroupName);
 
         // Add the new group to the Firebase database
         DatabaseReference newGroupRef = firebaseDatabase.getReference("Groups");
@@ -421,7 +543,6 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (!task.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
                     setRecycleView();
@@ -432,10 +553,12 @@ public class GroupActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task1) {
                             if (!task1.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), Objects.requireNonNull(task1.getException()).getMessage(), Toast.LENGTH_LONG).show();
                                 Log.e("firebase", "Error getting data", task1.getException());
                             } else {
                                 Log.d("firebase", String.valueOf(task1.getResult()));
+                                initializeSpinner();
+                                userID = firebaseAuth.getCurrentUser().getUid();
+                                getUserInitializeView();
                             }
                         }
                     });
