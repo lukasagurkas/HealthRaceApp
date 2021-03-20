@@ -3,6 +3,8 @@ package com.example.healthraceapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +39,10 @@ public class WaterActivity extends AppCompatActivity implements Intake{
     // TextView for the 'ml' for grams after the slider
     TextView milliliters;
 
+    // TextView that shows points from water page
+    // TODO: delete this later
+    TextView pointsWater;
+
     // Button to add water quantity
     Button buttonAdd;
 
@@ -60,8 +66,12 @@ public class WaterActivity extends AppCompatActivity implements Intake{
     int waterMinusFive;
     int waterMinusSix;
 
+    //stores points received from water page
+    int points_water;
+
     // Database reference for all values in the bar chart
     private DatabaseReference waterReference;
+//    private DatabaseReference pointsWaterReference;
     private DatabaseReference minusOneDatabaseReference;
     private DatabaseReference minusTwoDatabaseReference;
     private DatabaseReference minusThreeDatabaseReference;
@@ -81,6 +91,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
     private String userID = firebaseUser.getUid();
     User user = new User();
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +99,9 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
         // Finds progress bar in activity page
         progressBar = findViewById(R.id.progressBar);
+
+        int colorCodeDark = Color.parseColor("#F44336");
+        progressBar.setIndeterminateTintList(ColorStateList.valueOf(colorCodeDark));
         // Sets the progress
         progressBar.setProgress(totalProgress);
         // Sets the maximum progress to 500 (ml of water)
@@ -110,6 +124,12 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         tvProgressLabel.setTextColor(Color.WHITE);
         tvProgressLabel.setTextSize(15);
 
+        // TextView that shows the amount of ml's the user will add when pressing the add button
+        // TODO: delete this later
+        pointsWater = findViewById(R.id.pointsWater);
+        pointsWater.setTextColor(Color.WHITE);
+        pointsWater.setTextSize(15);
+
         // Informational textView, showing how many milliliter of water the user should still take
         // Of course, this remaining value cannot be a negative number
         waterProgress = findViewById(R.id.waterProgress);
@@ -122,6 +142,37 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 "recommended 2000 ml. Only " + remaining + " ml of water remains.");
         waterProgress.setTextColor(Color.WHITE);
         waterProgress.setTextSize(20);
+
+//        waterReference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                int dataFromDatabase = snapshot.getValue(int.class);
+//                totalProgress = dataFromDatabase;
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.w("error", "loadPost:onCancelled", error.toException());
+//            }
+//        });
+
+        if (totalProgress<=200) {
+            points_water = 25;
+        }
+        else if (totalProgress<=500) {
+            points_water += 50;
+        }
+        else if (totalProgress<=1000) {
+            points_water += 100;
+        }
+        else if (totalProgress<=2000) {
+            points_water += 250;
+        }
+        else if (totalProgress<=3200) {
+            points_water += 500;
+        }
+
+        pointsWater.setText("" + points_water);
 
         // Informational textView for the amount of points you get for each checkpoint
         checkpoint = findViewById(R.id.checkpoint);
@@ -140,6 +191,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 // Gets the value from the slider and displays it in the textView below
                 progress = seekBar.getProgress();
                 tvProgressLabel.setText("" + progress);
+                pointsWater.setText("" + points_water);
 
                 // Add the value from the slider to the totalProgress
                 totalProgress = totalProgress + progress;
@@ -149,6 +201,9 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
                 // Updates the value in the database to the new totalProgress
                 waterReference.setValue(totalProgress);
+
+                // Updates the points value in the database to the new value
+                // pointsWaterReference.setValue(points_water);
 
                 // Informational textView, showing how many milliliter of water the user
                 // should still take. Of course, this remaining value cannot be a negative number
@@ -160,6 +215,22 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
 
+                if (totalProgress<=200) {
+                    points_water = 25;
+                }
+                else if (totalProgress<=500) {
+                    points_water += 50;
+                }
+                else if (totalProgress<=1000) {
+                    points_water += 100;
+                }
+                else if (totalProgress<=2000) {
+                    points_water += 250;
+                }
+                else if (totalProgress<=3200) {
+                    points_water += 500;
+                }
+
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
             }
@@ -167,6 +238,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
         // Give the right data path to the corresponding reference
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+        // pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
@@ -197,6 +269,23 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
+
+                //adds points to the total from the water page if these checkpoints are crossed
+                if (totalProgress<=200) {
+                    points_water = 25;
+                }
+                else if (totalProgress<=500) {
+                    points_water += 50;
+                }
+                else if (totalProgress<=1000) {
+                    points_water += 100;
+                }
+                else if (totalProgress<=2000) {
+                    points_water += 250;
+                }
+                else if (totalProgress<=3200) {
+                    points_water += 500;
+                }
 
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
