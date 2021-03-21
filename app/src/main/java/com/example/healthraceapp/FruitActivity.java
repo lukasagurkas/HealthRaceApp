@@ -3,25 +3,17 @@ package com.example.healthraceapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.app.Activity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -82,6 +74,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
 
     // Database reference for all values in the bar chart
     private DatabaseReference fruitReference;
+    private DatabaseReference pointsFruitReference;
     private DatabaseReference minusOneDatabaseReference;
     private DatabaseReference minusTwoDatabaseReference;
     private DatabaseReference minusThreeDatabaseReference;
@@ -170,6 +163,9 @@ public class FruitActivity extends AppCompatActivity implements Intake{
                         "out of the recommended 500 g. Only " + remaining +
                         " grams of fruit remains.");
 
+                // Sets the points
+                setPoints(totalProgress, pointsFruitReference);
+
                 // Creates a new barChart
                 createBarChart(barChartFruit, getGraphData());
             }
@@ -177,6 +173,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
 
         // Give the right data path to the corresponding reference
         fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
+        pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitPoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
@@ -207,6 +204,9 @@ public class FruitActivity extends AppCompatActivity implements Intake{
                 intakeProgress.setText("You ate " + totalProgress + " g of fruits today out " +
                         "of the recommended 500 g. Only " + remaining + " grams of fruit remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
+
+                // Sets the points
+                setPoints(totalProgress, pointsFruitReference);
 
                 // Creates a new barChart
                 createBarChart(barChartFruit, getGraphData());
@@ -528,4 +528,18 @@ public class FruitActivity extends AppCompatActivity implements Intake{
 //        }
 //        );
     }
+
+    @Override
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+        //adds points to the total from the water page if these checkpoints are crossed
+        int points = 0;
+        if (totalProgress == 0){ points = 0; }
+        else if (totalProgress <= 200) { points = 25; }
+        else if (totalProgress <= 500) { points = 50; }
+        else if (totalProgress <= 1000) { points = 100; }
+        else if (totalProgress <= 2000) { points = 250; }
+        else if (totalProgress <= 3200) { points = 500; }
+        pointsReference.setValue(points);
+    }
+
 }

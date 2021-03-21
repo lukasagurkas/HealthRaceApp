@@ -76,6 +76,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
 
     // Database reference for all values in the bar chart
     private DatabaseReference vegReference;
+    private DatabaseReference pointsVeggieReference;
     private DatabaseReference minusOneDatabaseReference;
     private DatabaseReference minusTwoDatabaseReference;
     private DatabaseReference minusThreeDatabaseReference;
@@ -164,6 +165,9 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
                         " g of vegetables today out of the recommended 500 g. " +
                         "Only " + remaining + " grams of vegetables remains.");
 
+                // Sets the points
+                setPoints(totalProgress, pointsVeggieReference);
+
                 // Creates a new barChart
                 createBarChart(barChartVeggie, getGraphData());
             }
@@ -171,6 +175,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
 
         // Give the right data path to the corresponding reference
         vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
+        pointsVeggieReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggiePoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
@@ -202,6 +207,9 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
                         "today out of the recommended 500 g. Only "
                         + remaining + " grams of vegetables remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
+
+                // Sets the points
+                setPoints(totalProgress, pointsVeggieReference);
 
                 // Creates a new barChart
                 createBarChart(barChartVeggie, getGraphData());
@@ -513,5 +521,18 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
 //            }
 //        }
 //        );
+    }
+
+    @Override
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+        //adds points to the total from the water page if these checkpoints are crossed
+        int points = 0;
+        if (totalProgress == 0){ points = 0; }
+        else if (totalProgress <= 200) { points = 25; }
+        else if (totalProgress <= 500) { points = 50; }
+        else if (totalProgress <= 1000) { points = 100; }
+        else if (totalProgress <= 2000) { points = 250; }
+        else if (totalProgress <= 3200) { points = 500; }
+        pointsReference.setValue(points);
     }
 }

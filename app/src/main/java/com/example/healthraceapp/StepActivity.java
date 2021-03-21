@@ -1,41 +1,25 @@
 package com.example.healthraceapp;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.PeriodicSync;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -45,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener, Intake{
     // If permission to use physical activity is granted
@@ -91,6 +74,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     // Database reference for all values in the bar chart
     private DatabaseReference stepReference;
+    private DatabaseReference pointsStepReference;
     private DatabaseReference minusOneDatabaseReference;
     private DatabaseReference minusTwoDatabaseReference;
     private DatabaseReference minusThreeDatabaseReference;
@@ -126,6 +110,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         // Give the right data path to the corresponding reference
         stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
+        pointsStepReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepPoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusThree");
@@ -260,6 +245,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 progress.setText("You walked " + stepDetect + " steps today out of the " +
                                  "recommended 7000 per day. Only " + remaining +
                                  " steps remain till the next checkpoint.");
+
+                //set the points
+                setPoints(stepDetect, pointsStepReference);
 
                 // Create a new barChart
                 createBarChart(barChartStep, getGraphData());
@@ -524,6 +512,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                          "recommended 7000 per day. Only " + remaining +
                          " steps remain till the next checkpoint.");
 
+        // Set the points
+        setPoints(stepDetect, pointsStepReference);
+
         // Create a new barChart
         createBarChart(barChartStep, getGraphData());
     }
@@ -550,5 +541,18 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private void toastMessage(String message) {
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
     }
+    @Override
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+        //adds points to the total from the water page if these checkpoints are crossed
+        int points = 0;
+        if (totalProgress == 0){ points = 0; }
+        else if (totalProgress <= 200) { points = 25; }
+        else if (totalProgress <= 500) { points = 50; }
+        else if (totalProgress <= 1000) { points = 100; }
+        else if (totalProgress <= 2000) { points = 250; }
+        else if (totalProgress <= 3200) { points = 500; }
+        pointsReference.setValue(points);
+    }
+
 }
 

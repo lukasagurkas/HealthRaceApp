@@ -3,20 +3,19 @@ package com.example.healthraceapp;
 
 
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -65,6 +64,26 @@ public interface Intake {
             }
         });
     }
+
+    //TODO delete this when deleting TextView pointsWater in water activity
+    @SuppressLint("SetTextI18n")
+    default void setPoints(int totalProgress, String userID, DatabaseReference pointsReference, TextView pointsWater) {
+
+        //adds points to the total from the water page if these checkpoints are crossed
+                int points = 0;
+                if (totalProgress == 0){ points = 0; }
+                else if (totalProgress <= 200) { points = 25; }
+                else if (totalProgress <= 500) { points = 50; }
+                else if (totalProgress <= 1000) { points = 100; }
+                else if (totalProgress <= 2000) { points = 250; }
+                else if (totalProgress <= 3200) { points = 500; }
+                pointsReference.setValue(points);
+                pointsWater.setText("" + points);
+
+            }
+
+    @SuppressLint("SetTextI18n")
+    void setPoints(int totalProgress, DatabaseReference pointsReference);
 
 
 }

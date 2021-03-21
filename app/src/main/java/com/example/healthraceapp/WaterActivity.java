@@ -71,7 +71,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
     // Database reference for all values in the bar chart
     private DatabaseReference waterReference;
-//    private DatabaseReference pointsWaterReference;
+    private DatabaseReference pointsWaterReference;
     private DatabaseReference minusOneDatabaseReference;
     private DatabaseReference minusTwoDatabaseReference;
     private DatabaseReference minusThreeDatabaseReference;
@@ -84,7 +84,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
     // Initialize instances for writing and reading data from the database
     private static final String TAG = "ViewDatabase";
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+    public FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
             "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -156,23 +156,23 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 //            }
 //        });
 
-        if (totalProgress<=200) {
-            points_water = 25;
-        }
-        else if (totalProgress<=500) {
-            points_water += 50;
-        }
-        else if (totalProgress<=1000) {
-            points_water += 100;
-        }
-        else if (totalProgress<=2000) {
-            points_water += 250;
-        }
-        else if (totalProgress<=3200) {
-            points_water += 500;
-        }
-
-        pointsWater.setText("" + points_water);
+//        if (totalProgress<=200) {
+//            points_water = 25;
+//        }
+//        else if (totalProgress<=500) {
+//            points_water += 50;
+//        }
+//        else if (totalProgress<=1000) {
+//            points_water += 100;
+//        }
+//        else if (totalProgress<=2000) {
+//            points_water += 250;
+//        }
+//        else if (totalProgress<=3200) {
+//            points_water += 500;
+//        }
+//
+//        pointsWater.setText("" + points_water);
 
         // Informational textView for the amount of points you get for each checkpoint
         checkpoint = findViewById(R.id.checkpoint);
@@ -215,30 +215,35 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
 
-                if (totalProgress<=200) {
-                    points_water = 25;
-                }
-                else if (totalProgress<=500) {
-                    points_water += 50;
-                }
-                else if (totalProgress<=1000) {
-                    points_water += 100;
-                }
-                else if (totalProgress<=2000) {
-                    points_water += 250;
-                }
-                else if (totalProgress<=3200) {
-                    points_water += 500;
-                }
+//                if (totalProgress<=200) {
+//                    points_water = 25;
+//                }
+//                else if (totalProgress<=500) {
+//                    points_water += 50;
+//                }
+//                else if (totalProgress<=1000) {
+//                    points_water += 100;
+//                }
+//                else if (totalProgress<=2000) {
+//                    points_water += 250;
+//                }
+//                else if (totalProgress<=3200) {
+//                    points_water += 500;
+//                }
 
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
+
+                // Sets the points
+                //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
+                //setCheckpoint(totalProgress, pointsWaterReference);
+                setPoints(totalProgress, userID, pointsWaterReference, pointsWater);
             }
         });
 
         // Give the right data path to the corresponding reference
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
-        // pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+        pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterPoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
@@ -270,22 +275,28 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
-                //adds points to the total from the water page if these checkpoints are crossed
-                if (totalProgress<=200) {
-                    points_water = 25;
-                }
-                else if (totalProgress<=500) {
-                    points_water += 50;
-                }
-                else if (totalProgress<=1000) {
-                    points_water += 100;
-                }
-                else if (totalProgress<=2000) {
-                    points_water += 250;
-                }
-                else if (totalProgress<=3200) {
-                    points_water += 500;
-                }
+                // Sets the points
+                //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
+                //setCheckpoint(totalProgress, pointsWaterReference);
+                setPoints(totalProgress, userID, pointsWaterReference, pointsWater);
+
+
+//                //adds points to the total from the water page if these checkpoints are crossed
+//                if (totalProgress<=200) {
+//                    points_water = 25;
+//                }
+//                else if (totalProgress<=500) {
+//                    points_water += 50;
+//                }
+//                else if (totalProgress<=1000) {
+//                    points_water += 100;
+//                }
+//                else if (totalProgress<=2000) {
+//                    points_water += 250;
+//                }
+//                else if (totalProgress<=3200) {
+//                    points_water += 500;
+//                }
 
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
@@ -427,6 +438,29 @@ public class WaterActivity extends AppCompatActivity implements Intake{
             // called after the user finishes moving the SeekBar
         }
     };
+
+//    public void setCheckpoint() {
+//                //adds points to the total from the water page if these checkpoints are crossed
+//        if (totalProgress == 0){
+//            points_water = 0;
+//        }
+//        else if (totalProgress <=200) {
+//            points_water = 25;
+//        }
+//        else if (totalProgress <=500) {
+//            points_water = 50;
+//        }
+//        else if (totalProgress <=1000) {
+//            points_water = 100;
+//        }
+//        else if (totalProgress <=2000) {
+//            points_water = 250;
+//        }
+//        else if (totalProgress <=3200) {
+//            points_water = 500;
+//        }
+//        pointsWater.setText("" + points_water);
+//    }
 
 
     @Override
@@ -609,5 +643,34 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 //        }
 //        );
     }
+
+    @Override
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+        //adds points to the total from the water page if these checkpoints are crossed
+        int points = 0;
+        if (totalProgress == 0){ points = 0; }
+        else if (totalProgress <= 200) { points = 25; }
+        else if (totalProgress <= 500) { points = 50; }
+        else if (totalProgress <= 1000) { points = 100; }
+        else if (totalProgress <= 2000) { points = 250; }
+        else if (totalProgress <= 3200) { points = 500; }
+        pointsReference.setValue(points);
+    }
+
+//    @Override
+//    public void setCheckpoint(int totalProgress) {
+//        DatabaseReference pointsReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterPoints");
+//
+//        //adds points to the total from the water page if these checkpoints are crossed
+//        int points = 0;
+//        if (totalProgress == 0){ points = 0; }
+//        else if (totalProgress <= 200) { points = 25; }
+//        else if (totalProgress <= 500) { points = 50; }
+//        else if (totalProgress <= 1000) { points = 100; }
+//        else if (totalProgress <= 2000) { points = 250; }
+//        else if (totalProgress <= 3200) { points = 500; }
+//        pointsReference.setValue(points);
+//        pointsWater.setText("" + points);
+//    }
 
 }
