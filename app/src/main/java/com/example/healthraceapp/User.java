@@ -1,6 +1,8 @@
 package com.example.healthraceapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     private String username, email;
@@ -17,12 +19,17 @@ public class User {
     private int fruitMinusOne, fruitMinusTwo, fruitMinusThree, fruitMinusFour
             , fruitMinusFive, fruitMinusSix;
     private int points, totalPoints;
+    private int weeklySteps;
+
+
+    private HashMap<String, Integer> stepsWeek;
 
     // Names of groups that the user is part of
     private ArrayList<String> groupNames;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public User(){}
+
 
     public User(String username, String email) {}
 
@@ -36,6 +43,15 @@ public class User {
 
         groupNames = new ArrayList<>();
         groupNames.add("");
+
+        stepsWeek = new HashMap<>();
+        stepsWeek.put("dailyNumberOfSteps", dailyNumberOfSteps);
+        stepsWeek.put("stepDetectMinusOne", stepDetectMinusOne);
+        stepsWeek.put("stepDetectMinusTwo", StepDetectMinusTwo);
+        stepsWeek.put("stepDetectMinusThree", StepDetectMinusThree);
+        stepsWeek.put("stepDetectMinusFour", StepDetectMinusFour);
+        stepsWeek.put("stepDetectMinusFive", StepDetectMinusFive);
+        stepsWeek.put("stepDetectMinusSix", StepDetectMinusSix);
     }
 
     public String getUsername() {
@@ -317,4 +333,12 @@ public class User {
     public int getTotalPoints() { return totalPoints; }
 
     public void setTotalPoints(int totalPoints) { this.totalPoints = totalPoints; }
+
+    public int getWeeklySteps() { return weeklySteps; }
+
+    public void setWeeklySteps(int weeklySteps) { this.weeklySteps = weeklySteps; }
+
+    public HashMap<String, Integer> getStepsWeek() { return stepsWeek; }
+
+    public void setStepsWeek(HashMap<String, Integer> stepsWeek2) { this.stepsWeek = stepsWeek2; }
 }

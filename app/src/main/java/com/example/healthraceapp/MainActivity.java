@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         reference.child("amountOfVeg").setValue(0);
         reference.child("amountOfFruit").setValue(0);
         reference.child("amountOfWater").setValue(0);
-        reference.child("dailyNumberOfSteps").setValue(0);
+        reference.child("stepsWeek").child("dailyNumberOfSteps").setValue(0);
     }
 
     public void dailyResetAlarm() {
