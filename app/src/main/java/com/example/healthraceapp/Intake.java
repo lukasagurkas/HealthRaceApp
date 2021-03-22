@@ -8,11 +8,17 @@ import android.graphics.Color;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -85,5 +91,30 @@ public interface Intake {
     @SuppressLint("SetTextI18n")
     void setPoints(int totalProgress, DatabaseReference pointsReference);
 
+    default void setTotalPoints(FirebaseDatabase firebaseDatabase, String userID){
+        DatabaseReference pointsReference = firebaseDatabase.getReference().child("Users")
+                .child(userID).child("points");
+        DatabaseReference totalPointsReference = firebaseDatabase.getReference().child("Users")
+                .child(userID).child("totalPoints");
+
+        pointsReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int totalPoints = 0;
+
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    Log.d("pointschecker", String.valueOf(ds));
+                    int points = ds.getValue(int.class);
+                    totalPoints = totalPoints + points;
+                }
+                totalPointsReference.setValue(totalPoints);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
 }

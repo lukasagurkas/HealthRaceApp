@@ -16,7 +16,7 @@ public class User {
             , veggieMinusFive, veggieMinusSix;
     private int fruitMinusOne, fruitMinusTwo, fruitMinusThree, fruitMinusFour
             , fruitMinusFive, fruitMinusSix;
-    private int waterPoints, fruitPoints, veggiePoints, stepPoints;
+    private int points, totalPoints;
 
     // Names of groups that the user is part of
     private ArrayList<String> groupNames;
@@ -310,19 +310,11 @@ public class User {
         groupNames.remove(group);
     }
 
-    public int getWaterPoints() { return waterPoints; }
+    public int getPoints() { return points; }
 
-    public void setWaterPoints(int points) { this.waterPoints = points; }
+    public void setPoints(int points) { this.points = points; }
 
-    public int getFruitPoints() { return fruitPoints; }
+    public int getTotalPoints() { return totalPoints; }
 
-    public void setFruitPoints(int fruitPoints) { this.fruitPoints = fruitPoints; }
-
-    public int getVeggiePoints() { return veggiePoints; }
-
-    public void setVeggiePoints(int veggiePoints) { this.veggiePoints = veggiePoints; }
-
-    public int getStepPoints() { return stepPoints; }
-
-    public void setStepPoints(int stepPoints) { this.stepPoints = stepPoints; }
+    public void setTotalPoints(int totalPoints) { this.totalPoints = totalPoints; }
 }

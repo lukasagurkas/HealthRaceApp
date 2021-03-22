@@ -168,6 +168,8 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
                 // Sets the points
                 setPoints(totalProgress, pointsVeggieReference);
 
+                setTotalPoints(firebaseDatabase, userID);
+
                 // Creates a new barChart
                 createBarChart(barChartVeggie, getGraphData());
             }
@@ -175,7 +177,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
 
         // Give the right data path to the corresponding reference
         vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
-        pointsVeggieReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggiePoints");
+        pointsVeggieReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("veggiePoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
@@ -210,6 +212,8 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
 
                 // Sets the points
                 setPoints(totalProgress, pointsVeggieReference);
+
+                setTotalPoints(firebaseDatabase, userID);
 
                 // Creates a new barChart
                 createBarChart(barChartVeggie, getGraphData());

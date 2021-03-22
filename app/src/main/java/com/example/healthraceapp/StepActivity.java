@@ -110,7 +110,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         // Give the right data path to the corresponding reference
         stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("dailyNumberOfSteps");
-        pointsStepReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepPoints");
+        pointsStepReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("stepPoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepDetectMinusThree");
@@ -514,6 +514,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         // Set the points
         setPoints(stepDetect, pointsStepReference);
+
+        setTotalPoints(firebaseDatabase, userID);
 
         // Create a new barChart
         createBarChart(barChartStep, getGraphData());

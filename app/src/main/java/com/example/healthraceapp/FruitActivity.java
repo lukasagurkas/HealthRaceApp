@@ -166,6 +166,8 @@ public class FruitActivity extends AppCompatActivity implements Intake{
                 // Sets the points
                 setPoints(totalProgress, pointsFruitReference);
 
+                setTotalPoints(firebaseDatabase, userID);
+
                 // Creates a new barChart
                 createBarChart(barChartFruit, getGraphData());
             }
@@ -173,7 +175,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
 
         // Give the right data path to the corresponding reference
         fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
-        pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitPoints");
+        pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("fruitPoints");
         minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
         minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
         minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
@@ -207,6 +209,8 @@ public class FruitActivity extends AppCompatActivity implements Intake{
 
                 // Sets the points
                 setPoints(totalProgress, pointsFruitReference);
+
+                setTotalPoints(firebaseDatabase, userID);
 
                 // Creates a new barChart
                 createBarChart(barChartFruit, getGraphData());
