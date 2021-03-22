@@ -107,7 +107,6 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="You get 25 points for each checkpoint."
         app:layout_constraintBottom_toTopOf="@+id/barChartWater"
         app:layout_constraintEnd_toStartOf="@+id/waterProgress"
         app:layout_constraintStart_toStartOf="parent"

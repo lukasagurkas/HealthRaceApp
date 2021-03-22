@@ -533,12 +533,33 @@ public class FruitActivity extends AppCompatActivity implements Intake{
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress == 0){ points = 0; }
-        else if (totalProgress <= 200) { points = 25; }
-        else if (totalProgress <= 500) { points = 50; }
-        else if (totalProgress <= 1000) { points = 100; }
-        else if (totalProgress <= 2000) { points = 250; }
-        else if (totalProgress <= 3200) { points = 500; }
+        if (totalProgress >= 50 && totalProgress < 100) {
+            points = 25;
+
+            //setting value of points received for next checkpoint
+//            cp = String.valueOf(50);
+        }
+        else if (totalProgress >= 100 && totalProgress < 175) {
+            points = 75;
+//            cp = String.valueOf(100);
+        }
+        else if (totalProgress >= 175 && totalProgress < 275) {
+            points = 175;
+//            cp = String.valueOf(250);
+        }
+        else if (totalProgress >= 275 && totalProgress < 500) {
+            points = 425;
+//            cp = String.valueOf(500);
+        }
+        else if (totalProgress >= 500) {
+            points = 925;
+//            s = "You have crossed all the checkpoints!";
+        }
+        else if (totalProgress-progress==0 || totalProgress < 50) {
+            points = 0;
+//            cp = String.valueOf(25);
+        }
+//        checkpoint.setText(s);
         pointsReference.setValue(points);
     }
 

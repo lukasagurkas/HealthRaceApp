@@ -357,55 +357,6 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
 
         return graphData;
     }
-//    // Function the create the barChart and insert data into it
-//    public void createBarChart() {
-//        // ArrayList for the shown data
-//        ArrayList<BarEntry> graphData = new ArrayList<>();
-//        graphData.add(new BarEntry(1, veggieMinusSix));
-//        graphData.add(new BarEntry(2, veggieMinusFive));
-//        graphData.add(new BarEntry(3, veggieMinusFour));
-//        graphData.add(new BarEntry(4, veggieMinusThree));
-//        graphData.add(new BarEntry(5, veggieMinusTwo));
-//        graphData.add(new BarEntry(6, veggieMinusOne));
-//        graphData.add(new BarEntry(7, totalProgress));
-//
-//        // Layout for the bar chart
-//        // Create a new dataset for the barChart with the graphData
-//        BarDataSet barDataSetVeggie = new BarDataSet(graphData, "Days");
-//        // Set Bar Colors
-//        barDataSetVeggie.setColors(ColorTemplate.MATERIAL_COLORS);
-//        // Set Text Color
-//        barDataSetVeggie.setValueTextColor(Color.BLACK);
-//        // Set Text Size
-//        barDataSetVeggie.setValueTextSize(16f);
-//        BarData barDataVeggie = new BarData(barDataSetVeggie);
-//        // Adds half of the bar width to each side of the x-axis range in order to
-//        // allow the bars of the barchart to be fully displayed
-//        barChartVeggie.setFitBars(true);
-//        // Set a new data object for the barChart
-//        barChartVeggie.setData(barDataVeggie);
-//        // Set description
-//        barChartVeggie.getDescription().setText("Vegetable intake progress over the last 7 days");
-//        // The barChart will show a vertical animation with a duration of 200 ms
-//        // every time the data changes
-//        barChartVeggie.animateY(200);
-//    }
-
-//    //This function copies the value of database reference ds1 to ds2
-//    @Override
-//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    ds2.setValue(task.getResult().getValue());
-//                }
-//            }
-//        });
-//    }
 
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
@@ -432,107 +383,39 @@ public class VegetableActivity extends AppCompatActivity implements Intake{
         switchValues(minusOneDatabaseReference, minusTwoDatabaseReference);
         // Gives the value of vegReference to veggieMinusOne
         switchValues(vegReference, minusOneDatabaseReference);
-
-//        // Gives the value of veggieMinusFive to veggieMinusSix
-//        minusFiveDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of veggieMinusFour to veggieMinusFive
-//        minusFourDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of veggieMinusThree to veggieMinusFour
-//        minusThreeDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of veggieMinusTwo to veggieMinusThree
-//        minusTwoDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of veggieMinusOne to veggieMinusTwo
-//        minusOneDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of totalProgress to veggieMinusOne
-//        vegReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
     }
 
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress == 0){ points = 0; }
-        else if (totalProgress <= 200) { points = 25; }
-        else if (totalProgress <= 500) { points = 50; }
-        else if (totalProgress <= 1000) { points = 100; }
-        else if (totalProgress <= 2000) { points = 250; }
-        else if (totalProgress <= 3200) { points = 500; }
+        if (totalProgress >= 50 && totalProgress < 100) {
+            points = 25;
+
+            //setting value of points received for next checkpoint
+//            cp = String.valueOf(50);
+        }
+        else if (totalProgress >= 100 && totalProgress < 175) {
+            points = 75;
+//            cp = String.valueOf(100);
+        }
+        else if (totalProgress >= 175 && totalProgress < 275) {
+            points = 175;
+//            cp = String.valueOf(250);
+        }
+        else if (totalProgress >= 275 && totalProgress < 500) {
+            points = 425;
+//            cp = String.valueOf(500);
+        }
+        else if (totalProgress >= 500) {
+            points = 925;
+//            s = "You have crossed all the checkpoints!";
+        }
+        else if (totalProgress-progress==0 || totalProgress < 50) {
+            points = 0;
+//            cp = String.valueOf(25);
+        }
+//        checkpoint.setText(s);
         pointsReference.setValue(points);
     }
 }

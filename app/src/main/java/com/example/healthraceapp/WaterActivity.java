@@ -35,6 +35,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
 
     // Displays the points for each checkpoint
     TextView checkpoint;
+    String s;
 
     // TextView for the 'ml' for grams after the slider
     TextView milliliters;
@@ -69,6 +70,9 @@ public class WaterActivity extends AppCompatActivity implements Intake{
     //stores points received from water page
     int points_water;
 
+    //store the checkpoints to be displayed on each widget
+    String cp = "25";
+
     // Database reference for all values in the bar chart
     private DatabaseReference waterReference;
     private DatabaseReference pointsWaterReference;
@@ -91,7 +95,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
     private String userID = firebaseUser.getUid();
     User user = new User();
 
-    @SuppressLint("NewApi")
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +104,6 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         // Finds progress bar in activity page
         progressBar = findViewById(R.id.progressBar);
 
-        int colorCodeDark = Color.parseColor("#F44336");
-        progressBar.setIndeterminateTintList(ColorStateList.valueOf(colorCodeDark));
         // Sets the progress
         progressBar.setProgress(totalProgress);
         // Sets the maximum progress to 500 (ml of water)
@@ -143,41 +145,31 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         waterProgress.setTextColor(Color.WHITE);
         waterProgress.setTextSize(20);
 
-//        waterReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                int dataFromDatabase = snapshot.getValue(int.class);
-//                totalProgress = dataFromDatabase;
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.w("error", "loadPost:onCancelled", error.toException());
-//            }
-//        });
-
-//        if (totalProgress<=200) {
-//            points_water = 25;
-//        }
-//        else if (totalProgress<=500) {
-//            points_water += 50;
-//        }
-//        else if (totalProgress<=1000) {
-//            points_water += 100;
-//        }
-//        else if (totalProgress<=2000) {
-//            points_water += 250;
-//        }
-//        else if (totalProgress<=3200) {
-//            points_water += 500;
-//        }
-//
-//        pointsWater.setText("" + points_water);
-
         // Informational textView for the amount of points you get for each checkpoint
-        checkpoint = findViewById(R.id.checkpoint);
+        checkpoint = (TextView)findViewById(R.id.checkpoint);
+
+//        if (totalProgress >= 200 && totalProgress <=500) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 500 && totalProgress <=1000) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 1000 && totalProgress <= 2000) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 2000 && totalProgress <= 3200) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 3200) {
+//            checkpoint.setText(s);
+//        }
+//        else if (totalProgress-progress==0 || totalProgress<200) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+
+        checkpoint.setText(s);
         checkpoint.setTextColor(Color.WHITE);
-        checkpoint.setTextSize(25);
+        checkpoint.setTextSize(10);
 
         // Adds a 'ml' for milliliter add the end of the slider
         milliliters = findViewById(R.id.ml);
@@ -215,29 +207,34 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
 
-//                if (totalProgress<=200) {
-//                    points_water = 25;
-//                }
-//                else if (totalProgress<=500) {
-//                    points_water += 50;
-//                }
-//                else if (totalProgress<=1000) {
-//                    points_water += 100;
-//                }
-//                else if (totalProgress<=2000) {
-//                    points_water += 250;
-//                }
-//                else if (totalProgress<=3200) {
-//                    points_water += 500;
-//                }
-
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
-
                 // Sets the points
-                //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
+                //TODO: uncomment the first line and delete the second when deleting the TextView pointsWater
                 //setCheckpoint(totalProgress, pointsWaterReference);
-                setPoints(totalProgress, userID, pointsWaterReference, pointsWater);
+                setPoints(totalProgress, progress, userID, pointsWaterReference, pointsWater);
+
+                //        if (totalProgress >= 200 && totalProgress <=500) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 500 && totalProgress <=1000) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 1000 && totalProgress <= 2000) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 2000 && totalProgress <= 3200) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 3200) {
+//            checkpoint.setText(s);
+//        }
+//        else if (totalProgress-progress==0 || totalProgress<200) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+
+                checkpoint.setText(s);
+
             }
         });
 
@@ -271,6 +268,8 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 } else {
                     remaining = 2000 - totalProgress;
                 }
+
+
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
@@ -278,25 +277,28 @@ public class WaterActivity extends AppCompatActivity implements Intake{
                 // Sets the points
                 //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
                 //setCheckpoint(totalProgress, pointsWaterReference);
-                setPoints(totalProgress, userID, pointsWaterReference, pointsWater);
+                setPoints(totalProgress, progress, userID, pointsWaterReference, pointsWater);
 
+                //        if (totalProgress >= 200 && totalProgress <=500) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 500 && totalProgress <=1000) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 1000 && totalProgress <= 2000) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 2000 && totalProgress <= 3200) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
+//        else if (totalProgress >= 3200) {
+//            checkpoint.setText(s);
+//        }
+//        else if (totalProgress-progress==0 || totalProgress<200) {
+//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
+//        }
 
-//                //adds points to the total from the water page if these checkpoints are crossed
-//                if (totalProgress<=200) {
-//                    points_water = 25;
-//                }
-//                else if (totalProgress<=500) {
-//                    points_water += 50;
-//                }
-//                else if (totalProgress<=1000) {
-//                    points_water += 100;
-//                }
-//                else if (totalProgress<=2000) {
-//                    points_water += 250;
-//                }
-//                else if (totalProgress<=3200) {
-//                    points_water += 500;
-//                }
+                checkpoint.setText(s);
 
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
@@ -439,29 +441,6 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         }
     };
 
-//    public void setCheckpoint() {
-//                //adds points to the total from the water page if these checkpoints are crossed
-//        if (totalProgress == 0){
-//            points_water = 0;
-//        }
-//        else if (totalProgress <=200) {
-//            points_water = 25;
-//        }
-//        else if (totalProgress <=500) {
-//            points_water = 50;
-//        }
-//        else if (totalProgress <=1000) {
-//            points_water = 100;
-//        }
-//        else if (totalProgress <=2000) {
-//            points_water = 250;
-//        }
-//        else if (totalProgress <=3200) {
-//            points_water = 500;
-//        }
-//        pointsWater.setText("" + points_water);
-//    }
-
 
     @Override
     public ArrayList getGraphData() {
@@ -478,59 +457,7 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         return graphData;
     }
 
-//    // Function the create the barChart and insert data into it
-//    @Override
-//    public void createBarChart() {
-//        // ArrayList for the shown data
-//        ArrayList<BarEntry> graphData = new ArrayList<>();
-//        graphData.add(new BarEntry(1, waterMinusSix));
-//        graphData.add(new BarEntry(2, waterMinusFive));
-//        graphData.add(new BarEntry(3, waterMinusFour));
-//        graphData.add(new BarEntry(4, waterMinusThree));
-//        graphData.add(new BarEntry(5, waterMinusTwo));
-//        graphData.add(new BarEntry(6, waterMinusOne));
-//        graphData.add(new BarEntry(7, totalProgress));
-//
-//        // Layout for the bar chart
-//        // Create a new dataset for the barChart with the graphData
-//        BarDataSet barDataSetWater = new BarDataSet(graphData, "Days");
-//        // Set Bar Colors
-//        barDataSetWater.setColors(ColorTemplate.MATERIAL_COLORS);
-//        // Set Text Color
-//        barDataSetWater.setValueTextColor(Color.BLACK);
-//        // Set Text Size
-//        barDataSetWater.setValueTextSize(16f);
-//        BarData barDataWater = new BarData(barDataSetWater);
-//        // Adds half of the bar width to each side of the x-axis range in order to
-//        // allow the bars of the barchart to be fully displayed
-//        barChartWater.setFitBars(true);
-//        // Set a new data object for the barChart
-//        barChartWater.setData(barDataWater);
-//        // Set description
-//        barChartWater.getDescription().setText("Water intake progress over the last 7 days");
-//        // The barChart will show a vertical animation with a duration of 200 ms
-//        // every time the data changes
-//        barChartWater.animateY(200);
-//    }
 
-//    //This function copies the value of database reference ds1 to ds2
-//    @Override
-//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    ds2.setValue(task.getResult().getValue());
-//                }
-//            }
-//        });
-//    }
-
-    // Every day at midnight the bar chart will get updated
-    // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
         // Give the right data path to the corresponding reference
@@ -554,123 +481,40 @@ public class WaterActivity extends AppCompatActivity implements Intake{
         switchValues(minusOneDatabaseReference, minusTwoDatabaseReference);
         // Gives the value of waterReference to waterMinusOne
         switchValues(waterReference, minusOneDatabaseReference);
-
-//        // Gives the value of fruitMinusFive to fruitMinusSix
-//        minusFiveDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusFour to fruitMinusFive
-//        minusFourDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusThree to fruitMinusFour
-//        minusThreeDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//        // Gives the value of fruitMinusTwo to fruitMinusThree
-//        minusTwoDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusOne to fruitMinusTwo
-//        minusOneDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of totalProgress to fruitMinusOne
-//        waterReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
     }
 
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress == 0){ points = 0; }
-        else if (totalProgress <= 200) { points = 25; }
-        else if (totalProgress <= 500) { points = 50; }
-        else if (totalProgress <= 1000) { points = 100; }
-        else if (totalProgress <= 2000) { points = 250; }
-        else if (totalProgress <= 3200) { points = 500; }
+        if (totalProgress >= 200 && totalProgress <=500) {
+            points = 25;
+
+            //setting value of points received for next checkpoint
+            cp = String.valueOf(50);
+        }
+        else if (totalProgress >= 500 && totalProgress <=1000) {
+            points = 75;
+            cp = String.valueOf(100);
+        }
+        else if (totalProgress >= 1000 && totalProgress <= 2000) {
+            points = 175;
+            cp = String.valueOf(250);
+        }
+        else if (totalProgress >= 2000 && totalProgress <= 3200) {
+            points = 425;
+            cp = String.valueOf(500);
+        }
+        else if (totalProgress >= 3200) {
+            points = 925;
+            s = "You have crossed all the checkpoints!";
+            }
+        else if (totalProgress-progress==0 || totalProgress<200) {
+            points = 0;
+            cp = String.valueOf(25);
+        }
+        checkpoint.setText(s);
         pointsReference.setValue(points);
     }
-
-//    @Override
-//    public void setCheckpoint(int totalProgress) {
-//        DatabaseReference pointsReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterPoints");
-//
-//        //adds points to the total from the water page if these checkpoints are crossed
-//        int points = 0;
-//        if (totalProgress == 0){ points = 0; }
-//        else if (totalProgress <= 200) { points = 25; }
-//        else if (totalProgress <= 500) { points = 50; }
-//        else if (totalProgress <= 1000) { points = 100; }
-//        else if (totalProgress <= 2000) { points = 250; }
-//        else if (totalProgress <= 3200) { points = 500; }
-//        pointsReference.setValue(points);
-//        pointsWater.setText("" + points);
-//    }
 
 }

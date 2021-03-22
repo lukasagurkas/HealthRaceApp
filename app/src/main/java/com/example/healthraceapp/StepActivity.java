@@ -545,12 +545,33 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress == 0){ points = 0; }
-        else if (totalProgress <= 200) { points = 25; }
-        else if (totalProgress <= 500) { points = 50; }
-        else if (totalProgress <= 1000) { points = 100; }
-        else if (totalProgress <= 2000) { points = 250; }
-        else if (totalProgress <= 3200) { points = 500; }
+        if (totalProgress >= 500 && totalProgress < 1500) {
+            points = 25;
+
+            //setting value of points received for next checkpoint
+//            cp = String.valueOf(50);
+        }
+        else if (totalProgress >= 1500 && totalProgress < 3000) {
+            points = 75;
+//            cp = String.valueOf(100);
+        }
+        else if (totalProgress >= 3000 && totalProgress < 6000) {
+            points = 175;
+//            cp = String.valueOf(250);
+        }
+        else if (totalProgress >= 6000 && totalProgress < 7000) {
+            points = 425;
+//            cp = String.valueOf(500);
+        }
+        else if (totalProgress >= 7000) {
+            points = 925;
+//            s = "You have crossed all the checkpoints!";
+        }
+        else if (totalProgress < 500) {
+            points = 0;
+//            cp = String.valueOf(25);
+        }
+//        checkpoint.setText(s);
         pointsReference.setValue(points);
     }
 
