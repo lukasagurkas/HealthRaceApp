@@ -174,24 +174,24 @@ public class ProfileActivity extends AppCompatActivity {
 
                 deleteAccountDialog.setPositiveButton("Yes",
                         new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteUserAuth();
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteUserAuth();
 
 
-                    }
-                });
+                            }
+                        });
 
                 deleteAccountDialog.setNegativeButton("No",
                         new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
+                            }
+                        });
                 deleteAccountDialog.create().show();
-                }
-            });
+            }
+        });
 
         // OnClick listener for the add group button
 //        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
@@ -254,15 +254,15 @@ public class ProfileActivity extends AppCompatActivity {
                 for (DataSnapshot userSnapshot: snapshot.getChildren()){
                     userSnapshot.getRef().removeValue()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()){
-                                Log.d(TAG, String.valueOf(task.getResult()) + "qwz");
-                            } else {
-                                Log.d(TAG, String.valueOf(task.getException()) + "zwq");
-                            }
-                        }
-                    });
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Log.d(TAG, String.valueOf(task.getResult()) + "qwz");
+                                    } else {
+                                        Log.d(TAG, String.valueOf(task.getException()) + "zwq");
+                                    }
+                                }
+                            });
                 }
                 mAuth.signOut();
                 Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();

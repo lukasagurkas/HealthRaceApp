@@ -84,14 +84,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private DatabaseReference weeklyStepsReference;
     private DatabaseReference stepsWeekReference;
 
-    // initialize instances for writing and reading data from the database
-//    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-//            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-//    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//    private String userID = firebaseUser.getUid();
-//    User user = new User();
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -339,69 +331,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         return graphData;
     }
 
-//    // Function the create the barChart and insert data into it
-//    public void createBarChart() {
-//        // ArrayList for the shown data
-//        ArrayList<BarEntry> graphData = new ArrayList<>();
-//        graphData.add(new BarEntry(1, stepDetectMinusSix));
-//        graphData.add(new BarEntry(2, stepDetectMinusFive));
-//        graphData.add(new BarEntry(3, stepDetectMinusFour));
-//        graphData.add(new BarEntry(4, stepDetectMinusThree));
-//        graphData.add(new BarEntry(5, stepDetectMinusTwo));
-//        graphData.add(new BarEntry(6, stepDetectMinusOne));
-//        graphData.add(new BarEntry(7, stepDetect));
-//
-//        // Layout for the bar chart
-//        // Create a new dataset for the barChart with the graphData
-//        BarDataSet barDataSetStep = new BarDataSet(graphData, "Days");
-//        // Set Bar Colors
-//        barDataSetStep.setColors(ColorTemplate.MATERIAL_COLORS);
-//        // Set Text Color
-//        barDataSetStep.setValueTextColor(Color.BLACK);
-//        // Set Text Size
-//        barDataSetStep.setValueTextSize(16f);
-//        BarData barDataStep = new BarData(barDataSetStep);
-//        // Adds half of the bar width to each side of the x-axis range in order to
-//        // allow the bars of the barchart to be fully displayed
-//        barChartStep.setFitBars(true);
-//        // Set a new data object for the barChart
-//        barChartStep.setData(barDataStep);
-//        // Set description
-//        barChartStep.getDescription().setText("Step progress over the last 7 days");
-//        // The barChart will show a vertical animation with a duration of 200 ms
-//        // every time the data changes
-//        barChartStep.animateY(200);
-//    }
-
-//    //This function copies the value of database reference ds1 to ds2
-//    @Override
-//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    ds2.setValue(task.getResult().getValue());
-//                }
-//            }
-//        });
-//    }
-
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
-        // Give the right data path to the corresponding reference
-//        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusOne");
-//        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusTwo");
-//        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusThree");
-//        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusFour");
-//        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusFive");
-//        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusSix");
-        stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("dailyNumberOfSteps");
-
         // Gives the value of stepMinusFive to stepMinusSix
         switchValues(stepMinusFiveDatabaseReference, stepMinusSixDatabaseReference);
         // Gives the value of stepMinusFour to stepMinusFive
@@ -414,95 +347,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         switchValues(stepMinusOneDatabaseReference, stepMinusTwoDatabaseReference);
         // Gives the value of stepReference to stepMinusOne
         switchValues(stepReference, stepMinusOneDatabaseReference);
-
-//        // Gives the value of stepDetectMinusFive to stepDetectMinusSix
-//        minusFiveDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of stepDetectMinusFour to stepDetectMinusFive
-//        minusFourDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of stepDetectMinusThree to stepDetectMinusFour
-//        minusThreeDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of stepDetectMinusTwo to stepDetectMinusThree
-//        minusTwoDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of stepDetectMinusOne to stepDetectMinusTwo
-//        minusOneDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of stepDetect to stepDetectMinusOne
-//        stepReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
     }
 
     // Sets the progressBar
@@ -618,8 +462,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
             }
         });
-
     }
-
 }
 

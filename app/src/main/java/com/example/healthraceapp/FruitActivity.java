@@ -60,15 +60,6 @@ public class FruitActivity extends AppCompatActivity implements Intake {
     // Initialize value for information text view
     int remaining = 500;
 
-    //initialize instances for writing and reading data from the database
-//    private static final String TAG = "ViewDatabase";
-//    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-//            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-//    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//    private String userID = firebaseUser.getUid();
-//    User user = new User();
-
     // Database reference for all values in the bar chart
     private DatabaseReference fruitReference;
     private DatabaseReference pointsFruitReference;
@@ -364,69 +355,10 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         return graphData;
     }
 
-//    // Function the create the barChart and insert data into it
-//    public void createBarChart() {
-//        // ArrayList for the shown data
-//        ArrayList<BarEntry> graphData = new ArrayList<>();
-//        graphData.add(new BarEntry(1, fruitMinusSix));
-//        graphData.add(new BarEntry(2, fruitMinusFive));
-//        graphData.add(new BarEntry(3, fruitMinusFour));
-//        graphData.add(new BarEntry(4, fruitMinusThree));
-//        graphData.add(new BarEntry(5, fruitMinusTwo));
-//        graphData.add(new BarEntry(6, fruitMinusOne));
-//        graphData.add(new BarEntry(7, totalProgress));
-//
-//        // Layout for the bar chart
-//        // Create a new dataset for the barChart with the graphData
-//        BarDataSet barDataSetFruit = new BarDataSet(graphData, "Days");
-//        // Set Bar Colors
-//        barDataSetFruit.setColors(ColorTemplate.MATERIAL_COLORS);
-//        // Set Text Color
-//        barDataSetFruit.setValueTextColor(Color.BLACK);
-//        // Set Text Size
-//        barDataSetFruit.setValueTextSize(16f);
-//        BarData barDataFruit = new BarData(barDataSetFruit);
-//        // Adds half of the bar width to each side of the x-axis range in order to
-//        // allow the bars of the barchart to be fully displayed
-//        barChartFruit.setFitBars(true);
-//        // Set a new data object for the barChart
-//        barChartFruit.setData(barDataFruit);
-//        // Set description
-//        barChartFruit.getDescription().setText("Fruit intake progress over the last 7 days");
-//        // The barChart will show a vertical animation with a duration of 200 ms
-//        // every time the data changes
-//        barChartFruit.animateY(200);
-//    }
-
-//    //This function copies the value of database reference ds1 to ds2
-//    @Override
-//    public void switchValues(DatabaseReference ds1, DatabaseReference ds2) {
-//        ds1.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    ds2.setValue(task.getResult().getValue());
-//                }
-//            }
-//        });
-//    }
-
     // Every day at midnight the bar chart will get updated
     // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
-
-//        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
-//        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
-//        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
-//        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
-//        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
-//        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
-        fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
-
         // Gives the value of fruitMinusFive to fruitMinusSix
         switchValues(fruitMinusFiveDatabaseReference, fruitMinusSixDatabaseReference);
         // Gives the value of fruitMinusFour to fruitMinusFive
@@ -439,95 +371,6 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         switchValues(fruitMinusOneDatabaseReference, fruitMinusTwoDatabaseReference);
         // Gives the value of fruitReference to fruitMinusOne
         switchValues(fruitReference, fruitMinusOneDatabaseReference);
-//
-//        // Gives the value of fruitMinusFive to fruitMinusSix
-//        minusFiveDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusSixDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusFour to fruitMinusFive
-//        minusFourDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFiveDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusThree to fruitMinusFour
-//        minusThreeDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusFourDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusTwo to fruitMinusThree
-//        minusTwoDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusThreeDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of fruitMinusOne to fruitMinusTwo
-//        minusOneDatabaseReference.get().addOnCompleteListener(
-//                                                            new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusTwoDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
-//
-//        // Gives the value of totalProgress to fruitMinusOne
-//        fruitReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                if (!task.isSuccessful()) {
-//                    Log.e("firebase", "Error getting data", task.getException());
-//                }
-//                else {
-//                    minusOneDatabaseReference.setValue(task.getResult().getValue());
-//                }
-//            }
-//        }
-//        );
     }
 
     @Override

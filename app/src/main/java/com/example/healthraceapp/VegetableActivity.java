@@ -63,14 +63,6 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     // Initialize value for information text view
     int remaining = 500;
 
-    // Initialize instances for writing and reading data from the database
-//    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-//            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-//    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-//    private String userID = firebaseUser.getUid();
-//    User user = new User();
-
     // Database reference for all values in the bar chart
     private DatabaseReference vegReference;
     private DatabaseReference pointsVeggieReference;
@@ -363,15 +355,6 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
-        // Give the right data path to the corresponding reference
-//        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
-//        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
-//        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
-//        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFour");
-//        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFive");
-//        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusSix");
-        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
-
         // Gives the value of veggieMinusFive to veggieMinusSix
         switchValues(veggieMinusFiveDatabaseReference, veggieMinusSixDatabaseReference);
         // Gives the value of veggieMinusFour to veggieMinusFive

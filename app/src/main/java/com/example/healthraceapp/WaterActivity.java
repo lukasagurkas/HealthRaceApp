@@ -85,15 +85,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
     // Initialize value for information text view
     int remaining = 2000;
 
-    // Initialize instances for writing and reading data from the database
-//    private static final String TAG = "ViewDatabase";
-//    public FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-//            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-//    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-////    private String userID = firebaseUser.getUid();
-//    User user = new User();
-
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,25 +138,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // Informational textView for the amount of points you get for each checkpoint
         checkpoint = (TextView)findViewById(R.id.checkpoint);
 
-//        if (totalProgress >= 200 && totalProgress <=500) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 500 && totalProgress <=1000) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 1000 && totalProgress <= 2000) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 2000 && totalProgress <= 3200) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 3200) {
-//            checkpoint.setText(s);
-//        }
-//        else if (totalProgress-progress==0 || totalProgress<200) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-
         checkpoint.setText(s);
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(10);
@@ -212,28 +184,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 //TODO: uncomment the first line and delete the second when deleting the TextView pointsWater
                 //setCheckpoint(totalProgress, pointsWaterReference);
                 setPoints(totalProgress, progress, userID, pointsWaterReference, pointsWater);
-
-                //        if (totalProgress >= 200 && totalProgress <=500) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 500 && totalProgress <=1000) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 1000 && totalProgress <= 2000) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 2000 && totalProgress <= 3200) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 3200) {
-//            checkpoint.setText(s);
-//        }
-//        else if (totalProgress-progress==0 || totalProgress<200) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-
                 checkpoint.setText(s);
-
             }
         });
 
@@ -268,7 +219,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                     remaining = 2000 - totalProgress;
                 }
 
-
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
@@ -277,26 +227,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
                 //setCheckpoint(totalProgress, pointsWaterReference);
                 setPoints(totalProgress, progress, userID, pointsWaterReference, pointsWater);
-
-                //        if (totalProgress >= 200 && totalProgress <=500) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 500 && totalProgress <=1000) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 1000 && totalProgress <= 2000) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 2000 && totalProgress <= 3200) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-//        else if (totalProgress >= 3200) {
-//            checkpoint.setText(s);
-//        }
-//        else if (totalProgress-progress==0 || totalProgress<200) {
-//            checkpoint.setText("You will receive " + cp + " points for the next checkpoint.");
-//        }
-
                 checkpoint.setText(s);
 
                 // Creates a new barChart
@@ -459,15 +389,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
 
     @Override
     public void switchDays() {
-        // Give the right data path to the corresponding reference
-//        waterMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
-//        waterMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
-//        waterMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
-//        waterMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFour");
-//        waterMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFive");
-//        waterMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
-        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
-
         // Gives the value of waterMinusFive to waterMinusSix
         switchValues(waterMinusFiveDatabaseReference, waterMinusSixDatabaseReference);
         // Gives the value of waterMinusFour to waterMinusFive
