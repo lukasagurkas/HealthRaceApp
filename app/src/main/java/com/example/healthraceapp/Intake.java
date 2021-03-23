@@ -123,4 +123,33 @@ public interface Intake {
         });
     }
 
+
+//    default void barListener(TextView fruitTvProgressLabel, SeekBar fruitSeekBar) {
+//
+//        // Adds listener for the slider
+//        SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+//
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                // updated continuously as the user slides the thumb
+//                fruitTvProgressLabel.setText("" + progress);
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) {
+//                // called when the user first touches the SeekBar
+//            }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) {
+//                // called after the user finishes moving the SeekBar
+//            }
+//        };
+
+//        // Finds slider in activity page
+//        SeekBar fruitSeekBar = findViewById(R.id.seekBar);
+//        // set a change listener on the SeekBar
+//        fruitSeekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+//    }
+
 }

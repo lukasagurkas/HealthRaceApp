@@ -387,32 +387,32 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     }
 
     @Override
-    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+    public void setPoints(int veggieTotalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress >= 50 && totalProgress < 100) {
+        if (veggieTotalProgress >= 50 && veggieTotalProgress < 100) {
             points = 25;
 
             //setting value of points received for next checkpoint
 //            cp = String.valueOf(50);
         }
-        else if (totalProgress >= 100 && totalProgress < 175) {
+        else if (veggieTotalProgress >= 100 && veggieTotalProgress < 175) {
             points = 75;
 //            cp = String.valueOf(100);
         }
-        else if (totalProgress >= 175 && totalProgress < 275) {
+        else if (veggieTotalProgress >= 175 && veggieTotalProgress < 275) {
             points = 175;
 //            cp = String.valueOf(250);
         }
-        else if (totalProgress >= 275 && totalProgress < 500) {
+        else if (veggieTotalProgress >= 275 && veggieTotalProgress < 500) {
             points = 425;
 //            cp = String.valueOf(500);
         }
-        else if (totalProgress >= 500) {
+        else if (veggieTotalProgress >= 500) {
             points = 925;
 //            s = "You have crossed all the checkpoints!";
         }
-        else if (totalProgress-progress==0 || totalProgress < 50) {
+        else if (veggieTotalProgress-progress==0 || veggieTotalProgress < 50) {
             points = 0;
 //            cp = String.valueOf(25);
         }

@@ -483,32 +483,32 @@ public class WaterActivity extends AppCompatActivity implements Intake {
     }
 
     @Override
-    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+    public void setPoints(int waterTotalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress >= 200 && totalProgress <=500) {
+        if (waterTotalProgress >= 200 && waterTotalProgress <=500) {
             points = 25;
 
             //setting value of points received for next checkpoint
             cp = String.valueOf(50);
         }
-        else if (totalProgress >= 500 && totalProgress <=1000) {
+        else if (waterTotalProgress >= 500 && waterTotalProgress <=1000) {
             points = 75;
             cp = String.valueOf(100);
         }
-        else if (totalProgress >= 1000 && totalProgress <= 2000) {
+        else if (waterTotalProgress >= 1000 && waterTotalProgress <= 2000) {
             points = 175;
             cp = String.valueOf(250);
         }
-        else if (totalProgress >= 2000 && totalProgress <= 3200) {
+        else if (waterTotalProgress >= 2000 && waterTotalProgress <= 3200) {
             points = 425;
             cp = String.valueOf(500);
         }
-        else if (totalProgress >= 3200) {
+        else if (waterTotalProgress >= 3200) {
             points = 925;
             s = "You have crossed all the checkpoints!";
             }
-        else if (totalProgress-progress==0 || totalProgress<200) {
+        else if (waterTotalProgress-progress==0 || waterTotalProgress<200) {
             points = 0;
             cp = String.valueOf(25);
         }

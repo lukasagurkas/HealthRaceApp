@@ -98,7 +98,6 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         barChartFruit = findViewById(R.id.barChartFruit);
         createBarChart(barChartFruit, getGraphData());
 
-
         // Finds slider in activity page
         SeekBar fruitSeekBar = findViewById(R.id.seekBar);
         // set a change listener on the SeekBar
@@ -341,6 +340,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
             // called when the user first touches the SeekBar
+
         }
 
         @Override
@@ -531,32 +531,32 @@ public class FruitActivity extends AppCompatActivity implements Intake {
     }
 
     @Override
-    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
+    public void setPoints(int fruitTotalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress >= 50 && totalProgress < 100) {
+        if (fruitTotalProgress >= 50 && fruitTotalProgress < 100) {
             points = 25;
 
             //setting value of points received for next checkpoint
 //            cp = String.valueOf(50);
         }
-        else if (totalProgress >= 100 && totalProgress < 175) {
+        else if (fruitTotalProgress >= 100 && fruitTotalProgress < 175) {
             points = 75;
 //            cp = String.valueOf(100);
         }
-        else if (totalProgress >= 175 && totalProgress < 275) {
+        else if (fruitTotalProgress >= 175 && fruitTotalProgress < 275) {
             points = 175;
 //            cp = String.valueOf(250);
         }
-        else if (totalProgress >= 275 && totalProgress < 500) {
+        else if (fruitTotalProgress >= 275 && fruitTotalProgress < 500) {
             points = 425;
 //            cp = String.valueOf(500);
         }
-        else if (totalProgress >= 500) {
+        else if (fruitTotalProgress >= 500) {
             points = 925;
 //            s = "You have crossed all the checkpoints!";
         }
-        else if (totalProgress-progress==0 || totalProgress < 50) {
+        else if (fruitTotalProgress-progress==0 || fruitTotalProgress < 50) {
             points = 0;
 //            cp = String.valueOf(25);
         }
