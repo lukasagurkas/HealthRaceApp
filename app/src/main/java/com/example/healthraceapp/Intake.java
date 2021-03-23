@@ -6,6 +6,7 @@ package com.example.healthraceapp;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.util.Log;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,6 +28,11 @@ import java.util.ArrayList;
 
 public interface Intake {
 
+    FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    String userID = firebaseUser.getUid();
 
     //Method to get the data for the bar chart
     ArrayList getGraphData();

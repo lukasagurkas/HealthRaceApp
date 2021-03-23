@@ -14,34 +14,31 @@ import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class FruitActivity extends AppCompatActivity implements Intake{
+public class FruitActivity extends AppCompatActivity implements Intake {
     // Stores the progress on the slider
-    TextView tvProgressLabel;
+    TextView fruitTvProgressLabel;
 
     // Displays how much progress the user has made
-    TextView intakeProgress;
+    TextView fruitIntakeProgress;
 
     // Displays the points for each checkpoint
-    TextView checkpoint;
+    TextView fruitCheckpoint;
 
     // Displays the entry of the user
-    TextView grams;
+    TextView fruitGrams;
 
     // Button to add water quantity
-    Button buttonAdd;
+    Button fruitButtonAdd;
 
     // Progress bar for user to enter water intake
-    ProgressBar progressBar;
+    ProgressBar fruitProgressBar;
 
     // Initiate bar chart
     BarChart barChartFruit;
@@ -64,23 +61,23 @@ public class FruitActivity extends AppCompatActivity implements Intake{
     int remaining = 500;
 
     //initialize instances for writing and reading data from the database
-    private static final String TAG = "ViewDatabase";
-    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
-            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-    private String userID = firebaseUser.getUid();
-    User user = new User();
+//    private static final String TAG = "ViewDatabase";
+//    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
+//            "race-app-default-rtdb.europe-west1.firebasedatabase.app/");
+//    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+//    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+//    private String userID = firebaseUser.getUid();
+//    User user = new User();
 
     // Database reference for all values in the bar chart
     private DatabaseReference fruitReference;
     private DatabaseReference pointsFruitReference;
-    private DatabaseReference minusOneDatabaseReference;
-    private DatabaseReference minusTwoDatabaseReference;
-    private DatabaseReference minusThreeDatabaseReference;
-    private DatabaseReference minusFourDatabaseReference;
-    private DatabaseReference minusFiveDatabaseReference;
-    private DatabaseReference minusSixDatabaseReference;
+    private DatabaseReference fruitMinusOneDatabaseReference;
+    private DatabaseReference fruitMinusTwoDatabaseReference;
+    private DatabaseReference fruitMinusThreeDatabaseReference;
+    private DatabaseReference fruitMinusFourDatabaseReference;
+    private DatabaseReference fruitMinusFiveDatabaseReference;
+    private DatabaseReference fruitMinusSixDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,14 +85,14 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         setContentView(R.layout.activity_fruit);
 
         // Finds progress bar in activity page
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        fruitProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         Log.d("check", String.valueOf(totalProgress));
         // Sets the progress
-        progressBar.setProgress(totalProgress);
+        fruitProgressBar.setProgress(totalProgress);
         // Sets the maximum progress to 500 (grams of fruit)
-        progressBar.setMax(500);
+        fruitProgressBar.setMax(500);
         // Finds add button in activity page
-        buttonAdd = findViewById(R.id.buttonAdd);
+        fruitButtonAdd = findViewById(R.id.buttonAdd);
 
         // Add bar chart to activity and enter the corresponding data
         barChartFruit = findViewById(R.id.barChartFruit);
@@ -103,51 +100,51 @@ public class FruitActivity extends AppCompatActivity implements Intake{
 
 
         // Finds slider in activity page
-        SeekBar seekBar = findViewById(R.id.seekBar);
+        SeekBar fruitSeekBar = findViewById(R.id.seekBar);
         // set a change listener on the SeekBar
-        seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+        fruitSeekBar.setOnSeekBarChangeListener(seekBarChangeListener);
 
         // TextView that shows the amount of grams the user will add when pressing the add button
-        tvProgressLabel = findViewById(R.id.textView);
-        tvProgressLabel.setText("" + progress);
-        tvProgressLabel.setTextColor(Color.WHITE);
-        tvProgressLabel.setTextSize(15);
+        fruitTvProgressLabel = findViewById(R.id.textView);
+        fruitTvProgressLabel.setText("" + progress);
+        fruitTvProgressLabel.setTextColor(Color.WHITE);
+        fruitTvProgressLabel.setTextSize(15);
 
         // Informational textView, showing how many grams of fruit the user should still take
         // Of course, this remaining value cannot be a negative number
-        intakeProgress = findViewById(R.id.intakeProgress);
+        fruitIntakeProgress = findViewById(R.id.intakeProgress);
         if ((500 - totalProgress) < 0) {
             remaining = 0;
         } else {
             remaining = 500 - totalProgress;
         }
-        intakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
+        fruitIntakeProgress.setText("You ate " + totalProgress + " g of fruits today out of the " +
                 "recommended 500 g. Only " + remaining + " grams of fruit remains.");
-        intakeProgress.setTextColor(Color.WHITE);
-        intakeProgress.setTextSize(20);
+        fruitIntakeProgress.setTextColor(Color.WHITE);
+        fruitIntakeProgress.setTextSize(20);
 
         // Informational textView for the amount of points you get for each checkpoint
-        checkpoint = findViewById(R.id.checkpoint);
-        checkpoint.setTextColor(Color.WHITE);
-        checkpoint.setTextSize(25);
+        fruitCheckpoint = findViewById(R.id.checkpoint);
+        fruitCheckpoint.setTextColor(Color.WHITE);
+        fruitCheckpoint.setTextSize(25);
 
         // Adds a 'g' for grams add the end of the slider
-        grams = findViewById(R.id.grams);
-        grams.setTextColor(Color.WHITE);
-        grams.setTextSize(20);
+        fruitGrams = findViewById(R.id.grams);
+        fruitGrams.setTextColor(Color.WHITE);
+        fruitGrams.setTextSize(20);
 
         // onClickListener for the add quantity button
-        buttonAdd.setOnClickListener(new View.OnClickListener() {
+        fruitButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Gets the value from the slider and displays it in the textView below
-                progress = seekBar.getProgress();
-                tvProgressLabel.setText("" + progress);
+                progress = fruitSeekBar.getProgress();
+                fruitTvProgressLabel.setText("" + progress);
 
                 // Add the value from the slider to the totalProgress
                 totalProgress = totalProgress + progress;
                 // Sets the progressbar to the new totalProgress
-                progressBar.setProgress(totalProgress);
+                fruitProgressBar.setProgress(totalProgress);
 
                 // Updates the value in the database to the new totalProgress
                 fruitReference.setValue(totalProgress);
@@ -159,7 +156,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
                 } else {
                     remaining = 500 - totalProgress;
                 }
-                intakeProgress.setText("You ate " + totalProgress + " g of fruits today " +
+                fruitIntakeProgress.setText("You ate " + totalProgress + " g of fruits today " +
                         "out of the recommended 500 g. Only " + remaining +
                         " grams of fruit remains.");
 
@@ -176,12 +173,12 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // Give the right data path to the corresponding reference
         fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
         pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("fruitPoints");
-        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
-        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
-        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
-        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
-        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
-        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
+        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
+        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
+        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
+        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
+        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
+        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
 
         // If the value of amountOfFruit in the database changes
         // It takes the value from amountOfFruit in the database
@@ -194,7 +191,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
                 totalProgress = dataFromDatabase;
 
                 // Sets the progressbar to the totalProgress value in the database
-                progressBar.setProgress(totalProgress);
+                fruitProgressBar.setProgress(totalProgress);
 
                 // Informational textView, showing how many grams of fruit the user should
                 // still take of course, this remaining value cannot be a negative number
@@ -203,7 +200,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
                 } else {
                     remaining = 500 - totalProgress;
                 }
-                intakeProgress.setText("You ate " + totalProgress + " g of fruits today out " +
+                fruitIntakeProgress.setText("You ate " + totalProgress + " g of fruits today out " +
                         "of the recommended 500 g. Only " + remaining + " grams of fruit remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
@@ -226,7 +223,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // It takes the value from fruitMinusOne in the database
         // And saves it in the variable fruitMinusOne
         // And create a new barChart
-        minusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -244,7 +241,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // It takes the value from fruitMinusTwo in the database
         // And saves it in the variable fruitMinusTwo
         // And create a new barChart
-        minusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -262,7 +259,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // It takes the value from fruitMinusThree in the database
         // And saves it in the variable fruitMinusThree
         // And create a new barChart
-        minusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -280,7 +277,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // It takes the value from fruitMinusFour in the database
         // And saves it in the variable fruitMinusFour
         // And create a new barChart
-        minusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -298,7 +295,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // It takes the value from fruitMinusFive in the database
         // And saves it in the variable fruitMinusFive
         // And create a new barChart
-        minusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -316,7 +313,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         // It takes the value from fruitMinusSix in the database
         // And saves it in the variable fruitMinusSix
         // And create a new barChart
-        minusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -338,7 +335,7 @@ public class FruitActivity extends AppCompatActivity implements Intake{
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
-            tvProgressLabel.setText("" + progress);
+            fruitTvProgressLabel.setText("" + progress);
         }
 
         @Override
@@ -422,26 +419,26 @@ public class FruitActivity extends AppCompatActivity implements Intake{
     @Override
     public void switchDays() {
 
-        minusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
-        minusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
-        minusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
-        minusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
-        minusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
-        minusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
+//        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
+//        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
+//        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
+//        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
+//        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
+//        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
         fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
 
         // Gives the value of fruitMinusFive to fruitMinusSix
-        switchValues(minusFiveDatabaseReference, minusSixDatabaseReference);
+        switchValues(fruitMinusFiveDatabaseReference, fruitMinusSixDatabaseReference);
         // Gives the value of fruitMinusFour to fruitMinusFive
-        switchValues(minusFourDatabaseReference, minusFiveDatabaseReference);
+        switchValues(fruitMinusFourDatabaseReference, fruitMinusFiveDatabaseReference);
         // Gives the value of fruitMinusThree to fruitMinusFour
-        switchValues(minusThreeDatabaseReference, minusFourDatabaseReference);
+        switchValues(fruitMinusThreeDatabaseReference, fruitMinusFourDatabaseReference);
         // Gives the value of fruitMinusTwo to fruitMinusThree
-        switchValues(minusTwoDatabaseReference, minusThreeDatabaseReference);
+        switchValues(fruitMinusTwoDatabaseReference, fruitMinusThreeDatabaseReference);
         // Gives the value of fruitMinusOne to fruitMinusTwo
-        switchValues(minusOneDatabaseReference, minusTwoDatabaseReference);
+        switchValues(fruitMinusOneDatabaseReference, fruitMinusTwoDatabaseReference);
         // Gives the value of fruitReference to fruitMinusOne
-        switchValues(fruitReference, minusOneDatabaseReference);
+        switchValues(fruitReference, fruitMinusOneDatabaseReference);
 //
 //        // Gives the value of fruitMinusFive to fruitMinusSix
 //        minusFiveDatabaseReference.get().addOnCompleteListener(
