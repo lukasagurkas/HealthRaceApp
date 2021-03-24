@@ -259,9 +259,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 10);
-        setCalendar.set(Calendar.MINUTE,12);
-        setCalendar.set(Calendar.SECOND, 10);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        setCalendar.set(Calendar.MINUTE,0);
+        setCalendar.set(Calendar.SECOND, 0);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){

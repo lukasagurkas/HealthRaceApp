@@ -182,15 +182,17 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 createBarChart(barChartWater, getGraphData());
                 // Sets the points
                 //TODO: uncomment the first line and delete the second when deleting the TextView pointsWater
-                //setCheckpoint(totalProgress, pointsWaterReference);
-                setPoints(totalProgress, progress, userID, pointsWaterReference, pointsWater);
+                //setPoints(totalProgress, pointsWaterReference);
+                setPoints(totalProgress, progress, pointsWaterReference, pointsWater);
                 checkpoint.setText(s);
+
+                setTotalPoints(firebaseDatabase, userID);
             }
         });
 
         // Give the right data path to the corresponding reference
         waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
-        pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterPoints");
+        pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("waterPoints");
         waterMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
         waterMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
         waterMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
@@ -225,9 +227,11 @@ public class WaterActivity extends AppCompatActivity implements Intake {
 
                 // Sets the points
                 //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
-                //setCheckpoint(totalProgress, pointsWaterReference);
-                setPoints(totalProgress, progress, userID, pointsWaterReference, pointsWater);
+                //setPoints(totalProgress, pointsWaterReference);
+                setPoints(totalProgress, progress, pointsWaterReference, pointsWater);
                 checkpoint.setText(s);
+
+                setTotalPoints(firebaseDatabase, userID);
 
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());

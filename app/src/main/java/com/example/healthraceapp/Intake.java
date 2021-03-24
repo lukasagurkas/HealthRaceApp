@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+
 public interface Intake {
 
     FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance("https://health-" +
@@ -79,7 +80,7 @@ public interface Intake {
 
     //TODO: delete this when deleting TextView pointsWater in water activity
     @SuppressLint("SetTextI18n")
-    default void setPoints(int totalProgress, int progress, String userID, DatabaseReference pointsReference, TextView pointsWater) {
+    default void setPoints(int totalProgress, int progress, DatabaseReference pointsReference, TextView pointsWater) {
 
         //adds points to the total from the water page if these checkpoints are crossed
                 int points = 0;
