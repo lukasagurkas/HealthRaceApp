@@ -246,7 +246,7 @@ public class ProfileActivity extends AppCompatActivity {
                 final AlertDialog.Builder deleteAccountDialog =
                         new AlertDialog.Builder(v.getContext());
                 deleteAccountDialog.setTitle("Delete Account");
-                deleteAccountDialog.setMessage("If you are sure that you want to delete this account enter you password");
+                deleteAccountDialog.setMessage("If you are sure that you want to delete this account enter your password");
 
                 // Get a reference to the already created profile activity layout
                 ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.constraintLayoutProfile);
