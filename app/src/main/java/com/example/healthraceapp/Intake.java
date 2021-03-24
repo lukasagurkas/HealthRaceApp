@@ -105,11 +105,15 @@ public interface Intake {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int totalPoints = 0;
-
+                int points;
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     Log.d("pointschecker", String.valueOf(ds));
-                    int points = ds.getValue(int.class);
-                    totalPoints = totalPoints + points;
+                    if (ds.getValue(int.class) == null) {
+                        points = 0;
+                    } else {
+                        points = ds.getValue(int.class);
+                        totalPoints = totalPoints + points;
+                    }
                 }
                 totalPointsReference.setValue(totalPoints);
             }
