@@ -150,6 +150,77 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final AlertDialog.Builder deleteAccountDialog =
+                        new AlertDialog.Builder(v.getContext());
+                deleteAccountDialog.setTitle("Delete Account");
+                deleteAccountDialog.setMessage("To delete this account enter you password");
+
+                // Get a reference to the already created profile activity layout
+                ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.constraintLayoutProfile);
+
+                // Inflate (create) another copy of our custom layout
+                LayoutInflater inflater = getLayoutInflater();
+                View passwordLayout = inflater.inflate(R.layout.password_alert_dialog, parentLayout, false);
+
+                // Setting up the input for the AlertDialog
+                EditText inputPassword = (EditText) passwordLayout.findViewById(R.id.editTextTextPassword);
+
+                deleteAccountDialog.setView(inputPassword);
+
+                deleteAccountDialog.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                // Get auth credentials from the user for re-authentication.
+                                assert user != null;
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(Objects.requireNonNull(user.getEmail()), inputPassword.getText().toString());
+
+                                // Prompt the user to re-provide their sign-in credentials
+                                user.reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, String.valueOf(task.getResult()));
+
+                                                    String email = user.getEmail();
+                                                    mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(ProfileActivity.this,
+                                                                    "Password reset email sent", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(ProfileActivity.this,
+                                                                    "Password reset failed", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.d(TAG, String.valueOf(task.getException()));
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+
+                deleteAccountDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                deleteAccountDialog.show();
+            }
+
+
+            /*@Override
+            public void onClick(View v) {
                 String email = user.getEmail();
                 mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -164,7 +235,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 "Password reset failed", Toast.LENGTH_LONG).show();
                     }
                 });
-            }
+            }*/
 
         });
 
