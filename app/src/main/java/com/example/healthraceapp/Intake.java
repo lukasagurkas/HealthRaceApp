@@ -1,8 +1,5 @@
 package com.example.healthraceapp;
 
-
-
-
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.util.Log;
