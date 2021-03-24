@@ -405,14 +405,14 @@ public class FruitActivity extends AppCompatActivity implements Intake {
     @Override
     public void setReferences() {
         // Give the right data path to the corresponding reference
-        fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
+        fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("amountOfFruit");
         pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("fruitPoints");
-        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
-        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
-        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
-        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
-        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
-        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
+        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("fruitMinusOne");
+        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("fruitMinusTwo");
+        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("fruitMinusThree");
+        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("fruitMinusFour");
+        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("fruitMinusFive");
+        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitWeek").child("fruitMinusSix");
 
     }
 

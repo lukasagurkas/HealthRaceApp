@@ -129,10 +129,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         layout_vegetable = (LinearLayout)findViewById(R.id.layout_vegetable);
         progressBar_veg = findViewById(R.id.progressBar_veg);
 
-        createProgressBar(progressBar_step, "dailyNumberOfSteps", 7000);
-        createProgressBar(progressBar_water, "amountOfWater", 2000);
-        createProgressBar(progressBar_fruit, "amountOfFruit", 500);
-        createProgressBar(progressBar_veg, "amountOfVeg", 500);
+        createProgressBar(progressBar_step, "stepsWeek", "dailyNumberOfSteps", 7000);
+        createProgressBar(progressBar_water,"waterWeek", "amountOfWater", 2000);
+        createProgressBar(progressBar_fruit, "fruitWeek", "amountOfFruit", 500);
+        createProgressBar(progressBar_veg, "veggieWeek", "amountOfVeg", 500);
 
 
 
@@ -204,10 +204,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void createProgressBar(ProgressBar progressBar, String progressValue, int max) {
+    private void createProgressBar(ProgressBar progressBar, String progressMap, String progressValue, int max) {
         progressBar.setMax(max);
 
-        reference.child(progressValue).addValueEventListener(new ValueEventListener() {
+        reference.child(progressMap).child(progressValue).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try {
@@ -242,9 +242,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public static void reset(){
         Log.d("ResetAlarm", "Reset works");
         //Sets all the data inputs from the last day to zero
-        reference.child("amountOfVeg").setValue(0);
-        reference.child("amountOfFruit").setValue(0);
-        reference.child("amountOfWater").setValue(0);
+        reference.child("veggieWeek").child("amountOfVeg").setValue(0);
+        reference.child("fruitWeek").child("amountOfFruit").setValue(0);
+        reference.child("waterWeek").child("amountOfWater").setValue(0);
         reference.child("stepsWeek").child("dailyNumberOfSteps").setValue(0);
 
         //sets all the points from last day to zero
@@ -266,9 +266,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        setCalendar.set(Calendar.MINUTE, 0);
-        setCalendar.set(Calendar.SECOND, 0);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 17);
+        setCalendar.set(Calendar.MINUTE, 44);
+        setCalendar.set(Calendar.SECOND, 20);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){

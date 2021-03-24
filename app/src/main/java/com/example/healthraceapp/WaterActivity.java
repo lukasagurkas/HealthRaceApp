@@ -441,14 +441,14 @@ public class WaterActivity extends AppCompatActivity implements Intake {
     @Override
     public void setReferences(){
         // Give the right data path to the corresponding reference
-        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("amountOfWater");
         pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("waterPoints");
-        waterMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
-        waterMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
-        waterMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
-        waterMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFour");
-        waterMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFive");
-        waterMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
+        waterMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("waterMinusOne");
+        waterMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("waterMinusTwo");
+        waterMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("waterMinusThree");
+        waterMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("waterMinusFour");
+        waterMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("waterMinusFive");
+        waterMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterWeek").child("waterMinusSix");
     }
 
 }

@@ -401,13 +401,13 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     @Override
     public void setReferences() {
         // Give the right data path to the corresponding reference
-        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
+        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("amountOfVeg");
         pointsVeggieReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("veggiePoints");
-        veggieMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
-        veggieMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
-        veggieMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
-        veggieMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFour");
-        veggieMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFive");
-        veggieMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusSix");
+        veggieMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("veggieMinusOne");
+        veggieMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("veggieMinusTwo");
+        veggieMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("veggieMinusThree");
+        veggieMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("veggieMinusFour");
+        veggieMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("veggieMinusFive");
+        veggieMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieWeek").child("veggieMinusSix");
     }
 }
