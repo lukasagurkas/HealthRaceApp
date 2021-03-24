@@ -6,9 +6,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +35,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseError;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
@@ -54,14 +59,12 @@ import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    // Instances of all TextView elements
-    private TextView email, username, day, month, year, gender, points;
-    // Instances of all Button elements
+    // Instances of all UI elements
+    private TextView email, username, day, month, year, gender;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
-    // Instances of all ImageView elements
     private ImageView userProfileImage;
+//    private ImageButton buttonAddGroup;
 
-    // Instances of String element
     private String userID;
 
     // Firebase instances
@@ -92,12 +95,9 @@ public class ProfileActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb." +
                 "europe-west1.firebasedatabase.app/");
-        // Get current user
         user = mAuth.getCurrentUser();
-        // Get ID of current user
         userID = user.getUid();
         String uID = mAuth.getCurrentUser().getUid();
-        // Referenece to the firebase database
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
                 getReference("Users").child(uID);
@@ -107,6 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         userProfileImage = findViewById(R.id.userProfileImage);
+//        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
 
         // If there is a user a profile image should be fetched from storage
         if (user != null) {
@@ -121,32 +122,26 @@ public class ProfileActivity extends AppCompatActivity {
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop-up
                 final AlertDialog.Builder logoutDialog = new AlertDialog.Builder(v.getContext());
                 logoutDialog.setTitle("Log out");
                 logoutDialog.setMessage("Are you sure you want to log out?");
 
-                // If the "Yes" option is chosen
                 logoutDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //Sign-out
                         mAuth.signOut();
                         finish();
-                        // Go to the LoginActivity
                         startActivity(new Intent(ProfileActivity.this,
                                 LoginActivity.class));
                     }
                 });
 
-                // If the "No" option is chosen
                 logoutDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Hide pop-up
+
                     }
                 });
-                // Create and show the pop-up
                 logoutDialog.create().show();
             }
         });
@@ -155,9 +150,78 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the email of the current user
+                final AlertDialog.Builder deleteAccountDialog =
+                        new AlertDialog.Builder(v.getContext());
+                deleteAccountDialog.setTitle("Delete Account");
+                deleteAccountDialog.setMessage("To delete this account enter you password");
+
+                // Get a reference to the already created profile activity layout
+                ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.constraintLayoutProfile);
+
+                // Inflate (create) another copy of our custom layout
+                LayoutInflater inflater = getLayoutInflater();
+                View passwordLayout = inflater.inflate(R.layout.password_alert_dialog, parentLayout, false);
+
+                // Setting up the input for the AlertDialog
+                EditText inputPassword = (EditText) passwordLayout.findViewById(R.id.editTextTextPassword);
+
+                deleteAccountDialog.setView(inputPassword);
+
+                deleteAccountDialog.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                // Get auth credentials from the user for re-authentication.
+                                assert user != null;
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(Objects.requireNonNull(user.getEmail()), inputPassword.getText().toString());
+
+                                // Prompt the user to re-provide their sign-in credentials
+                                user.reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, String.valueOf(task.getResult()));
+
+                                                    String email = user.getEmail();
+                                                    mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            Toast.makeText(ProfileActivity.this,
+                                                                    "Password reset email sent", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Toast.makeText(ProfileActivity.this,
+                                                                    "Password reset failed", Toast.LENGTH_LONG).show();
+                                                        }
+                                                    });
+                                                } else {
+                                                    Log.d(TAG, String.valueOf(task.getException()));
+                                                }
+                                            }
+                                        });
+                            }
+                        });
+
+                deleteAccountDialog.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                deleteAccountDialog.show();
+            }
+
+
+            /*@Override
+            public void onClick(View v) {
                 String email = user.getEmail();
-                // Send a reset password email
                 mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -171,7 +235,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 "Password reset failed", Toast.LENGTH_LONG).show();
                     }
                 });
-            }
+            }*/
 
         });
 
@@ -179,34 +243,69 @@ public class ProfileActivity extends AppCompatActivity {
         buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop-up
                 final AlertDialog.Builder deleteAccountDialog =
                         new AlertDialog.Builder(v.getContext());
                 deleteAccountDialog.setTitle("Delete Account");
-                deleteAccountDialog.setMessage("Are you sure you want to delete your account?");
+                deleteAccountDialog.setMessage("If you are sure that you want to delete this account enter your password");
 
-                // If the "Yes" option is chosen
-                deleteAccountDialog.setPositiveButton("Yes",
+                // Get a reference to the already created profile activity layout
+                ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.constraintLayoutProfile);
+
+                // Inflate (create) another copy of our custom layout
+                LayoutInflater inflater = getLayoutInflater();
+                View passwordLayout = inflater.inflate(R.layout.password_alert_dialog, parentLayout, false);
+
+                // Setting up the input for the AlertDialog
+                EditText inputPassword = (EditText) passwordLayout.findViewById(R.id.editTextTextPassword);
+
+                deleteAccountDialog.setView(inputPassword);
+
+                deleteAccountDialog.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deleteUserAuth();
+                                user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                // Get auth credentials from the user for re-authentication.
+                                assert user != null;
+                                AuthCredential credential = EmailAuthProvider
+                                        .getCredential(Objects.requireNonNull(user.getEmail()), inputPassword.getText().toString());
+
+                                // Prompt the user to re-provide their sign-in credentials
+                                user.reauthenticate(credential)
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Log.d(TAG, "User re-authenticated.");
+                                                    Log.d(TAG, String.valueOf(task.getResult()));
+                                                    deleteUserAuth();
+                                                } else {
+                                                    Log.d(TAG, String.valueOf(task.getException()));
+                                                }
+                                            }
+                                        });
                             }
                         });
 
-                // If the "No" option is chosen
-                deleteAccountDialog.setNegativeButton("No",
+                deleteAccountDialog.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // Hide pop-up
+                                dialog.cancel();
                             }
                         });
-                // Create and show the pop-up
-                deleteAccountDialog.create().show();
+                deleteAccountDialog.show();
             }
         });
 
+        // OnClick listener for the add group button
+//        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //TODO: create new group
+//            }
+//        });
 
         //TextView references from the UI
         username = (TextView) findViewById(R.id.textUsernameProfile);
@@ -215,7 +314,6 @@ public class ProfileActivity extends AppCompatActivity {
         month = (TextView) findViewById(R.id.textMonth);
         year = (TextView) findViewById(R.id.textYear);
         gender = (TextView) findViewById(R.id.textGender);
-        points = (TextView) findViewById(R.id.textPoints);
 
         // Get the values for username, email, gender and DoB from Realtime Database
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -223,27 +321,23 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = mAuth.getCurrentUser();
                 if (user != null) {
-                    // Get the value of all user data
                     String myUsername = snapshot.child("username").getValue(String.class);
                     String myEmail = snapshot.child("email").getValue(String.class);
                     Boolean myGender = (Boolean) snapshot.child("male").getValue();
                     String myDay = String.valueOf(snapshot.child("day").getValue());
                     String myMonth = String.valueOf(snapshot.child("month").getValue());
                     String myYear = String.valueOf(snapshot.child("year").getValue());
-                    String totalPoints = String.valueOf(snapshot.child("totalPoints").getValue());
 
-                    // Setting the text in the UI to user data from database
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
                     day.setText(myDay);
                     month.setText("/" + myMonth);
                     year.setText("/" + myYear);
-                    if (myGender){
+                    if (myGender) {
                         gender.setText("Gender: male");
-                    }else{
+                    } else {
                         gender.setText("Gender: female");
                     }
-                    points.setText("Total number of points today: " + totalPoints);
                 }
             }
 
@@ -257,21 +351,18 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Delete user from Realtime database
     private void deleteUserRealtime() {
-        // Reference to the data base
         DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
                 "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
                 .child(userID);
-
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // Remove all the values in the database for user
-                for (DataSnapshot userSnapshot: snapshot.getChildren()){
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                     userSnapshot.getRef().removeValue()
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()){
+                                    if (task.isSuccessful()) {
                                         Log.d(TAG, String.valueOf(task.getResult()) + "qwz");
                                     } else {
                                         Log.d(TAG, String.valueOf(task.getException()) + "zwq");
@@ -279,17 +370,14 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                 }
-                // Sign out the user
                 mAuth.signOut();
                 Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
-                // Start the RegisterActivity
                 startActivity(new Intent(ProfileActivity.this,
                         RegisterActivity.class));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Go back to the ProfileActivity
             }
         });
 
@@ -297,10 +385,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Delete user's authentication details
     private void deleteUserAuth() {
-        // Get user from database
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Delete user from authentication
         user.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -341,9 +427,7 @@ public class ProfileActivity extends AppCompatActivity {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
-        // Get userID
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // Set storage reference inside the profile image folder with the name of user id + ".jpg"
         final StorageReference reference = FirebaseStorage.getInstance().getReference()
                 .child("profileImages")
                 .child(uid + ".jpeg");
@@ -358,7 +442,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: ", e.getCause() );
+                        Log.e(TAG, "onFailure: ", e.getCause());
                     }
                 });
     }
@@ -377,15 +461,12 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Set the image as user's profile image
     private void setUserProfileUrl(Uri uri) {
-        // Get user from firebase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Change the profile picture
         UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
                 .setPhotoUri(uri)
                 .build();
 
-        // Update the profile image in storage
         user.updateProfile(request)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
