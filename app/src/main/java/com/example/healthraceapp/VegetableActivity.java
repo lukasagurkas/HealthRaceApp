@@ -164,15 +164,8 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
             }
         });
 
-        // Give the right data path to the corresponding reference
-        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
-        pointsVeggieReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("veggiePoints");
-        veggieMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
-        veggieMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
-        veggieMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
-        veggieMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFour");
-        veggieMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFive");
-        veggieMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusSix");
+        //set the correct data paths
+        setReferences();
 
         // If the value of amountOfVeg in the database changes
         // It takes the value from amountOfVeg in the database
@@ -355,6 +348,8 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
+        //set the correct data paths
+        setReferences();
         // Gives the value of veggieMinusFive to veggieMinusSix
         switchValues(veggieMinusFiveDatabaseReference, veggieMinusSixDatabaseReference);
         // Gives the value of veggieMinusFour to veggieMinusFive
@@ -401,5 +396,18 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         }
 //        checkpoint.setText(s);
         pointsReference.setValue(points);
+    }
+
+    @Override
+    public void setReferences() {
+        // Give the right data path to the corresponding reference
+        vegReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfVeg");
+        pointsVeggieReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("veggiePoints");
+        veggieMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusOne");
+        veggieMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusTwo");
+        veggieMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusThree");
+        veggieMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFour");
+        veggieMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusFive");
+        veggieMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("veggieMinusSix");
     }
 }

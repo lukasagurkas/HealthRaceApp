@@ -190,15 +190,8 @@ public class WaterActivity extends AppCompatActivity implements Intake {
             }
         });
 
-        // Give the right data path to the corresponding reference
-        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
-        pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("waterPoints");
-        waterMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
-        waterMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
-        waterMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
-        waterMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFour");
-        waterMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFive");
-        waterMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
+        //set the correct data paths
+        setReferences();
 
         // If the value of amountOfWater in the database changes
         // It takes the value from amountOfWater in the database
@@ -393,6 +386,10 @@ public class WaterActivity extends AppCompatActivity implements Intake {
 
     @Override
     public void switchDays() {
+
+        //set the correct data paths
+        setReferences();
+
         // Gives the value of waterMinusFive to waterMinusSix
         switchValues(waterMinusFiveDatabaseReference, waterMinusSixDatabaseReference);
         // Gives the value of waterMinusFour to waterMinusFive
@@ -439,6 +436,19 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         }
         checkpoint.setText(s);
         pointsReference.setValue(points);
+    }
+
+    @Override
+    public void setReferences(){
+        // Give the right data path to the corresponding reference
+        waterReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfWater");
+        pointsWaterReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("waterPoints");
+        waterMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusOne");
+        waterMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusTwo");
+        waterMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusThree");
+        waterMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFour");
+        waterMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusFive");
+        waterMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("waterMinusSix");
     }
 
 }

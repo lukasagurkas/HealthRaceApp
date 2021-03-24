@@ -241,10 +241,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static void reset(){
         Log.d("ResetAlarm", "Reset works");
+        //Sets all the data inputs from the last day to zero
         reference.child("amountOfVeg").setValue(0);
         reference.child("amountOfFruit").setValue(0);
         reference.child("amountOfWater").setValue(0);
         reference.child("stepsWeek").child("dailyNumberOfSteps").setValue(0);
+
+        //sets all the points from last day to zero
+        reference.child("points").child("fruitPoints").setValue(0);
+        reference.child("points").child("waterPoints").setValue(0);
+        reference.child("points").child("stepPoints").setValue(0);
+        reference.child("points").child("veggiePoints").setValue(0);
     }
 
     public void dailyResetAlarm() {
@@ -260,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
         setCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        setCalendar.set(Calendar.MINUTE,0);
+        setCalendar.set(Calendar.MINUTE, 0);
         setCalendar.set(Calendar.SECOND, 0);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 

@@ -8,10 +8,7 @@ public class User {
     private String username, email;
     private boolean male;
     private int year, month, day;
-    private int dailyNumberOfSteps;
     private int amountOfVeg, amountOfWater, amountOfFruit;
-    private int stepDetectMinusOne, StepDetectMinusTwo, StepDetectMinusThree, StepDetectMinusFour
-            , StepDetectMinusFive, StepDetectMinusSix;
     private int waterMinusOne, waterMinusTwo, waterMinusThree, waterMinusFour
             , waterMinusFive, waterMinusSix;
     private int veggieMinusOne, veggieMinusTwo, veggieMinusThree, veggieMinusFour
@@ -45,13 +42,13 @@ public class User {
         groupNames.add("");
 
         stepsWeek = new HashMap<>();
-        stepsWeek.put("dailyNumberOfSteps", dailyNumberOfSteps);
-        stepsWeek.put("stepDetectMinusOne", stepDetectMinusOne);
-        stepsWeek.put("stepDetectMinusTwo", StepDetectMinusTwo);
-        stepsWeek.put("stepDetectMinusThree", StepDetectMinusThree);
-        stepsWeek.put("stepDetectMinusFour", StepDetectMinusFour);
-        stepsWeek.put("stepDetectMinusFive", StepDetectMinusFive);
-        stepsWeek.put("stepDetectMinusSix", StepDetectMinusSix);
+        stepsWeek.put("dailyNumberOfSteps", 0);
+        stepsWeek.put("stepDetectMinusOne", 0);
+        stepsWeek.put("stepDetectMinusTwo", 0);
+        stepsWeek.put("stepDetectMinusThree", 0);
+        stepsWeek.put("stepDetectMinusFour", 0);
+        stepsWeek.put("stepDetectMinusFive", 0);
+        stepsWeek.put("stepDetectMinusSix", 0);
     }
 
     public String getUsername() {
@@ -102,14 +99,6 @@ public class User {
         this.day = day;
     }
 
-    public int getDailyNumberOfSteps() {
-        return dailyNumberOfSteps;
-    }
-
-    public void setDailyNumberOfSteps(int dailyNumberOfSteps) {
-        this.dailyNumberOfSteps = dailyNumberOfSteps;
-    }
-
     public int getAmountOfVeg() {
         return amountOfVeg;
     }
@@ -133,42 +122,6 @@ public class User {
     public void setAmountOfFruit(int amountOfFruit) {
         this.amountOfFruit = amountOfFruit;
     }
-
-    public int getStepDetectMinusOne() { return stepDetectMinusOne; }
-
-    public void setStepDetectMinusOne(int stepDetectMinusOne) {
-        this.stepDetectMinusOne = stepDetectMinusOne;
-    }
-
-    public int getStepDetectMinusTwo() {
-        return StepDetectMinusTwo; }
-
-    public void setStepDetectMinusTwo(int stepDetectMinusTwo) {
-        StepDetectMinusTwo = stepDetectMinusTwo; }
-
-    public int getStepDetectMinusThree() {
-        return StepDetectMinusThree; }
-
-    public void setStepDetectMinusThree(int stepDetectMinusThree) {
-        StepDetectMinusThree = stepDetectMinusThree; }
-
-    public int getStepDetectMinusFour() {
-        return StepDetectMinusFour; }
-
-    public void setStepDetectMinusFour(int stepDetectMinusFour) {
-        StepDetectMinusFour = stepDetectMinusFour; }
-
-    public int getStepDetectMinusFive() {
-        return StepDetectMinusFive; }
-
-    public void setStepDetectMinusFive(int stepDetectMinusFive) {
-        StepDetectMinusFive = stepDetectMinusFive; }
-
-    public int getStepDetectMinusSix() {
-        return StepDetectMinusSix; }
-
-    public void setStepDetectMinusSix(int stepDetectMinusSix) {
-        StepDetectMinusSix = stepDetectMinusSix; }
 
     public int getWaterMinusOne() {
         return waterMinusOne;

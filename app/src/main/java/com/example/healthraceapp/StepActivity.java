@@ -102,17 +102,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         barChartStep = findViewById(R.id.barChartStep);
         createBarChart(barChartStep, getGraphData());
 
-        // Give the right data path to the corresponding reference
-        stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("dailyNumberOfSteps");
-        pointsStepReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("stepPoints");
-        stepMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusOne");
-        stepMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusTwo");
-        stepMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusThree");
-        stepMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusFour");
-        stepMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusFive");
-        stepMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusSix");
-        weeklyStepsReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklySteps");
-        stepsWeekReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek");
+        //set the correct data paths
+        setReferences();
 
         // If the value of stepDetectMinusOne in the database changes
         // It takes the value from stepDetectMinusOne in the database
@@ -335,6 +326,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
+        //set the correct data paths
+        setReferences();
         // Gives the value of stepMinusFive to stepMinusSix
         switchValues(stepMinusFiveDatabaseReference, stepMinusSixDatabaseReference);
         // Gives the value of stepMinusFour to stepMinusFive
@@ -442,6 +435,21 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         }
 //        checkpoint.setText(s);
         pointsReference.setValue(points);
+    }
+
+    @Override
+    public void setReferences() {
+        // Give the right data path to the corresponding reference
+        stepReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("dailyNumberOfSteps");
+        pointsStepReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("stepPoints");
+        stepMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusOne");
+        stepMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusTwo");
+        stepMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusThree");
+        stepMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusFour");
+        stepMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusFive");
+        stepMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek").child("stepDetectMinusSix");
+        weeklyStepsReference = firebaseDatabase.getReference().child("Users").child(userID).child("weeklySteps");
+        stepsWeekReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek");
     }
 
     private void setWeeklySteps() {

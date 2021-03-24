@@ -160,15 +160,8 @@ public class FruitActivity extends AppCompatActivity implements Intake {
             }
         });
 
-        // Give the right data path to the corresponding reference
-        fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
-        pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("fruitPoints");
-        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
-        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
-        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
-        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
-        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
-        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
+        //set the correct data paths
+        setReferences();
 
         // If the value of amountOfFruit in the database changes
         // It takes the value from amountOfFruit in the database
@@ -359,6 +352,8 @@ public class FruitActivity extends AppCompatActivity implements Intake {
     // This function makes sure the right data is swapped for the next day
     @Override
     public void switchDays() {
+        //set the correct data paths
+        setReferences();
         // Gives the value of fruitMinusFive to fruitMinusSix
         switchValues(fruitMinusFiveDatabaseReference, fruitMinusSixDatabaseReference);
         // Gives the value of fruitMinusFour to fruitMinusFive
@@ -405,6 +400,20 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         }
 //        checkpoint.setText(s);
         pointsReference.setValue(points);
+    }
+
+    @Override
+    public void setReferences() {
+        // Give the right data path to the corresponding reference
+        fruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("amountOfFruit");
+        pointsFruitReference = firebaseDatabase.getReference().child("Users").child(userID).child("points").child("fruitPoints");
+        fruitMinusOneDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusOne");
+        fruitMinusTwoDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusTwo");
+        fruitMinusThreeDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusThree");
+        fruitMinusFourDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFour");
+        fruitMinusFiveDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusFive");
+        fruitMinusSixDatabaseReference = firebaseDatabase.getReference().child("Users").child(userID).child("fruitMinusSix");
+
     }
 
 }

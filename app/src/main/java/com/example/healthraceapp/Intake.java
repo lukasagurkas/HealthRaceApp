@@ -125,6 +125,8 @@ public interface Intake {
         });
     }
 
+    void setReferences();
+
 
 //    default void barListener(TextView fruitTvProgressLabel, SeekBar fruitSeekBar) {
 //
