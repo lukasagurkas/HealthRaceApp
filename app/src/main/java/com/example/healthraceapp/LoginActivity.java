@@ -29,10 +29,13 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    // Instances of all UI elements
+    // Instances of all Button elements
     private Button buttonRegister, buttonSignIn;
+    // Instances of all EditText elements
     private EditText editTextEmail, editTextPassword;
+    // Instances of ProgressDialog element
     private ProgressDialog progressDialog;
+    // Instances of TextView element
     private TextView textForgotPassword;
 
     // Defining FirebaseAuth object
@@ -43,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // Set the title of the page
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle("Login");
@@ -65,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         buttonSignIn = (Button) findViewById(R.id.buttonSignIn);
         buttonRegister = (Button) findViewById(R.id.buttonRegister);
         textForgotPassword = (TextView) findViewById(R.id.textForgotPassword);
-
+        //Create progressDialog
         progressDialog = new ProgressDialog(this);
 
         // Attaching click listener to forgot password text
@@ -114,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Objects.requireNonNull(task.getException()).getMessage(),
                                     Toast.LENGTH_LONG).show();
                         }
+                        // Hide the progressDialog
                         progressDialog.dismiss();
                     }
                 });
@@ -122,11 +127,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     // Check whether email is verified
     private void checkIfEmailVerified() {
+        // Get the current user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
+        // assert user is not null
         assert user != null;
+        // If the email is verified
         if (user.isEmailVerified()) {
-            // If the users email has been verified start the main page
+            // Start the main page
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
         } else {
             Toast.makeText(LoginActivity.this,
@@ -138,15 +145,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     // OnClick listeners of sign in and register buttons
     public void onClick(View view) {
         if (view == buttonSignIn) {
+            //login the user
             userLogin();
         }
 
         if (view == buttonRegister) {
             finish();
+            // Go to the RegisterActivity
             startActivity(new Intent(this, RegisterActivity.class));
         }
 
         if (view == textForgotPassword) {
+            // Create pop-up
+
+            // Set the EditText to the user email
             final EditText editUserEmail = new EditText(view.getContext());
             final AlertDialog.Builder forgotPasswordDialog =
                     new AlertDialog.Builder(view.getContext());
@@ -154,17 +166,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             forgotPasswordDialog.setMessage("Please enter your email");
             forgotPasswordDialog.setView(editUserEmail);
 
+            // If the "submit" option is chosen
             forgotPasswordDialog.setPositiveButton("Submit",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            // Get the email entered and get rid of any spaces
                             String userEmail = editUserEmail.getText().toString().trim();
-
+                            // If the user email field is empty
                             if(TextUtils.isEmpty(userEmail)){
                                 Toast.makeText(LoginActivity.this,
                                         "Please enter your email address",
                                         Toast.LENGTH_LONG).show();
                             } else {
+                                // Send the email to the useremail
                                 mAuth.sendPasswordResetEmail(userEmail)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -184,14 +199,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             }
                         }
                     });
-
+            // If the "cancel" option is chosen
             forgotPasswordDialog.setNegativeButton("Cancel",
                     new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
+                            // Hide the pop-up
                         }
                     });
+            // Create pop-up and show it
             forgotPasswordDialog.create().show();
         }
 
