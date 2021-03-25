@@ -1,5 +1,6 @@
 package com.example.healthraceapp;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -220,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar.setMax(max);
 
         reference.child(progressMap).child(progressValue).addValueEventListener(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try {
@@ -247,9 +249,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         switch (intakeType) {
                             case "fruit": fruitWidget_points.setText("Fruit: " + next_cp_points);
-                                          break;
+                                break;
                             case "veg": vegWidget_points.setText("Vegetables: " + next_cp_points);
-                                        break;
+                                break;
                         }
                     }
 

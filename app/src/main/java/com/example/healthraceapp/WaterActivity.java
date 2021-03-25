@@ -18,12 +18,15 @@ import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WaterActivity extends AppCompatActivity implements Intake {
     // Stores the progress on the slider
@@ -495,15 +498,28 @@ public class WaterActivity extends AppCompatActivity implements Intake {
 
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        //adds points to the total from the water page if these checkpoints are crossed
-        int points = 0;
-        if (totalProgress >= 200 && totalProgress < 500) { points = 25; }
-        else if (totalProgress >= 500 && totalProgress < 1000) { points = 75; }
-        else if (totalProgress >= 1000 && totalProgress < 2000) { points = 175; }
-        else if (totalProgress >= 2000 && totalProgress < 3200) { points = 425; }
-        else if (totalProgress >= 3200) { points = 925; }
-        else if (totalProgress < 200) { points = 0; }
-        pointsReference.setValue(points);
+        new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                int points;
+//                if (!task.isSuccessful()) {
+//                    Log.e("firebase", "Error getting data", task.getException());
+//                } else
+                {
+                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+
+                    points = task.getResult().getValue(Integer.class);
+                    //adds points to the total from the water page if these checkpoints are crossed
+                    if (totalProgress >= 200 && totalProgress < 500) { points += 25; }
+                    else if (totalProgress >= 500 && totalProgress < 1000) { points += 50; }
+                    else if (totalProgress >= 1000 && totalProgress < 2000) { points += 100; }
+                    else if (totalProgress >= 2000 && totalProgress < 3200) { points += 250; }
+                    else if (totalProgress >= 3200) { points += 500; }
+                    else if (totalProgress < 200) { points = 0; }
+                    pointsReference.setValue(points);
+                }
+            }
+        };
     }
 
     @Override

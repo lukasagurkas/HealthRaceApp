@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener, Intake {
     // If permission to use physical activity is granted
@@ -98,7 +101,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         // Ask with a popup for permission to track physical activity
         ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+                new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
@@ -285,8 +288,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             remaining = 7000 - stepDetect;
         }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
-                         "recommended 7000 per day. Only " + remaining +
-                         " steps remain till the next checkpoint.");
+                "recommended 7000 per day. Only " + remaining +
+                " steps remain till the next checkpoint.");
 
         // Set the layout for this information text view
         progress.setTextColor(Color.WHITE);
@@ -434,8 +437,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             remaining = 7000 - stepDetect;
         }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
-                         "recommended 7000 per day. Only " + remaining +
-                         " steps remain till the next checkpoint.");
+                "recommended 7000 per day. Only " + remaining +
+                " steps remain till the next checkpoint.");
 
         // Set the points
         setPoints(stepDetect, pointsStepReference);
@@ -456,7 +459,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.registerListener(this,
-                                                myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+                    myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
@@ -468,17 +471,30 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private void toastMessage(String message) {
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        //adds points to the total from the water page if these checkpoints are crossed
-        int points = 0;
-        if (totalProgress >= 500 && totalProgress < 1500) { points = 50; }
-        else if (totalProgress >= 1500 && totalProgress < 3000) { points = 200; }
-        else if (totalProgress >= 3000 && totalProgress < 6000) { points = 500; }
-        else if (totalProgress >= 6000 && totalProgress < 8000) { points = 1100; }
-        else if (totalProgress >= 8000) { points = 1900; }
-        else if (totalProgress < 500) { points = 0; }
-        pointsReference.setValue(points);
+        new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                int points;
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+
+                    points = task.getResult().getValue(Integer.class);
+                    //adds points to the total from the water page if these checkpoints are crossed
+                    if (totalProgress >= 500 && totalProgress < 1500) { points += 50; }
+                    else if (totalProgress >= 1500 && totalProgress < 3000) { points += 150; }
+                    else if (totalProgress >= 3000 && totalProgress < 6000) { points += 300; }
+                    else if (totalProgress >= 6000 && totalProgress < 8000) { points += 600; }
+                    else if (totalProgress >= 8000) { points += 800; }
+                    else if (totalProgress < 500) { points = 0; }
+                    pointsReference.setValue(points);
+                }
+            }
+        };
     }
 
     @Override
