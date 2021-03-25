@@ -7,11 +7,16 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ProgressBar;
@@ -39,6 +44,10 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     // Text field to display the points for each checkpoint
     private TextView checkpoint;
+    String points_value;
+    int cp_number;
+    int cp_value;
+    SpannableStringBuilder ssb;
 
     // Text field for the amount of steps of stepDetector
     private static TextView textViewStepDetector;
@@ -285,6 +294,68 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         checkpoint = findViewById(R.id.checkpoint);
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
+
+        //Informational textview about user's progress and checkpoints
+        if (stepDetect>=8000) {
+            ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                    "the checkpoints!");
+            checkpoint.setText(ssb);
+        }
+        else if (stepDetect<500) {
+            ssb = new SpannableStringBuilder("You will receive 50 points for the " +
+                    "next checkpoint.");
+            checkpoint.setText(ssb);
+        }
+        else {
+            if (stepDetect >= 500 && stepDetect < 1500) {
+                cp_number = 1;
+                cp_value = 500;
+                points_value = String.valueOf(150);
+                ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                        + cp_number + " - " + cp_value + " steps. ");
+                ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new StyleSpan(Typeface.BOLD),
+                        23, 40, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            else if (stepDetect >= 1500 && stepDetect < 3000) {
+                cp_number = 2;
+                cp_value = 1500;
+                points_value = String.valueOf(300);
+                ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                        + cp_number + " - " + cp_value + " steps. ");
+                ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
+                ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new StyleSpan(Typeface.BOLD),
+                        23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            else if (stepDetect >= 3000 && stepDetect < 6000) {
+                cp_number = 3;
+                cp_value = 3000;
+                points_value = String.valueOf(600);
+                ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                        + cp_number + " - " + cp_value + " steps. ");
+                ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
+                ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new StyleSpan(Typeface.BOLD),
+                        23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            else if (stepDetect >= 6000 && stepDetect < 8000) {
+                cp_number = 4;
+                cp_value = 6000;
+                points_value = String.valueOf(800);
+                ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                        + cp_number + " - " + cp_value + " steps. ");
+                ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.setSpan(new StyleSpan(Typeface.BOLD),
+                        23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
+            ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+
+            checkpoint.setText(ssb);
+        }
 
         // TODO: add comment
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);

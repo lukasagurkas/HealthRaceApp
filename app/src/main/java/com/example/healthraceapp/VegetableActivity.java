@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -33,6 +36,10 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
 
     // Displays the points for each checkpoint
     TextView veggieCheckpoint;
+    String points_value;
+    int cp_number;
+    int cp_value;
+    SpannableStringBuilder ssb;
 
     // TextView for the 'g' for grams after the slider
     TextView veggieGrams;
@@ -121,7 +128,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         veggieCheckpoint.setTextColor(Color.WHITE);
         veggieCheckpoint.setTextSize(25);
 
-        // Adds a 'g' for grams add the end of the slider
+        // Adds a 'g' for grams at the end of the slider
         veggieGrams = findViewById(R.id.grams);
         veggieGrams.setTextColor(Color.WHITE);
         veggieGrams.setTextSize(20);
@@ -153,6 +160,73 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                 veggieIntakeProgress.setText("You ate " + veggieTotalProgress +
                         " g of vegetables today out of the recommended 500 g. " +
                         "Only " + remaining + " grams of vegetables remains.");
+
+                // Informational textView, showing how many grams of veggies the user should
+                // still take of course, this remaining value cannot be a negative number
+                if ((500 - veggieTotalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - veggieTotalProgress;
+                }
+                veggieIntakeProgress.setText("You ate " + veggieTotalProgress +
+                        " g of vegetables today out of the recommended 500 g. " +
+                        "Only " + remaining + " grams of vegetables remains.");
+
+                //Informational textview about user's progress and checkpoints
+                if (veggieTotalProgress >=500) {
+                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                            "the checkpoints!");
+                    veggieCheckpoint.setText(ssb);
+                }
+                else if (veggieTotalProgress <50) {
+                    ssb = new SpannableStringBuilder("You will receive 25 points for the " +
+                            "next checkpoint.");
+                    veggieCheckpoint.setText(ssb);
+                }
+                else {
+                    if (veggieTotalProgress >= 50 && veggieTotalProgress < 100) {
+                        cp_number = 1;
+                        cp_value = 50;
+                        points_value = String.valueOf(50);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (veggieTotalProgress >= 100 && veggieTotalProgress < 175) {
+                        cp_number = 2;
+                        cp_value = 100;
+                        points_value = String.valueOf(100);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
+                        ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (veggieTotalProgress >= 175 && veggieTotalProgress < 275) {
+                        cp_number = 3;
+                        cp_value = 175;
+                        points_value = String.valueOf(250);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (veggieTotalProgress >= 275 && veggieTotalProgress < 400) {
+                        cp_number = 4;
+                        cp_value = 275;
+                        points_value = String.valueOf(500);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+                    ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                            23, 44, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    veggieCheckpoint.setText(ssb);
+                }
 
                 // Sets the points
                 setPoints(veggieTotalProgress, pointsVeggieReference);
@@ -191,6 +265,73 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         "today out of the recommended 500 g. Only "
                         + remaining + " grams of vegetables remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
+
+                // Informational textView, showing how many grams of veggies the user should
+                // still take of course, this remaining value cannot be a negative number
+                if ((500 - veggieTotalProgress) < 0) {
+                    remaining = 0;
+                } else {
+                    remaining = 500 - veggieTotalProgress;
+                }
+                veggieIntakeProgress.setText("You ate " + veggieTotalProgress +
+                        " g of vegetables today out of the recommended 500 g. " +
+                        "Only " + remaining + " grams of vegetables remains.");
+
+                //Informational textview about user's progress and checkpoints
+                if (veggieTotalProgress >=500) {
+                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                            "the checkpoints!");
+                    veggieCheckpoint.setText(ssb);
+                }
+                else if (veggieTotalProgress <50) {
+                    ssb = new SpannableStringBuilder("You will receive 25 points for the " +
+                            "next checkpoint.");
+                    veggieCheckpoint.setText(ssb);
+                }
+                else {
+                    if (veggieTotalProgress >= 50 && veggieTotalProgress < 100) {
+                        cp_number = 1;
+                        cp_value = 50;
+                        points_value = String.valueOf(50);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (veggieTotalProgress >= 100 && veggieTotalProgress < 175) {
+                        cp_number = 2;
+                        cp_value = 100;
+                        points_value = String.valueOf(100);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
+                        ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (veggieTotalProgress >= 175 && veggieTotalProgress < 275) {
+                        cp_number = 3;
+                        cp_value = 175;
+                        points_value = String.valueOf(250);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (veggieTotalProgress >= 275 && veggieTotalProgress < 400) {
+                        cp_number = 4;
+                        cp_value = 275;
+                        points_value = String.valueOf(500);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+                    ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                            23, 44, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    veggieCheckpoint.setText(ssb);
+                }
 
                 // Sets the points
                 setPoints(veggieTotalProgress, pointsVeggieReference);
@@ -365,36 +506,15 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     }
 
     @Override
-    public void setPoints(int veggieTotalProgress, DatabaseReference pointsReference) {
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (veggieTotalProgress >= 50 && veggieTotalProgress < 100) {
-            points = 25;
-
-            //setting value of points received for next checkpoint
-//            cp = String.valueOf(50);
-        }
-        else if (veggieTotalProgress >= 100 && veggieTotalProgress < 175) {
-            points = 75;
-//            cp = String.valueOf(100);
-        }
-        else if (veggieTotalProgress >= 175 && veggieTotalProgress < 275) {
-            points = 175;
-//            cp = String.valueOf(250);
-        }
-        else if (veggieTotalProgress >= 275 && veggieTotalProgress < 500) {
-            points = 425;
-//            cp = String.valueOf(500);
-        }
-        else if (veggieTotalProgress >= 500) {
-            points = 925;
-//            s = "You have crossed all the checkpoints!";
-        }
-        else if (veggieTotalProgress-progress==0 || veggieTotalProgress < 50) {
-            points = 0;
-//            cp = String.valueOf(25);
-        }
-//        checkpoint.setText(s);
+        if (totalProgress >= 50 && totalProgress < 100) { points = 25; }
+        else if (totalProgress >= 100 && totalProgress < 175) { points = 75; }
+        else if (totalProgress >= 175 && totalProgress < 275) { points = 175; }
+        else if (totalProgress >= 275 && totalProgress < 500) { points = 425; }
+        else if (totalProgress >= 500) { points = 925; }
+        else if (totalProgress-progress==0 || totalProgress < 50) { points = 0; }
         pointsReference.setValue(points);
     }
 

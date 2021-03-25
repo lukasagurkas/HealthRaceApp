@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,6 +33,10 @@ public class FruitActivity extends AppCompatActivity implements Intake {
 
     // Displays the points for each checkpoint
     TextView fruitCheckpoint;
+    String points_value;
+    int cp_number;
+    int cp_value;
+    SpannableStringBuilder ssb;
 
     // Displays the entry of the user
     TextView fruitGrams;
@@ -150,6 +157,62 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                         "out of the recommended 500 g. Only " + remaining +
                         " grams of fruit remains.");
 
+                //Informational textview about user's progress and checkpoints
+                if (totalProgress>=500) {
+                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                            "the checkpoints!");
+                    fruitCheckpoint.setText(ssb);
+                }
+                else if (totalProgress<50) {
+                    ssb = new SpannableStringBuilder("You will receive 25 points for the " +
+                            "next checkpoint.");
+                    fruitCheckpoint.setText(ssb);
+                }
+                else {
+                    if (totalProgress >= 50 && totalProgress < 100) {
+                        cp_number = 1;
+                        cp_value = 50;
+                        points_value = String.valueOf(50);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 100 && totalProgress < 175) {
+                        cp_number = 2;
+                        cp_value = 100;
+                        points_value = String.valueOf(100);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
+                        ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 175 && totalProgress < 275) {
+                        cp_number = 3;
+                        cp_value = 175;
+                        points_value = String.valueOf(250);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 275 && totalProgress < 400) {
+                        cp_number = 4;
+                        cp_value = 275;
+                        points_value = String.valueOf(500);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+                    ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                            23, 44, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    fruitCheckpoint.setText(ssb);
+                }
+
                 // Sets the points
                 setPoints(totalProgress, pointsFruitReference);
 
@@ -186,6 +249,62 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                 fruitIntakeProgress.setText("You ate " + totalProgress + " g of fruits today out " +
                         "of the recommended 500 g. Only " + remaining + " grams of fruit remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
+
+                //Informational textview about user's progress and checkpoints
+                if (totalProgress>=500) {
+                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                            "the checkpoints!");
+                    fruitCheckpoint.setText(ssb);
+                }
+                else if (totalProgress<50) {
+                    ssb = new SpannableStringBuilder("You will receive 25 points for the " +
+                            "next checkpoint.");
+                    fruitCheckpoint.setText(ssb);
+                }
+                else {
+                    if (totalProgress >= 50 && totalProgress < 100) {
+                        cp_number = 1;
+                        cp_value = 50;
+                        points_value = String.valueOf(50);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 100 && totalProgress < 175) {
+                        cp_number = 2;
+                        cp_value = 100;
+                        points_value = String.valueOf(100);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
+                        ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 175 && totalProgress < 275) {
+                        cp_number = 3;
+                        cp_value = 175;
+                        points_value = String.valueOf(250);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 275 && totalProgress < 400) {
+                        cp_number = 4;
+                        cp_value = 275;
+                        points_value = String.valueOf(500);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " g. ");
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+                    ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                            23, 44, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    fruitCheckpoint.setText(ssb);
+                }
 
                 // Sets the points
                 setPoints(totalProgress, pointsFruitReference);
@@ -369,36 +488,15 @@ public class FruitActivity extends AppCompatActivity implements Intake {
     }
 
     @Override
-    public void setPoints(int fruitTotalProgress, DatabaseReference pointsReference) {
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (fruitTotalProgress >= 50 && fruitTotalProgress < 100) {
-            points = 25;
-
-            //setting value of points received for next checkpoint
-//            cp = String.valueOf(50);
-        }
-        else if (fruitTotalProgress >= 100 && fruitTotalProgress < 175) {
-            points = 75;
-//            cp = String.valueOf(100);
-        }
-        else if (fruitTotalProgress >= 175 && fruitTotalProgress < 275) {
-            points = 175;
-//            cp = String.valueOf(250);
-        }
-        else if (fruitTotalProgress >= 275 && fruitTotalProgress < 500) {
-            points = 425;
-//            cp = String.valueOf(500);
-        }
-        else if (fruitTotalProgress >= 500) {
-            points = 925;
-//            s = "You have crossed all the checkpoints!";
-        }
-        else if (fruitTotalProgress-progress==0 || fruitTotalProgress < 50) {
-            points = 0;
-//            cp = String.valueOf(25);
-        }
-//        checkpoint.setText(s);
+        if (totalProgress >= 50 && totalProgress < 100) { points = 25; }
+        else if (totalProgress >= 100 && totalProgress < 175) { points = 75; }
+        else if (totalProgress >= 175 && totalProgress < 275) { points = 175; }
+        else if (totalProgress >= 275 && totalProgress < 500) { points = 425; }
+        else if (totalProgress >= 500) { points = 925; }
+        else if (totalProgress-progress==0 || totalProgress < 50) { points = 0; }
         pointsReference.setValue(points);
     }
 

@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -15,12 +18,9 @@ import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -33,15 +33,14 @@ public class WaterActivity extends AppCompatActivity implements Intake {
     TextView waterProgress;
 
     // Displays the points for each checkpoint
-    TextView checkpoint;
-    String s;
+    TextView waterCheckpoint;
+    int cp_number;
+    int cp_value;
+    String points_value;
+    SpannableStringBuilder ssb;
 
     // TextView for the 'ml' for grams after the slider
     TextView milliliters;
-
-    // TextView that shows points from water page
-    // TODO: delete this later
-    TextView pointsWater;
 
     // Button to add water quantity
     Button buttonAdd;
@@ -68,9 +67,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
 
     //stores points received from water page
     int points_water;
-
-    //store the checkpoints to be displayed on each widget
-    String cp = "25";
 
     // Database reference for all values in the bar chart
     private DatabaseReference waterReference;
@@ -116,12 +112,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         waterTvProgressLabel.setTextColor(Color.WHITE);
         waterTvProgressLabel.setTextSize(15);
 
-        // TextView that shows the amount of ml's the user will add when pressing the add button
-        // TODO: delete this later
-        pointsWater = findViewById(R.id.pointsWater);
-        pointsWater.setTextColor(Color.WHITE);
-        pointsWater.setTextSize(15);
-
         // Informational textView, showing how many milliliter of water the user should still take
         // Of course, this remaining value cannot be a negative number
         waterProgress = findViewById(R.id.waterProgress);
@@ -136,11 +126,9 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         waterProgress.setTextSize(20);
 
         // Informational textView for the amount of points you get for each checkpoint
-        checkpoint = (TextView)findViewById(R.id.checkpoint);
-
-        checkpoint.setText(s);
-        checkpoint.setTextColor(Color.WHITE);
-        checkpoint.setTextSize(10);
+        waterCheckpoint = findViewById(R.id.checkpoint);
+        waterCheckpoint.setTextColor(Color.WHITE);
+        waterCheckpoint.setTextSize(25);
 
         // Adds a 'ml' for milliliter add the end of the slider
         milliliters = findViewById(R.id.ml);
@@ -154,7 +142,6 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 // Gets the value from the slider and displays it in the textView below
                 progress = waterSeekBar.getProgress();
                 waterTvProgressLabel.setText("" + progress);
-                pointsWater.setText("" + points_water);
 
                 // Add the value from the slider to the totalProgress
                 totalProgress = totalProgress + progress;
@@ -178,13 +165,73 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 waterProgress.setText("You drank " + totalProgress + " ml of water today out of " +
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
 
+                //Informational TextView showing which checkpoint they crossed and information about
+                // the checkpoint
+                if (totalProgress>=3200) {
+                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                            "the checkpoints!");
+                    waterCheckpoint.setText(ssb);
+                }
+                else if (totalProgress<200) {
+                    ssb = new SpannableStringBuilder("You will receive 25 points for the " +
+                            "next checkpoint.");
+                    waterCheckpoint.setText(ssb);
+                }
+                else {
+                    if (totalProgress >= 200 && totalProgress < 500) {
+                        cp_number = 1;
+                        cp_value = 200;
+                        points_value = String.valueOf(50);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 45, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 500 && totalProgress < 1000) {
+                        cp_number = 2;
+                        cp_value = 500;
+                        points_value = String.valueOf(100);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,140,0));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 45, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 1000 && totalProgress < 2000) {
+                        cp_number = 3;
+                        cp_value = 1000;
+                        points_value = String.valueOf(250);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(218,165,32));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 46, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 2000 && totalProgress < 3200) {
+                        cp_number = 4;
+                        cp_value = 2000;
+                        points_value = String.valueOf(500);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 46, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+
+                    waterCheckpoint.setText(ssb);
+                }
+
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
                 // Sets the points
-                //TODO: uncomment the first line and delete the second when deleting the TextView pointsWater
-                //setPoints(totalProgress, pointsWaterReference);
-                setPoints(totalProgress, progress, pointsWaterReference, pointsWater);
-                checkpoint.setText(s);
+                setPoints(totalProgress, pointsWaterReference);
 
                 setTotalPoints(firebaseDatabase, userID);
             }
@@ -218,11 +265,71 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                         "the recommended 2000 ml. Only " + remaining + " ml of water remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
+                //Informational TextView showing which checkpoint they crossed and information about
+                // the checkpoint
+                if (totalProgress>=3200) {
+                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
+                            "the checkpoints!");
+                    waterCheckpoint.setText(ssb);
+                }
+                else if (totalProgress<200) {
+                    ssb = new SpannableStringBuilder("You will receive 25 points for the " +
+                            "next checkpoint.");
+                    waterCheckpoint.setText(ssb);
+                }
+                else {
+                    if (totalProgress >= 200 && totalProgress < 500) {
+                        cp_number = 1;
+                        cp_value = 200;
+                        points_value = String.valueOf(50);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
+                        ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 45, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 500 && totalProgress < 1000) {
+                        cp_number = 2;
+                        cp_value = 500;
+                        points_value = String.valueOf(100);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,140,0));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 45, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 1000 && totalProgress < 2000) {
+                        cp_number = 3;
+                        cp_value = 1000;
+                        points_value = String.valueOf(250);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(218,165,32));
+                        ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 46, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    else if (totalProgress >= 2000 && totalProgress < 3200) {
+                        cp_number = 4;
+                        cp_value = 2000;
+                        points_value = String.valueOf(500);
+                        ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
+                                + cp_number + " - " + cp_value + " ml. ");
+                        ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
+                        ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
+                                23, 46, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    ssb.append("You will receive " + points_value + " points for the next checkpoint.");
+
+                    waterCheckpoint.setText(ssb);
+                }
+
                 // Sets the points
-                //TODO uncomment the first line and delete the second when deleting the TextView pointsWater
-                //setPoints(totalProgress, pointsWaterReference);
-                setPoints(totalProgress, progress, pointsWaterReference, pointsWater);
-                checkpoint.setText(s);
+                setPoints(totalProgress, pointsWaterReference);
 
                 setTotalPoints(firebaseDatabase, userID);
 
@@ -405,36 +512,15 @@ public class WaterActivity extends AppCompatActivity implements Intake {
     }
 
     @Override
-    public void setPoints(int waterTotalProgress, DatabaseReference pointsReference) {
+    public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (waterTotalProgress >= 200 && waterTotalProgress <=500) {
-            points = 25;
-
-            //setting value of points received for next checkpoint
-            cp = String.valueOf(50);
-        }
-        else if (waterTotalProgress >= 500 && waterTotalProgress <=1000) {
-            points = 75;
-            cp = String.valueOf(100);
-        }
-        else if (waterTotalProgress >= 1000 && waterTotalProgress <= 2000) {
-            points = 175;
-            cp = String.valueOf(250);
-        }
-        else if (waterTotalProgress >= 2000 && waterTotalProgress <= 3200) {
-            points = 425;
-            cp = String.valueOf(500);
-        }
-        else if (waterTotalProgress >= 3200) {
-            points = 925;
-            s = "You have crossed all the checkpoints!";
-            }
-        else if (waterTotalProgress-progress==0 || waterTotalProgress<200) {
-            points = 0;
-            cp = String.valueOf(25);
-        }
-        checkpoint.setText(s);
+        if (totalProgress >= 200 && totalProgress < 500) { points = 25; }
+        else if (totalProgress >= 500 && totalProgress < 1000) { points = 75; }
+        else if (totalProgress >= 1000 && totalProgress < 2000) { points = 175; }
+        else if (totalProgress >= 2000 && totalProgress < 3200) { points = 425; }
+        else if (totalProgress >= 3200) { points = 925; }
+        else if (totalProgress < 200) { points = 0; }
         pointsReference.setValue(points);
     }
 

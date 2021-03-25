@@ -106,6 +106,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/stepWidget_points"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -173,6 +174,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/fruitWidget_points"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -241,6 +243,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/vegWidget_points"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -310,6 +313,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/waterWidget_points"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"

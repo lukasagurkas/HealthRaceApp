@@ -89,7 +89,6 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="You get 25 points for each checkpoint."
         app:layout_constraintBottom_toTopOf="@+id/barChartFruit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.02"

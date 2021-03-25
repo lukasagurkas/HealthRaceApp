@@ -75,23 +75,6 @@ public interface Intake {
         });
     }
 
-    //TODO: delete this when deleting TextView pointsWater in water activity
-    @SuppressLint("SetTextI18n")
-    default void setPoints(int totalProgress, int progress, DatabaseReference pointsReference, TextView pointsWater) {
-
-        //adds points to the total from the water page if these checkpoints are crossed
-                int points = 0;
-                if (totalProgress >= 200 && totalProgress <=500) { points = 25; }
-                else if (totalProgress >= 500 && totalProgress <=1000) { points = 75; }
-                else if (totalProgress >= 1000 && totalProgress <= 2000) { points = 175; }
-                else if (totalProgress >= 2000 && totalProgress <= 3200) { points = 425; }
-                else if (totalProgress >= 3200) { points = 925; }
-                else if (totalProgress-progress==0 || totalProgress<200) { points = 0; }
-                pointsReference.setValue(points);
-                pointsWater.setText("" + points);
-
-            }
-
     @SuppressLint("SetTextI18n")
     void setPoints(int totalProgress, DatabaseReference pointsReference);
 
