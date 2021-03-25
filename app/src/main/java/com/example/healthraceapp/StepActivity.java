@@ -297,8 +297,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         //Informational textview about user's progress and checkpoints
         if (stepDetect>=8000) {
-            ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
-                    "the checkpoints!");
+            ssb = new SpannableStringBuilder("Congratulations! You earned 800 points and " +
+                    "have crossed all the checkpoints!");
             checkpoint.setText(ssb);
         }
         else if (stepDetect<500) {
@@ -312,46 +312,40 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                 cp_value = 500;
                 points_value = String.valueOf(150);
                 ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                        + cp_number + " - " + cp_value + " steps. ");
+                        + cp_number + " - " + cp_value + " steps and earned 50 points! ");
                 ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                 ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ssb.setSpan(new StyleSpan(Typeface.BOLD),
-                        23, 40, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             else if (stepDetect >= 1500 && stepDetect < 3000) {
                 cp_number = 2;
                 cp_value = 1500;
                 points_value = String.valueOf(300);
                 ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                        + cp_number + " - " + cp_value + " steps. ");
+                        + cp_number + " - " + cp_value + " steps and earned 150 points! ");
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                 ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ssb.setSpan(new StyleSpan(Typeface.BOLD),
-                        23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             else if (stepDetect >= 3000 && stepDetect < 6000) {
                 cp_number = 3;
                 cp_value = 3000;
                 points_value = String.valueOf(600);
                 ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                        + cp_number + " - " + cp_value + " steps. ");
+                        + cp_number + " - " + cp_value + " steps and earned 300 points! ");
                 ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                 ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ssb.setSpan(new StyleSpan(Typeface.BOLD),
-                        23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             else if (stepDetect >= 6000 && stepDetect < 8000) {
                 cp_number = 4;
                 cp_value = 6000;
                 points_value = String.valueOf(800);
                 ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                        + cp_number + " - " + cp_value + " steps. ");
+                        + cp_number + " - " + cp_value + " steps and earned 600 points! ");
                 ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                 ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                ssb.setSpan(new StyleSpan(Typeface.BOLD),
-                        23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 
+            ssb.setSpan(new StyleSpan(Typeface.BOLD),
+                    23, 41, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             ssb.append("You will receive " + points_value + " points for the next checkpoint.");
 
             checkpoint.setText(ssb);
@@ -478,33 +472,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         //adds points to the total from the water page if these checkpoints are crossed
         int points = 0;
-        if (totalProgress >= 500 && totalProgress < 1500) {
-            points = 25;
-
-            //setting value of points received for next checkpoint
-//            cp = String.valueOf(50);
-        }
-        else if (totalProgress >= 1500 && totalProgress < 3000) {
-            points = 75;
-//            cp = String.valueOf(100);
-        }
-        else if (totalProgress >= 3000 && totalProgress < 6000) {
-            points = 175;
-//            cp = String.valueOf(250);
-        }
-        else if (totalProgress >= 6000 && totalProgress < 7000) {
-            points = 425;
-//            cp = String.valueOf(500);
-        }
-        else if (totalProgress >= 7000) {
-            points = 925;
-//            s = "You have crossed all the checkpoints!";
-        }
-        else if (totalProgress < 500) {
-            points = 0;
-//            cp = String.valueOf(25);
-        }
-//        checkpoint.setText(s);
+        if (totalProgress >= 500 && totalProgress < 1500) { points = 50; }
+        else if (totalProgress >= 1500 && totalProgress < 3000) { points = 200; }
+        else if (totalProgress >= 3000 && totalProgress < 6000) { points = 500; }
+        else if (totalProgress >= 6000 && totalProgress < 8000) { points = 1100; }
+        else if (totalProgress >= 8000) { points = 1900; }
+        else if (totalProgress < 500) { points = 0; }
         pointsReference.setValue(points);
     }
 

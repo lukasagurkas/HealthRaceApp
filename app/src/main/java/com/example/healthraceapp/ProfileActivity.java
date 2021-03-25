@@ -60,7 +60,7 @@ import java.util.Objects;
 public class ProfileActivity extends AppCompatActivity {
 
     // Instances of all UI elements
-    private TextView email, username, day, month, year, gender;
+    private TextView email, username, day, month, year, gender, textPoints;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
     private ImageView userProfileImage;
 //    private ImageButton buttonAddGroup;
@@ -314,8 +314,10 @@ public class ProfileActivity extends AppCompatActivity {
         month = (TextView) findViewById(R.id.textMonth);
         year = (TextView) findViewById(R.id.textYear);
         gender = (TextView) findViewById(R.id.textGender);
+        textPoints = (TextView) findViewById(R.id.textPoints);
 
-        // Get the values for username, email, gender and DoB from Realtime Database
+        // Get the values for username, email, gender, DoB and total points for the day from
+        // Realtime Database
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -327,6 +329,7 @@ public class ProfileActivity extends AppCompatActivity {
                     String myDay = String.valueOf(snapshot.child("day").getValue());
                     String myMonth = String.valueOf(snapshot.child("month").getValue());
                     String myYear = String.valueOf(snapshot.child("year").getValue());
+                    String days_totalPoints = String.valueOf(snapshot.child("totalPoints").getValue());
 
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
@@ -338,6 +341,7 @@ public class ProfileActivity extends AppCompatActivity {
                     } else {
                         gender.setText("Gender: female");
                     }
+                    textPoints.setText("Today's points: " + days_totalPoints);
                 }
             }
 

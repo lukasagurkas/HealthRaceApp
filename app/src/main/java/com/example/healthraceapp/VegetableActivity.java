@@ -126,7 +126,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // Informational textView for the amount of points you get for each checkpoint
         veggieCheckpoint = findViewById(R.id.checkpoint);
         veggieCheckpoint.setTextColor(Color.WHITE);
-        veggieCheckpoint.setTextSize(25);
+        veggieCheckpoint.setTextSize(20);
 
         // Adds a 'g' for grams at the end of the slider
         veggieGrams = findViewById(R.id.grams);
@@ -174,8 +174,8 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
 
                 //Informational textview about user's progress and checkpoints
                 if (veggieTotalProgress >=500) {
-                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
-                            "the checkpoints!");
+                    ssb = new SpannableStringBuilder("Congratulations! You earned 500 points" +
+                            " and have crossed all the checkpoints!");
                     veggieCheckpoint.setText(ssb);
                 }
                 else if (veggieTotalProgress <50) {
@@ -189,7 +189,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 50;
                         points_value = String.valueOf(50);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 25 points! ");
                         ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                         ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -198,7 +198,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 100;
                         points_value = String.valueOf(100);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 50 points! ");
                         ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                         ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -207,7 +207,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 175;
                         points_value = String.valueOf(250);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 100 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -216,7 +216,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 275;
                         points_value = String.valueOf(500);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 250 points! ");
                         ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                         ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -266,21 +266,10 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         + remaining + " grams of vegetables remains.");
                 Log.d("Fruitchecker", String.valueOf(dataFromDatabase));
 
-                // Informational textView, showing how many grams of veggies the user should
-                // still take of course, this remaining value cannot be a negative number
-                if ((500 - veggieTotalProgress) < 0) {
-                    remaining = 0;
-                } else {
-                    remaining = 500 - veggieTotalProgress;
-                }
-                veggieIntakeProgress.setText("You ate " + veggieTotalProgress +
-                        " g of vegetables today out of the recommended 500 g. " +
-                        "Only " + remaining + " grams of vegetables remains.");
-
                 //Informational textview about user's progress and checkpoints
                 if (veggieTotalProgress >=500) {
-                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
-                            "the checkpoints!");
+                    ssb = new SpannableStringBuilder("Congratulations! You earned 500 points" +
+                            " and have crossed all the checkpoints!");
                     veggieCheckpoint.setText(ssb);
                 }
                 else if (veggieTotalProgress <50) {
@@ -294,7 +283,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 50;
                         points_value = String.valueOf(50);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 25 points! ");
                         ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                         ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -303,7 +292,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 100;
                         points_value = String.valueOf(100);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 50 points! ");
                         ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                         ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -312,7 +301,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 175;
                         points_value = String.valueOf(250);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 100 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -321,7 +310,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                         cp_value = 275;
                         points_value = String.valueOf(500);
                         ssb = new SpannableStringBuilder("Good going! You crossed Checkpoint "
-                                + cp_number + " - " + cp_value + " g. ");
+                                + cp_number + " - " + cp_value + " g and earned 250 points! ");
                         ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                         ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
@@ -514,7 +503,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         else if (totalProgress >= 175 && totalProgress < 275) { points = 175; }
         else if (totalProgress >= 275 && totalProgress < 500) { points = 425; }
         else if (totalProgress >= 500) { points = 925; }
-        else if (totalProgress-progress==0 || totalProgress < 50) { points = 0; }
+        else if (totalProgress < 50) { points = 0; }
         pointsReference.setValue(points);
     }
 

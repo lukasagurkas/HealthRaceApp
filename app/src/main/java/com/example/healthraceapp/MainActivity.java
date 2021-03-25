@@ -2,7 +2,6 @@ package com.example.healthraceapp;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,14 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -29,11 +24,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
-import java.util.Objects;
 
 import static java.util.Objects.*;
 
@@ -61,6 +54,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     LinearLayout layout_vegetable;
 
     ProgressBar progressBar_water, progressBar_veg, progressBar_fruit, progressBar_step;
+
+    //TextView to display points received for upcoming checkpoint
+    TextView waterWidget_points;
+    TextView fruitWidget_points;
+    TextView vegWidget_points;
+    TextView stepWidget_points;
+    String next_cp_points;
+    int progress;
 
     MaterialToolbar topAppBar;
 
@@ -116,23 +117,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //layout for the step page
         layout_step = (LinearLayout)findViewById(R.id.layout_step);
         progressBar_step = findViewById(R.id.progressBar_step);
+        stepWidget_points = findViewById(R.id.stepWidget_points);
 
         //layout for the water page
         layout_water = (LinearLayout)findViewById(R.id.layout_water);
         progressBar_water = findViewById(R.id.progressBar_water);
+        waterWidget_points = findViewById(R.id.waterWidget_points);
 
         //layout for the fruit page
         layout_fruit = (LinearLayout)findViewById(R.id.layout_fruit);
         progressBar_fruit = findViewById(R.id.progressBar_fruit);
+        fruitWidget_points = findViewById(R.id.fruitWidget_points);
 
         //layout for the vegetable page
         layout_vegetable = (LinearLayout)findViewById(R.id.layout_vegetable);
         progressBar_veg = findViewById(R.id.progressBar_veg);
+        vegWidget_points = findViewById(R.id.vegWidget_points);
 
-        createProgressBar(progressBar_step, "stepsWeek", "dailyNumberOfSteps", 7000);
-        createProgressBar(progressBar_water,"waterWeek", "amountOfWater", 2000);
-        createProgressBar(progressBar_fruit, "fruitWeek", "amountOfFruit", 500);
-        createProgressBar(progressBar_veg, "veggieWeek", "amountOfVeg", 500);
+        setValues(progressBar_step, "stepsWeek", "dailyNumberOfSteps", 7000, "step");
+//        stepWidget_points.setText("Steps: +" + next_cp_points);
+
+        setValues(progressBar_water,"waterWeek", "amountOfWater", 2000, "water");
+//        waterWidget_points.setText("Water: +" + next_cp_points);
+
+        setValues(progressBar_fruit, "fruitWeek", "amountOfFruit", 500, "fruit");
+//        fruitWidget_points.setText("Fruit: +" + next_cp_points);
+
+        setValues(progressBar_veg, "veggieWeek", "amountOfVeg", 500, "veg");
 
 
 
@@ -203,8 +214,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onOptionsItemSelected(item);
     }
 
-
-    private void createProgressBar(ProgressBar progressBar, String progressMap, String progressValue, int max) {
+    // sets values for the progress bars and the checkpoints on the widgets
+    private void setValues(ProgressBar progressBar, String progressMap, String progressValue,
+                           int max, String intakeType) {
         progressBar.setMax(max);
 
         reference.child(progressMap).child(progressValue).addValueEventListener(new ValueEventListener() {
@@ -213,6 +225,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     int dataFromDatabase = requireNonNull(snapshot).getValue(int.class);
                     progressBar.setProgress(dataFromDatabase);
+
+                    if (intakeType.equals("step")) {
+                        if (dataFromDatabase < 500) { next_cp_points = "+ 50 points";;  }
+                        if (dataFromDatabase >= 500 && dataFromDatabase < 1500) { next_cp_points = "+ 150 points"; }
+                        if (dataFromDatabase >= 1500 && dataFromDatabase < 3000) { next_cp_points = "+ 300 points"; }
+                        if (dataFromDatabase >= 3000 && dataFromDatabase < 6000) { next_cp_points = "+ 600 points"; }
+                        if (dataFromDatabase >= 6000 && dataFromDatabase < 8000) { next_cp_points = "+ 800 points"; }
+                        if (dataFromDatabase >= 8000) { next_cp_points = "Complete!";  }
+
+                        stepWidget_points.setText("Steps: " + next_cp_points);
+                    }
+
+                    else if (intakeType.equals("fruit") || intakeType.equals("veg")) {
+                        if (dataFromDatabase < 50) { next_cp_points = "+ 25 points";  }
+                        if (dataFromDatabase >= 50 && dataFromDatabase < 100) { next_cp_points = "+ 50 points"; }
+                        if (dataFromDatabase >= 100 && dataFromDatabase < 175) { next_cp_points = "+ 100 points"; }
+                        if (dataFromDatabase >= 175 && dataFromDatabase < 275) { next_cp_points = "+ 250 points"; }
+                        if (dataFromDatabase >= 275 && dataFromDatabase < 400) { next_cp_points = "+ 500 points"; }
+                        if (dataFromDatabase >= 400) { next_cp_points = "Complete!";  }
+
+                        switch (intakeType) {
+                            case "fruit": fruitWidget_points.setText("Fruit: " + next_cp_points);
+                                          break;
+                            case "veg": vegWidget_points.setText("Vegetables: " + next_cp_points);
+                                        break;
+                        }
+                    }
+
+                    else if (intakeType.equals("water")) {
+                        if (dataFromDatabase < 200) { next_cp_points = "+ 25 points";;  }
+                        if (dataFromDatabase >= 200 && dataFromDatabase < 500) { next_cp_points = "+ 50 points"; }
+                        if (dataFromDatabase >= 500 && dataFromDatabase < 1000) { next_cp_points = "+ 100 points"; }
+                        if (dataFromDatabase >= 1000 && dataFromDatabase < 2000) { next_cp_points = "+ 250 points"; }
+                        if (dataFromDatabase >= 2000 && dataFromDatabase < 3200) { next_cp_points = "+ 500 points"; }
+                        if (dataFromDatabase >= 3200) { next_cp_points = "Complete!";  }
+
+                        waterWidget_points.setText("Water: " + next_cp_points);
+                    }
+
+                } catch (Exception e) {
+                    System.out.println("Error: " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.w("error", "loadPost:onCancelled", error.toException());
+            }
+        });
+    }
+
+    private void setNextCheckpoint(String progressMap, String progressValue, String intake) {
+
+        reference.child(progressMap).child(progressValue).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                try {
+                    int dataFromDatabase = snapshot.getValue(int.class);
+                    progress = dataFromDatabase;
+
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
                 }
