@@ -474,7 +474,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        new OnCompleteListener<DataSnapshot>() {
+        pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 int points;
@@ -494,7 +494,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                     pointsReference.setValue(points);
                 }
             }
-        };
+        });
     }
 
     @Override

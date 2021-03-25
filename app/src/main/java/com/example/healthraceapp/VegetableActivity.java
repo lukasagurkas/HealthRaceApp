@@ -499,7 +499,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
 
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        new OnCompleteListener<DataSnapshot>() {
+        pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 int points;
@@ -519,7 +519,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
                     pointsReference.setValue(points);
                 }
             }
-        };
+        });
     }
 
     @Override
