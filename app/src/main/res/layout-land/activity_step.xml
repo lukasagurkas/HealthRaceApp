@@ -89,22 +89,6 @@
         </LinearLayout>
 
             <TextView
-                android:id="@+id/textViewStepDetector"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="20dp"
-                android:text="Step detector"
-                app:layout_constraintBottom_toBottomOf="@+id/StepProgress"
-                app:layout_constraintEnd_toStartOf="@+id/StepProgress"
-                app:layout_constraintHorizontal_bias="0.924"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="@+id/StepProgress" />
-
-            <TextView
                 android:id="@+id/checkpoint"
                 android:layout_width="300dp"
                 android:layout_height="100dp"
