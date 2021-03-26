@@ -507,6 +507,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         switchValues(fruitReference, fruitMinusOneDatabaseReference);
     }
 
+    //sets points for individual activity to be stored in firebase
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -532,6 +533,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         });
     }
 
+    //sets firebase references that are used in the rest of the class
     @Override
     public void setReferences() {
         // Give the right data path to the corresponding reference

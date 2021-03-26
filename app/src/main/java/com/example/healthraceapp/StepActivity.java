@@ -486,6 +486,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
     }
 
+    //sets points for individual activity to be stored in firebase
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
         pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -513,6 +514,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         });
     }
 
+    //sets firebase references that are used in the rest of the class
     @Override
     public void setReferences() {
         // Give the right data path to the corresponding reference
@@ -528,6 +530,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepsWeekReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek");
     }
 
+    //sets the combined steps of the last 7 days and stores in firebase
     private void setWeeklySteps() {
         stepsWeekReference.addValueEventListener(new ValueEventListener() {
             @Override
