@@ -53,7 +53,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     SpannableStringBuilder ssb;
 
     // Text field for the amount of steps of stepDetector
-    private static TextView textViewStepDetector;
+//    private static TextView textViewStepDetector;
 
     // The sensor manager for the step counter
     private SensorManager sensorManager;
@@ -108,9 +108,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Add stepDetector counter to activity
-        textViewStepDetector = findViewById(R.id.textViewStepDetector);
-        textViewStepDetector.setTextColor(Color.WHITE);
-        textViewStepDetector.setTextSize(20);
+//        textViewStepDetector = findViewById(R.id.textViewStepDetector);
+//        textViewStepDetector.setTextColor(Color.WHITE);
+//        textViewStepDetector.setTextSize(20);
 
         // Add bar chart to activity and enter the corresponding data
         barChartStep = findViewById(R.id.barChartStep);
@@ -244,7 +244,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                     stepDetect = snapshot.getValue(int.class);
 
                     // Show value of stepDetect in textView
-                    textViewStepDetector.setText("Steps today: " + stepDetect);
+//                    textViewStepDetector.setText("Steps today: " + stepDetect);
 
                     // Update progressBar with the new value
                     simpleProgressBar.setProgress(stepDetect);
@@ -382,9 +382,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             isDetectorSensorPresent = true;
         } else {
             //for testing purposes
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+//            textViewStepDetector.setText(String.valueOf(stepDetect));
             simpleProgressBar.setProgress(stepDetect);
-            textViewStepDetector.setText("Detector sensor is not present");
+//            textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
@@ -436,7 +436,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         // Update the textView of stepDetector when the user steps
         if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
-            textViewStepDetector.setText("Steps today: " + stepDetect);
+//            textViewStepDetector.setText("Steps today: " + stepDetect);
             stepReference.setValue(stepDetect);
         }
 
