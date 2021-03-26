@@ -519,9 +519,9 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                     //adds points to the total from the water page if these checkpoints are crossed
                     if (totalProgress >= 200 && totalProgress < 500) { points = 25; }
                     else if (totalProgress >= 500 && totalProgress < 1000) { points = 75; }
-                    else if (totalProgress >= 1000 && totalProgress < 2000) { points = 100; }
-                    else if (totalProgress >= 2000 && totalProgress < 3200) { points = 250; }
-                    else if (totalProgress >= 3200) { points = 500; }
+                    else if (totalProgress >= 1000 && totalProgress < 2000) { points = 175; }
+                    else if (totalProgress >= 2000 && totalProgress < 3200) { points = 425; }
+                    else if (totalProgress >= 3200) { points = 925; }
                     else if (totalProgress < 200) { points = 0; }
                     pointsReference.setValue(points);
 
