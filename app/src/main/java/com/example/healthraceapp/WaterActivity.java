@@ -33,7 +33,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
     TextView waterTvProgressLabel;
 
     // Displays how much progress the user has made
-    TextView waterProgress;
+    TextView waterProgress, dailyPoints;
 
     // Displays the points for each checkpoint
     TextView waterCheckpoint;
@@ -124,6 +124,11 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 "recommended 2000 ml. Only " + remaining + " ml of water remains.");
         waterProgress.setTextColor(Color.WHITE);
         waterProgress.setTextSize(20);
+
+        //shows the individual activity points
+        dailyPoints = findViewById(R.id.dailyPoints);
+        dailyPoints.setTextColor(Color.WHITE);
+        dailyPoints.setTextSize(20);
 
         // Informational textView for the amount of points you get for each checkpoint
         waterCheckpoint = findViewById(R.id.checkpoint);
@@ -517,6 +522,8 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                     else if (totalProgress >= 3200) { points += 500; }
                     else if (totalProgress < 200) { points = 0; }
                     pointsReference.setValue(points);
+
+                    dailyPoints.setText("Your water intake points today: " + task.getResult().getValue(Integer.class));
                 }
             }
         });
