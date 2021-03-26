@@ -8,7 +8,7 @@ public class User {
     private String username, email;
     private boolean male;
     private int year, month, day;
-    private int points, totalPoints;
+    private int totalPoints;
     private int weeklySteps;
 
 
@@ -17,6 +17,8 @@ public class User {
     private HashMap<String, Integer> veggieWeek;
     private HashMap<String, Integer> fruitWeek;
     private HashMap<String, Integer> waterWeek;
+
+    private HashMap<String, Integer> points;
 
     // Names of groups that the user is part of
     private ArrayList<String> groupNames;
@@ -37,6 +39,12 @@ public class User {
 
         groupNames = new ArrayList<>();
         groupNames.add("");
+
+        points = new HashMap<String, Integer>();
+        points.put("waterPoints", 0);
+        points.put("veggiePoints", 0);
+        points.put("fruitPoints", 0);
+        points.put("stepPoints", 0);
 
         stepsWeek = new HashMap<>();
         stepsWeek.put("dailyNumberOfSteps", 0);
@@ -112,7 +120,9 @@ public class User {
         groupNames.remove(group);
     }
 
-    public int getPoints() { return points; }
+    public HashMap<String, Integer> getPoints() {
+        return points;
+    }
 
     public int getTotalPoints() { return totalPoints; }
 
