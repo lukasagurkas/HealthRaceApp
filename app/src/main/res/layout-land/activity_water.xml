@@ -50,6 +50,7 @@
                 android:layout_height="70dp"
                 android:layout_weight="1"
                 android:layout_gravity="center"
+                android:layout_marginLeft="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.018"
