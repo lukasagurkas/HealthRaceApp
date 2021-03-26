@@ -43,7 +43,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private int PERMISSION_CODE = 1;
 
     // Text field to display remaining progress of user
-    private TextView progress;
+    private TextView progress, dailyPoints;
 
     // Text field to display the points for each checkpoint
     private TextView checkpoint;
@@ -109,6 +109,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
         // Add stepDetector counter to activity
         textViewStepDetector = findViewById(R.id.textViewStepDetector);
+        textViewStepDetector.setTextColor(Color.WHITE);
+        textViewStepDetector.setTextSize(20);
 
         // Add bar chart to activity and enter the corresponding data
         barChartStep = findViewById(R.id.barChartStep);
@@ -242,7 +244,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                     stepDetect = snapshot.getValue(int.class);
 
                     // Show value of stepDetect in textView
-                    textViewStepDetector.setText(String.valueOf(stepDetect));
+                    textViewStepDetector.setText("Steps today: " + stepDetect);
 
                     // Update progressBar with the new value
                     simpleProgressBar.setProgress(stepDetect);
@@ -294,6 +296,12 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         // Set the layout for this information text view
         progress.setTextColor(Color.WHITE);
         progress.setTextSize(15);
+
+        //shows the individual activity points
+        dailyPoints = findViewById(R.id.dailyPoints);
+        dailyPoints.setTextColor(Color.WHITE);
+        dailyPoints.setTextSize(20);
+
         checkpoint = findViewById(R.id.checkpoint);
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
@@ -303,11 +311,13 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             ssb = new SpannableStringBuilder("Congratulations! You earned 800 points and " +
                     "have crossed all the checkpoints!");
             checkpoint.setText(ssb);
+            dailyPoints.setText("Your step count points today: 1900");
         }
         else if (stepDetect<500) {
             ssb = new SpannableStringBuilder("You will receive 50 points for the " +
                     "next checkpoint.");
             checkpoint.setText(ssb);
+            dailyPoints.setText("Your step count points today: 0");
         }
         else {
             if (stepDetect >= 500 && stepDetect < 1500) {
@@ -318,6 +328,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 50 points! ");
                 ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                 ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 50");
             }
             else if (stepDetect >= 1500 && stepDetect < 3000) {
                 cp_number = 2;
@@ -327,6 +338,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 150 points! ");
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                 ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 200");
             }
             else if (stepDetect >= 3000 && stepDetect < 6000) {
                 cp_number = 3;
@@ -336,6 +348,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 300 points! ");
                 ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                 ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 500");
             }
             else if (stepDetect >= 6000 && stepDetect < 8000) {
                 cp_number = 4;
@@ -345,6 +358,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 600 points! ");
                 ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                 ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 1100");
             }
 
             ssb.setSpan(new StyleSpan(Typeface.BOLD),
@@ -422,7 +436,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         // Update the textView of stepDetector when the user steps
         if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+            textViewStepDetector.setText("Steps today: " + stepDetect);
             stepReference.setValue(stepDetect);
         }
 
@@ -485,13 +499,15 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
 
                     points = task.getResult().getValue(Integer.class);
                     //adds points to the total from the water page if these checkpoints are crossed
-                    if (totalProgress >= 500 && totalProgress < 1500) { points += 50; }
-                    else if (totalProgress >= 1500 && totalProgress < 3000) { points += 150; }
-                    else if (totalProgress >= 3000 && totalProgress < 6000) { points += 300; }
-                    else if (totalProgress >= 6000 && totalProgress < 8000) { points += 600; }
-                    else if (totalProgress >= 8000) { points += 800; }
+                    if (totalProgress >= 500 && totalProgress < 1500) { points = 50; }
+                    else if (totalProgress >= 1500 && totalProgress < 3000) { points = 200; }
+                    else if (totalProgress >= 3000 && totalProgress < 6000) { points = 500; }
+                    else if (totalProgress >= 6000 && totalProgress < 8000) { points = 1100; }
+                    else if (totalProgress >= 8000) { points = 1900; }
                     else if (totalProgress < 500) { points = 0; }
                     pointsReference.setValue(points);
+
+                    dailyPoints.setText("Your step count points today: " + task.getResult().getValue(Integer.class));
                 }
             }
         });

@@ -7,100 +7,127 @@
     android:background="@color/purple_500"
     tools:context=".StepActivity">
 
-    <TextView
-        android:id="@+id/textViewStepCounter"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:text="Step counter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/barChartStep"
-        app:layout_constraintHorizontal_bias="0.469"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkpoint"
-        app:layout_constraintVertical_bias="0.625" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
 
-    <ProgressBar
-        android:id="@+id/StepProgress"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="286dp"
-        android:layout_height="41dp"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/progressbar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.685"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045"
-        tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="100dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/purple_500"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textViewStepDetector"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="Step detector"
-        app:layout_constraintBottom_toBottomOf="@+id/StepProgress"
-        app:layout_constraintEnd_toStartOf="@+id/StepProgress"
-        app:layout_constraintHorizontal_bias="0.924"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="@+id/StepProgress" />
+        <TextView
+                android:id="@+id/dailyPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.903"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="67dp"
-        android:layout_height="59dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/pedestrian" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="left"
+            android:background="@color/purple_500"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/checkpoint"
-        android:layout_width="212dp"
-        android:layout_height="100dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.351" />
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/pedestrian_smaller"
+                android:layout_marginStart="15dp" />
 
-    <TextView
-        android:id="@+id/progress"
-        android:layout_width="343dp"
-        android:layout_height="94dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/barChartStep"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.705"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/StepProgress"
-        app:layout_constraintVertical_bias="0.014" />
+            <ProgressBar
+                android:id="@+id/StepProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="286dp"
+                android:layout_height="41dp"
+                android:layout_gravity="center_vertical"
+                android:max="500"
+                android:progress="0"
+                android:progressDrawable="@drawable/progressbar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.685"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.045"
+                tools:ignore="MissingConstraints" />
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChartStep"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.676"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/progress"
+                android:layout_width="311dp"
+                android:layout_height="105dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@+id/barChartStep"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.705"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/StepProgress"
+                app:layout_constraintVertical_bias="0.014" />
+
+        </LinearLayout>
+
+            <TextView
+                android:id="@+id/textViewStepDetector"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="20dp"
+                android:text="Step detector"
+                app:layout_constraintBottom_toBottomOf="@+id/StepProgress"
+                app:layout_constraintEnd_toStartOf="@+id/StepProgress"
+                app:layout_constraintHorizontal_bias="0.924"
+                app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="@+id/StepProgress" />
+
+            <TextView
+                android:id="@+id/checkpoint"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.351" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChartStep"
+                android:layout_width="300dp"
+                android:layout_height="150dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.676"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
