@@ -100,13 +100,16 @@
                     android:layout_weight="1"
                     android:max="500"
                     android:progress="0"
+                    android:background="@drawable/gradient2"
+                    android:progressBackgroundTint="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.258"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.545"
-                    tools:ignore="MissingConstraints" />
+                    tools:ignore="MissingConstraints"
+                    tools:targetApi="lollipop" />
 
                 <!--    <com.warkiz.tickseekbar.TickSeekBar-->
                 <!--        android:id="@+id/slider"-->
@@ -131,6 +134,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:text="g"
+                    android:background="@drawable/gradient2"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.944"
