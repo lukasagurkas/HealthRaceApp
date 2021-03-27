@@ -13,6 +13,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -79,10 +81,15 @@ public interface Intake {
     void setPoints(int totalProgress, DatabaseReference pointsReference);
 
     default void setTotalPoints(FirebaseDatabase firebaseDatabase, String userID){
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String userID2 = firebaseAuth.getCurrentUser().getUid();
+
         DatabaseReference pointsReference = firebaseDatabase.getReference().child("Users")
-                .child(userID).child("points");
+                .child(userID2).child("points");
         DatabaseReference totalPointsReference = firebaseDatabase.getReference().child("Users")
-                .child(userID).child("totalPoints");
+                .child(userID2).child("totalPoints");
+        DatabaseReference negativeTotalPointsReference = firebaseDatabase.getReference().child("Users")
+                .child(userID2).child("negativeTotalPoints");
 
         pointsReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -98,7 +105,43 @@ public interface Intake {
                         totalPoints = totalPoints + points;
                     }
                 }
+                int totalPointsCopy = totalPoints;
+
+                firebaseDatabase.getReference("Users").child(userID2).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (!task.isSuccessful()) {
+                            Log.e("Intake", task.getException().getMessage());
+                        } else {
+                            User user = task.getResult().getValue(User.class);
+                            ArrayList<String> groupsOfUser = user.getGroupNames();
+
+                            firebaseDatabase.getReference("Groups").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                        String temporaryGroupName = dataSnapshot.child("groupName").getValue(String.class);
+                                        if (groupsOfUser.contains(temporaryGroupName)) {
+                                            firebaseDatabase.getReference("Groups")
+                                                    .child(temporaryGroupName).child("members")
+                                                    .child(user.getUsername()).child("totalPoints").setValue(totalPointsCopy);
+                                            firebaseDatabase.getReference("Groups")
+                                                    .child(temporaryGroupName).child("members")
+                                                    .child(user.getUsername()).child("negativeTotalPoints").setValue(totalPointsCopy * -1);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                        }
+                    }
+                });
                 totalPointsReference.setValue(totalPoints);
+                negativeTotalPointsReference.setValue(totalPoints * -1);
             }
 
             @Override
