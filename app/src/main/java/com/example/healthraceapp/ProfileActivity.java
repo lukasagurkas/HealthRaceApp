@@ -305,13 +305,13 @@ public class ProfileActivity extends AppCompatActivity {
                     for (DataSnapshot dataSnapshot: snapshot.child("groupNames").getChildren()) {
                         String groups = dataSnapshot.getValue(String.class);
                         Log.d("groups", groups);
-                        assert groups != null;
                         allGroups.add(groups);
                     }
+                    allGroups.remove(0);
                     String group = String.valueOf(allGroups);
-                    String newGroups = group.replace("[" , "");
-                    String newnewGroups = newGroups.replace("]" , "");
-                    String myGroups = newnewGroups.substring(1, newnewGroups.length());
+                    String myGroups = group.substring(1, group.length()-1);
+                    groups.setText("Part of groups: " + myGroups);
+
 
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
@@ -324,7 +324,7 @@ public class ProfileActivity extends AppCompatActivity {
                         gender.setText("Gender: female");
                     }
                     points.setText("Today's points: " + days_totalPoints);
-                    groups.setText("Part of groups: " + myGroups);
+//                    groups.setText("Part of groups: " + myGroups);
                 }
             }
 
