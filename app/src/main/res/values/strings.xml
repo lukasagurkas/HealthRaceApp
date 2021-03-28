@@ -29,13 +29,18 @@
     <string name="email_profile">Email</string>
     <string name="card_view_username">Username:</string>
     <string name="card_view_email">Email:</string>
+    <string name="card_view_score">Score:</string>
     <string name="card_view_filler_email">email@example.com</string>
     <string name="card_view_filler_username">ExampleUsername</string>
+    <string name="card_view_filler_score">0</string>
     <string name="create_new_group_button">Create New Group</string>
     <string name="create_group">You are not a part of any group. You can either create your own group by going to the overflow menu in the action bar (the three dots). Or you can get added to a group.</string>
     <string name="select_group">Select Group</string>
     <string name="add_user_to_group">Add User To Group</string>
     <string name="remove_user_from_group">Remove User From Group</string>
     <string name="delete_group">Delete Selected Group</string>
+    <string name="change_group_name">Change Group Name</string>
     <string name="profile">profile</string>
+    <string name="nr_ppl_in_group">Number of members in selected group:</string>
+    <string name="default_ppl_in_group">1</string>
 </resources>

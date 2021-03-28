@@ -431,6 +431,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     }
 
     // Changes the shows value in the textView to current amount of steps
+    @SuppressLint("SetTextI18n")
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         // Update the textView of stepDetector when the user steps
@@ -507,8 +508,6 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                     else if (totalProgress >= 8000) { points = 1900; }
                     else if (totalProgress < 500) { points = 0; }
                     pointsReference.setValue(points);
-
-                    dailyPoints.setText("Your step count points today: " + task.getResult().getValue(Integer.class));
                 }
             }
         });

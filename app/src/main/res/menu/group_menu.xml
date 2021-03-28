@@ -21,6 +21,11 @@
         android:title="@string/delete_group"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/changeGroupName"
+        android:title="@string/change_group_name"
+        app:showAsAction="never" />
+
     <item android:id="@+id/selectGroupSpinner"
         app:showAsAction="always"
         app:actionViewClass="android.widget.Spinner"

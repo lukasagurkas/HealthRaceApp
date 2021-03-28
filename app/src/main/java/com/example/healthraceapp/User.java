@@ -9,6 +9,9 @@ public class User {
     private boolean male;
     private int year, month, day;
     private int totalPoints;
+    // Negative total points is used for the leaderboard to order group members by score in
+    // descending fashion
+    private int negativeTotalPoints;
     private int weeklySteps;
 
 
@@ -113,7 +116,9 @@ public class User {
     }
 
     public void addGroup(String group) {
-        groupNames.add(group);
+        if (!groupNames.contains(group)) {
+            groupNames.add(group);
+        }
     }
 
     public void exitGroup(String group) {
@@ -125,6 +130,8 @@ public class User {
     }
 
     public int getTotalPoints() { return totalPoints; }
+
+    public int getNegativeTotalPoints() { return negativeTotalPoints; }
 
     public int getWeeklySteps() { return weeklySteps; }
 
