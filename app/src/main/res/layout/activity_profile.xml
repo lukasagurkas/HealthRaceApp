@@ -64,39 +64,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textEmailProfile"
             app:layout_constraintVertical_bias="0.536" />
 
-        <TextView
-            android:id="@+id/textYear"
-            android:layout_width="48dp"
-            android:layout_height="21dp"
-            android:layout_marginTop="44dp"
-            android:text="Year"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.341"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
-
-        <TextView
-            android:id="@+id/textMonth"
-            android:layout_width="25dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="44dp"
-            android:text="Month"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.256"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
-
-        <TextView
-            android:id="@+id/textDay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:text="Day"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.193"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
-
     <!--    <ImageView-->
 <!--            android:id="@+id/userProfileImage"-->
 <!--            android:layout_width="169dp"-->
@@ -110,6 +77,39 @@
 <!--            app:layout_constraintVertical_bias="0.096"-->
 <!--            app:srcCompat="@drawable/profile"-->
 <!--            tools:srcCompat="@tools:sample/avatars" />-->
+
+    <TextView
+        android:id="@+id/textYear"
+        android:layout_width="48dp"
+        android:layout_height="21dp"
+        android:layout_marginTop="44dp"
+        android:text="Year"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.308"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
+
+    <TextView
+        android:id="@+id/textMonth"
+        android:layout_width="25dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="44dp"
+        android:text="Month"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.225"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
+
+    <TextView
+        android:id="@+id/textDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="Day"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.162"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsernameProfile" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/userProfileImage"
