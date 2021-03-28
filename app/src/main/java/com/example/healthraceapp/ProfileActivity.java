@@ -1,12 +1,9 @@
 package com.example.healthraceapp;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -14,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,16 +21,12 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseError;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,22 +37,20 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.annotations.NotNull;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.font.NumericShaper;
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
     // Instances of all UI elements
-    private TextView email, username, day, month, year, gender, textPoints;
+    private TextView email, username, day, month, year, gender, points, groups;
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
     private ImageView userProfileImage;
 //    private ImageButton buttonAddGroup;
@@ -75,6 +65,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Tag  value for debugging
     private static final String TAG = "ProfileActivity";
+
+    //
+    private final ArrayList<String> allGroups = new ArrayList<>();
 
     //Instances for profile image
     String PROFILE_IMAGE_URL = null;
@@ -92,10 +85,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         // Firebase instantiations
         mAuth = FirebaseAuth.getInstance();
+
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb." +
                 "europe-west1.firebasedatabase.app/");
+        // Get current user
         user = mAuth.getCurrentUser();
+        // Get user ID of current user
         userID = user.getUid();
         String uID = mAuth.getCurrentUser().getUid();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
@@ -152,8 +148,8 @@ public class ProfileActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final AlertDialog.Builder deleteAccountDialog =
                         new AlertDialog.Builder(v.getContext());
-                deleteAccountDialog.setTitle("Delete Account");
-                deleteAccountDialog.setMessage("To delete this account enter you password");
+                deleteAccountDialog.setTitle("Change password");
+                deleteAccountDialog.setMessage("To change your password enter you current password");
 
                 // Get a reference to the already created profile activity layout
                 ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.constraintLayoutProfile);
@@ -219,24 +215,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
 
-            /*@Override
-            public void onClick(View v) {
-                String email = user.getEmail();
-                mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(ProfileActivity.this,
-                                "Password reset email sent", Toast.LENGTH_LONG).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ProfileActivity.this,
-                                "Password reset failed", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }*/
-
         });
 
         // OnClick listener for the delete account button
@@ -299,14 +277,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // OnClick listener for the add group button
-//        buttonAddGroup.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //TODO: create new group
-//            }
-//        });
-
         //TextView references from the UI
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -314,7 +284,8 @@ public class ProfileActivity extends AppCompatActivity {
         month = (TextView) findViewById(R.id.textMonth);
         year = (TextView) findViewById(R.id.textYear);
         gender = (TextView) findViewById(R.id.textGender);
-        textPoints = (TextView) findViewById(R.id.textPoints);
+        points = (TextView) findViewById(R.id.textPoints);
+        groups = (TextView) findViewById(R.id.textGroups);
 
         // Get the values for username, email, gender, DoB and total points for the day from
         // Realtime Database
@@ -330,6 +301,17 @@ public class ProfileActivity extends AppCompatActivity {
                     String myMonth = String.valueOf(snapshot.child("month").getValue());
                     String myYear = String.valueOf(snapshot.child("year").getValue());
                     String days_totalPoints = String.valueOf(snapshot.child("totalPoints").getValue());
+                    // Get all group names
+                    for (DataSnapshot dataSnapshot: snapshot.child("groupNames").getChildren()) {
+                        String groups = dataSnapshot.getValue(String.class);
+                        Log.d("groups", groups);
+                        assert groups != null;
+                        allGroups.add(groups);
+                    }
+                    String group = String.valueOf(allGroups);
+                    String newGroups = group.replace("[" , "");
+                    String newnewGroups = newGroups.replace("]" , "");
+                    String myGroups = newnewGroups.substring(1, newnewGroups.length());
 
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
@@ -341,7 +323,8 @@ public class ProfileActivity extends AppCompatActivity {
                     } else {
                         gender.setText("Gender: female");
                     }
-                    textPoints.setText("Today's points: " + days_totalPoints);
+                    points.setText("Today's points: " + days_totalPoints);
+                    groups.setText("Part of groups: " + myGroups);
                 }
             }
 

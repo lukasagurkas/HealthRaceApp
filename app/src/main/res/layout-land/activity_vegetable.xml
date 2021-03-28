@@ -7,145 +7,180 @@
     android:background="@color/purple_500"
     tools:context=".VegetableActivity">
 
-    <!--    <com.warkiz.tickseekbar.TickSeekBar-->
-    <!--        android:id="@+id/slider"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        app:tsb_seek_smoothly="true"-->
-    <!--        app:tsb_show_thumb_text = "below"-->
-    <!--        app:tsb_thumb_color="@color/white"-->
-    <!--        app:tsb_thumb_size="16dp"-->
-    <!--        app:tsb_max="300"-->
-    <!--        app:tsb_min="0"-->
-    <!--        app:tsb_track_progress_size="3dp"-->
-    <!--        tools:ignore="MissingConstraints"-->
-    <!--        tools:layout_editor_absoluteX="36dp"-->
-    <!--        tools:layout_editor_absoluteY="-1dp" />-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
 
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="290dp"
-        android:layout_height="83dp"
-        android:indeterminate="false"
-        android:max="500"
-        android:progress="0"
-        android:progressDrawable="@drawable/progressbar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.794"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="100dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/purple_500"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="175dp"
-        android:layout_height="25dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="@+id/seekBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.458"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/seekBar"
-        tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/dailyPoints"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.903"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="289dp"
-        android:layout_height="58dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
-        android:max="500"
-        android:progress="0"
-        android:background="@color/purple_200"
-        app:layout_constraintBottom_toTopOf="@+id/buttonAdd"
-        app:layout_constraintEnd_toStartOf="@+id/grams"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/barChartVeggie"
-        app:layout_constraintTop_toBottomOf="@+id/intakeProgress"
-        tools:ignore="MissingConstraints" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="left"
+                android:background="@color/purple_500"
+                android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/buttonAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:text="Add Vegetable Quantity"
-        android:textColor="#000000"
-        app:backgroundTint="#FFFFFF"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.472"
-        app:layout_constraintStart_toEndOf="@+id/barChartVeggie"
-        tools:ignore="MissingConstraints" />
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.018"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/vegetable_smaller"
+                    tools:ignore="MissingConstraints" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="84dp"
-        android:layout_height="79dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/checkpoint"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.473"
-        app:srcCompat="@drawable/vegetables"
-        tools:ignore="MissingConstraints" />
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="250dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:indeterminate="false"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressDrawable="@drawable/progressbar"
+                    tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/intakeProgress"
-        android:layout_width="371dp"
-        android:layout_height="119dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.849"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar"
-        tools:ignore="MissingConstraints" />
+                <TextView
+                    android:id="@+id/intakeProgress"
+                    android:layout_width="335dp"
+                    android:layout_height="81dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:layout_marginRight="20dp"
+                    android:gravity="right"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/progressBar"
+                    tools:ignore="MissingConstraints" />
 
-    <TextView
-        android:id="@+id/checkpoint"
-        android:layout_width="388dp"
-        android:layout_height="106dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="33dp"
-        android:layout_marginRight="33dp"
-        android:gravity="center"
-        app:layout_constraintBottom_toTopOf="@+id/barChartVeggie"
-        app:layout_constraintEnd_toStartOf="@+id/intakeProgress"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.914"
-        tools:ignore="MissingConstraints" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/grams"
-        android:layout_width="55dp"
-        android:layout_height="59dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:gravity="center"
-        android:text="g"
-        android:background="@color/purple_200"
-        app:layout_constraintBottom_toBottomOf="@+id/seekBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/seekBar"
-        app:layout_constraintVertical_bias="1.0"
-        tools:ignore="MissingConstraints" />
+            <TextView
+                android:id="@+id/checkpoint"
+                android:layout_width="332dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@+id/barChartVeggie"
+                app:layout_constraintEnd_toStartOf="@+id/intakeProgress"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                app:layout_constraintVertical_bias="0.755"
+                tools:ignore="MissingConstraints" />
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/barChartVeggie"
-        android:layout_width="300dp"
-        android:layout_height="150dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="left"
+                android:background="@color/purple_500"
+                android:orientation="horizontal">
 
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="289dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="left"
+                    android:max="2000"
+                    android:progress="0"
+                    app:layout_constraintBottom_toTopOf="@+id/buttonAdd"
+                    app:layout_constraintEnd_toStartOf="@+id/ml"
+                    app:layout_constraintStart_toEndOf="@+id/barChartVeggie"
+                    app:layout_constraintTop_toBottomOf="@+id/intakeProgress"
+                    app:layout_constraintVertical_bias="0.868"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="132dp"
+                    android:layout_height="38dp"
+                    android:layout_gravity="center_vertical"
+                    app:layout_constraintVertical_bias="0.484"
+                    tools:ignore="MissingConstraints" />
+
+                <TextView
+                    android:id="@+id/grams"
+                    android:layout_width="51dp"
+                    android:layout_height="29dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="13dp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="g"
+                    app:layout_constraintBottom_toBottomOf="@+id/seekBar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/seekBar"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="MissingConstraints" />
+
+                <Button
+                    android:id="@+id/buttonAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="#FFFFFF"
+                    android:text="Add Fruit Quantity"
+                    android:textColor="#000000"
+                    app:backgroundTint="#FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.756"
+                    app:layout_constraintStart_toEndOf="@+id/barChartVeggie"
+                    tools:ignore="MissingConstraints" />
+
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/barChartVeggie"
+                android:layout_width="300dp"
+                android:layout_height="150dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

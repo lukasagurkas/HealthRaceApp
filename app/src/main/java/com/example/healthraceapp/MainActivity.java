@@ -1,5 +1,6 @@
 package com.example.healthraceapp;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -135,13 +136,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         vegWidget_points = findViewById(R.id.vegWidget_points);
 
         setValues(progressBar_step, "stepsWeek", "dailyNumberOfSteps", 7000, "step");
-//        stepWidget_points.setText("Steps: +" + next_cp_points);
 
         setValues(progressBar_water,"waterWeek", "amountOfWater", 2000, "water");
-//        waterWidget_points.setText("Water: +" + next_cp_points);
 
         setValues(progressBar_fruit, "fruitWeek", "amountOfFruit", 500, "fruit");
-//        fruitWidget_points.setText("Fruit: +" + next_cp_points);
 
         setValues(progressBar_veg, "veggieWeek", "amountOfVeg", 500, "veg");
 
@@ -220,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar.setMax(max);
 
         reference.child(progressMap).child(progressValue).addValueEventListener(new ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 try {
@@ -242,14 +241,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (dataFromDatabase >= 50 && dataFromDatabase < 100) { next_cp_points = "+ 50 points"; }
                         if (dataFromDatabase >= 100 && dataFromDatabase < 175) { next_cp_points = "+ 100 points"; }
                         if (dataFromDatabase >= 175 && dataFromDatabase < 275) { next_cp_points = "+ 250 points"; }
-                        if (dataFromDatabase >= 275 && dataFromDatabase < 400) { next_cp_points = "+ 500 points"; }
-                        if (dataFromDatabase >= 400) { next_cp_points = "Complete!";  }
+                        if (dataFromDatabase >= 275 && dataFromDatabase < 500) { next_cp_points = "+ 500 points"; }
+                        if (dataFromDatabase >= 500) { next_cp_points = "Complete!";  }
 
                         switch (intakeType) {
                             case "fruit": fruitWidget_points.setText("Fruit: " + next_cp_points);
-                                          break;
+                                break;
                             case "veg": vegWidget_points.setText("Vegetables: " + next_cp_points);
-                                        break;
+                                break;
                         }
                     }
 

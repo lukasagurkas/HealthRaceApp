@@ -17,19 +17,22 @@ import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class FruitActivity extends AppCompatActivity implements Intake {
     // Stores the progress on the slider
     TextView fruitTvProgressLabel;
 
     // Displays how much progress the user has made
-    TextView fruitIntakeProgress;
+    TextView fruitIntakeProgress, dailyPoints;
 
     // Displays the points for each checkpoint
     TextView fruitCheckpoint;
@@ -120,6 +123,11 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         fruitIntakeProgress.setTextColor(Color.WHITE);
         fruitIntakeProgress.setTextSize(20);
 
+        //shows the individual activity points
+        dailyPoints = findViewById(R.id.dailyPoints);
+        dailyPoints.setTextColor(Color.WHITE);
+        dailyPoints.setTextSize(20);
+
         // Informational textView for the amount of points you get for each checkpoint
         fruitCheckpoint = findViewById(R.id.checkpoint);
         fruitCheckpoint.setTextColor(Color.WHITE);
@@ -162,11 +170,13 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                     ssb = new SpannableStringBuilder("Congratulations! You earned 500 points" +
                             " and crossed all the checkpoints!");
                     fruitCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your fruit intake points today: 925");
                 }
                 else if (totalProgress<50) {
                     ssb = new SpannableStringBuilder("You will receive 25 points for the " +
                             "next checkpoint.");
                     fruitCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your fruit intake points today: 0");
                 }
                 else {
                     if (totalProgress >= 50 && totalProgress < 100) {
@@ -177,6 +187,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 25 points! ");
                         ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                         ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 25");
                     }
                     else if (totalProgress >= 100 && totalProgress < 175) {
                         cp_number = 2;
@@ -186,6 +197,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 50 points! ");
                         ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                         ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 75");
                     }
                     else if (totalProgress >= 175 && totalProgress < 275) {
                         cp_number = 3;
@@ -195,8 +207,9 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 100 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 175");
                     }
-                    else if (totalProgress >= 275 && totalProgress < 400) {
+                    else if (totalProgress >= 275 && totalProgress < 500) {
                         cp_number = 4;
                         cp_value = 275;
                         points_value = String.valueOf(500);
@@ -204,6 +217,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 250 points! ");
                         ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                         ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 425");
                     }
 
                     ssb.append("You will receive " + points_value + " points for the next checkpoint.");
@@ -255,11 +269,13 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                     ssb = new SpannableStringBuilder("Congratulations! You earned 500 points" +
                             " and crossed all the checkpoints!");
                     fruitCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your fruit intake points today: 925");
                 }
                 else if (totalProgress<50) {
                     ssb = new SpannableStringBuilder("You will receive 25 points for the " +
                             "next checkpoint.");
                     fruitCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your fruit intake points today: 0");
                 }
                 else {
                     if (totalProgress >= 50 && totalProgress < 100) {
@@ -270,6 +286,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 25 points! ");
                         ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                         ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 25");
                     }
                     else if (totalProgress >= 100 && totalProgress < 175) {
                         cp_number = 2;
@@ -279,6 +296,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 50 points! ");
                         ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                         ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 75");
                     }
                     else if (totalProgress >= 175 && totalProgress < 275) {
                         cp_number = 3;
@@ -288,8 +306,9 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 100 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 175");
                     }
-                    else if (totalProgress >= 275 && totalProgress < 400) {
+                    else if (totalProgress >= 275 && totalProgress < 500) {
                         cp_number = 4;
                         cp_value = 275;
                         points_value = String.valueOf(500);
@@ -297,6 +316,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " g and earned 250 points! ");
                         ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                         ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your fruit intake points today: 425");
                     }
 
                     ssb.append("You will receive " + points_value + " points for the next checkpoint.");
@@ -487,19 +507,33 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         switchValues(fruitReference, fruitMinusOneDatabaseReference);
     }
 
+    //sets points for individual activity to be stored in firebase
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        //adds points to the total from the water page if these checkpoints are crossed
-        int points = 0;
-        if (totalProgress >= 50 && totalProgress < 100) { points = 25; }
-        else if (totalProgress >= 100 && totalProgress < 175) { points = 75; }
-        else if (totalProgress >= 175 && totalProgress < 275) { points = 175; }
-        else if (totalProgress >= 275 && totalProgress < 500) { points = 425; }
-        else if (totalProgress >= 500) { points = 925; }
-        else if (totalProgress < 50) { points = 0; }
-        pointsReference.setValue(points);
+        pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                int points;
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+
+                    points = task.getResult().getValue(Integer.class);
+                    //adds points to the total from the water page if these checkpoints are crossed
+                    if (totalProgress >= 50 && totalProgress < 100) { points = 25; }
+                    else if (totalProgress >= 100 && totalProgress < 175) { points = 75; }
+                    else if (totalProgress >= 175 && totalProgress < 275) { points = 175; }
+                    else if (totalProgress >= 275 && totalProgress < 500) { points = 425; }
+                    else if (totalProgress >= 500) { points = 925; }
+                    else if (totalProgress < 50) { points = 0; }
+                    pointsReference.setValue(points);
+                }
+            }
+        });
     }
 
+    //sets firebase references that are used in the rest of the class
     @Override
     public void setReferences() {
         // Give the right data path to the corresponding reference

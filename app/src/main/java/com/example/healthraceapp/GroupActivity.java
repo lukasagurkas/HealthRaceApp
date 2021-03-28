@@ -38,6 +38,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class GroupActivity extends AppCompatActivity {
@@ -69,6 +70,8 @@ public class GroupActivity extends AppCompatActivity {
     private ViewGroup viewGroup = null;
 
     private String currentlySelectedGroup = "";
+
+    private TextView nrOfMembersInGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +109,7 @@ public class GroupActivity extends AppCompatActivity {
                     assert user != null;
                     if (user.getGroupNames().size() < 2) { // The user is not part of any group
                         // Show text telling the user to create a new group or be added to a group
+                        viewGroup.removeAllViews();
                         viewGroup.addView(View.inflate(getApplicationContext(), R.layout.activity_group_create_group, null));
                     } else {
                         setRecycleView();
@@ -118,6 +122,7 @@ public class GroupActivity extends AppCompatActivity {
     private void setRecycleView() {
         // Clearing all the views
         viewGroup.removeAllViews();
+
         viewGroup.addView(View.inflate(getApplicationContext(), R.layout.activity_group, null));
 
         if (currentlySelectedGroup.equals("")) { // Spinner has not been initialized
@@ -129,7 +134,7 @@ public class GroupActivity extends AppCompatActivity {
                 .child("Groups")
                 .child(currentlySelectedGroup) // TODO abstract to selected group
                 .child("members")
-                .orderByChild("username"); // TODO when score is implemented update score inside members as well and then order by score
+                .orderByChild("negativeTotalPoints"); // TODO when score is implemented update score inside members as well and then order by score
 
         RecyclerView recyclerView = findViewById(R.id.recycle_view);
 
@@ -164,6 +169,14 @@ public class GroupActivity extends AppCompatActivity {
                 // Add email from model class (here "User.class") to appropriate view in Card view
                 // (here "user.xml")
                 holder.email.setText(model.getEmail());
+
+                // Add score from model class (here "User.class") to appropriate view in Card view
+                // (here "user.xml")
+                holder.score.setText(String.valueOf(model.getTotalPoints()));
+
+                nrOfMembersInGroup = findViewById(R.id.textViewNrMembersInGroup);
+
+                nrOfMembersInGroup.setText(String.valueOf(recyclerView.getAdapter().getItemCount()));
             }
         };
 
@@ -184,13 +197,14 @@ public class GroupActivity extends AppCompatActivity {
 
     // Class to create references of the views in Card view (here "User.xml")
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        TextView username, email;
+        TextView username, email, score;
 
         public UserViewHolder(@NonNull View itemView) {
             super(itemView);
 
             username = itemView.findViewById(R.id.card_view_username_fill);
             email = itemView.findViewById(R.id.card_view_email_fill);
+            score = itemView.findViewById(R.id.card_view_score_fill);
         }
     }
 
@@ -227,10 +241,11 @@ public class GroupActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        allGroupNames.remove("");
+                        ArrayList<String> allGroupNamesCopy = allGroupNames;
+                        allGroupNamesCopy.remove("");
                         // After retrieving all the group names set up the Spinner
                         Spinner spinner = (Spinner) findViewById(R.id.selectGroupSpinner);
-                        ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, allGroupNames);
+                        ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, allGroupNamesCopy);
                         addressAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(addressAdapter);
 
@@ -280,7 +295,7 @@ public class GroupActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     newGroupName = input.getText().toString();
-                    checkGroupNameUniqueness();
+                    checkGroupNameUniqueness(true, input.getText().toString());
                 }
             });
 
@@ -292,7 +307,9 @@ public class GroupActivity extends AppCompatActivity {
             });
 
             builder.show();
-        } else if (item.getItemId() == R.id.addUserToGroup || item.getItemId() == R.id.removeUserFromGroup || item.getItemId() == R.id.deleteGroup) {
+
+            // These other functions require administrative privileges
+        } else if (item.getItemId() == R.id.addUserToGroup || item.getItemId() == R.id.removeUserFromGroup || item.getItemId() == R.id.deleteGroup || item.getItemId() == R.id.changeGroupName) {
             databaseReference.child("Groups").child(currentlySelectedGroup).child("adminUID").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -327,6 +344,8 @@ public class GroupActivity extends AppCompatActivity {
             builder.setTitle("Enter username to remove member");
         } else if (item.getItemId() == R.id.deleteGroup) {
             builder.setTitle("Enter group name to delete the group");
+        } else if (item.getItemId() == R.id.changeGroupName) {
+            builder.setTitle("Enter new group name");
         }
 
         // Setting up the input for the AlertDialog
@@ -338,9 +357,22 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (item.getItemId() == R.id.addUserToGroup) {
-                    addUserToGroup(input.getText().toString());
+                    if (input.getText().toString().equals(user.getUsername())) {
+                        Toast.makeText(GroupActivity.this, "You are already in the group", Toast.LENGTH_LONG).show();
+                    } else {
+                        addUserToGroup(input.getText().toString());
+                    }
                 } else if (item.getItemId() == R.id.removeUserFromGroup) {
-                    removeUserFromGroup(input.getText().toString());
+                    if (input.getText().toString().equals(user.getUsername())) {
+                        Toast.makeText(GroupActivity.this,
+                                "You cannot remove yourself from the group. If you wish to exit the group then you will have to delete it",
+                                Toast.LENGTH_LONG).show();
+                    } else {
+                        removeUserFromGroup(input.getText().toString());
+                    }
+                } else if (item.getItemId() == R.id.changeGroupName) {
+                    // We need to check if the given group name is already taken
+                    checkGroupNameUniqueness(false, input.getText().toString());
                 } else if (item.getItemId() == R.id.deleteGroup) {
                     if (input.getText().toString().equals(currentlySelectedGroup)) {
                         // If the correct group name was entered for the selected group
@@ -389,6 +421,8 @@ public class GroupActivity extends AppCompatActivity {
                                     databaseReference.child("Groups").child(currentlySelectedGroup).child("members").child(selectedUser.getUsername()).setValue(selectedUser);
 
                                     databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
+
+                                    Toast.makeText(GroupActivity.this, username + " has been added to the group", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -433,6 +467,10 @@ public class GroupActivity extends AppCompatActivity {
                                     databaseReference.child("Groups").child(currentlySelectedGroup).child("members").child(selectedUser.getUsername()).removeValue();
 
                                     databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
+
+                                    setRecycleView();
+
+                                    Toast.makeText(GroupActivity.this, username + " has been deleted from the group", Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -464,7 +502,7 @@ public class GroupActivity extends AppCompatActivity {
                     databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 if (allMembers.containsKey(dataSnapshot.child("username").getValue(String.class))) {
                                     User tempUser = dataSnapshot.getValue(User.class);
                                     tempUser.exitGroup(groupName);
@@ -472,6 +510,77 @@ public class GroupActivity extends AppCompatActivity {
                                 }
                             }
                             databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
+
+                            getUserInitializeView();
+                            initializeSpinner();
+
+                            Toast.makeText(GroupActivity.this, "The group has been deleted", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    private void changeGroupName(String groupNameNew) {
+        if (allGroupNames.contains(groupNameNew)) {
+            Toast.makeText(this, "This group name is already in use", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (groupNameNew.length() > 10) {
+            Toast.makeText(this, "The group name has to contain at most ten characters", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (groupNameNew.length() < 1) {
+            Toast.makeText(this, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+
+                    Group currentGroup = task.getResult().getValue(Group.class);
+
+                    currentGroup.setGroupName(groupNameNew);
+
+                    HashMap<String, User> allMembers = (HashMap<String, User>) currentGroup.getMembers();
+
+                    databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
+
+                    databaseReference.child("Groups").child(groupNameNew).setValue(currentGroup);
+
+                    databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                if (allMembers.containsKey(dataSnapshot.child("username").getValue(String.class))) {
+                                    User tempUser = dataSnapshot.getValue(User.class);
+                                    tempUser.exitGroup(currentlySelectedGroup);
+                                    tempUser.addGroup(groupNameNew);
+                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(tempUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.e("firebase", task.getException().getMessage());
+                                            } else {
+                                                Toast.makeText(GroupActivity.this, "The group name has been changed", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
 
                             getUserInitializeView();
                             initializeSpinner();
@@ -487,7 +596,8 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
-    private void checkGroupNameUniqueness() {
+
+    private void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1) {
         // Defining DatabaseReference object
         DatabaseReference databaseReferenceGroups = firebaseDatabase.getReference("Groups");
 
@@ -501,8 +611,13 @@ public class GroupActivity extends AppCompatActivity {
                         allGroupNames.add(temporaryGroupName);
                     }
                 }
-                // After retrieving all the group names a new group can be created
-                createNewGroup();
+                if (createNewGroup) {
+                    // After retrieving all the group names a new group can be created
+                    createNewGroup();
+                } else { // The second function of this method is to change the group name of the
+                    // selected group
+                    changeGroupName(newGroupName1);
+                }
             }
 
             @Override
@@ -541,6 +656,8 @@ public class GroupActivity extends AppCompatActivity {
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
+                    Toast.makeText(GroupActivity.this, "Group has been created", Toast.LENGTH_LONG).show();
+
                     setRecycleView();
 
                     firebaseDatabase.getReference("Users")

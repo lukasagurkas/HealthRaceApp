@@ -25,6 +25,8 @@ import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,13 +36,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class StepActivity extends AppCompatActivity implements SensorEventListener, Intake {
     // If permission to use physical activity is granted
     private int PERMISSION_CODE = 1;
 
     // Text field to display remaining progress of user
-    private TextView progress;
+    private TextView progress, dailyPoints;
 
     // Text field to display the points for each checkpoint
     private TextView checkpoint;
@@ -50,7 +53,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     SpannableStringBuilder ssb;
 
     // Text field for the amount of steps of stepDetector
-    private static TextView textViewStepDetector;
+//    private static TextView textViewStepDetector;
 
     // The sensor manager for the step counter
     private SensorManager sensorManager;
@@ -98,14 +101,16 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         // Ask with a popup for permission to track physical activity
         ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
+                new String[]{Manifest.permission.ACTIVITY_RECOGNITION}, PERMISSION_CODE);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         // Add stepDetector counter to activity
-        textViewStepDetector = findViewById(R.id.textViewStepDetector);
+//        textViewStepDetector = findViewById(R.id.textViewStepDetector);
+//        textViewStepDetector.setTextColor(Color.WHITE);
+//        textViewStepDetector.setTextSize(20);
 
         // Add bar chart to activity and enter the corresponding data
         barChartStep = findViewById(R.id.barChartStep);
@@ -239,7 +244,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                     stepDetect = snapshot.getValue(int.class);
 
                     // Show value of stepDetect in textView
-                    textViewStepDetector.setText(String.valueOf(stepDetect));
+//                    textViewStepDetector.setText("Steps today: " + stepDetect);
 
                     // Update progressBar with the new value
                     simpleProgressBar.setProgress(stepDetect);
@@ -285,12 +290,18 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             remaining = 7000 - stepDetect;
         }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
-                         "recommended 7000 per day. Only " + remaining +
-                         " steps remain till the next checkpoint.");
+                "recommended 7000 per day. Only " + remaining +
+                " steps remain till the next checkpoint.");
 
         // Set the layout for this information text view
         progress.setTextColor(Color.WHITE);
         progress.setTextSize(15);
+
+        //shows the individual activity points
+        dailyPoints = findViewById(R.id.dailyPoints);
+        dailyPoints.setTextColor(Color.WHITE);
+        dailyPoints.setTextSize(20);
+
         checkpoint = findViewById(R.id.checkpoint);
         checkpoint.setTextColor(Color.WHITE);
         checkpoint.setTextSize(25);
@@ -300,11 +311,13 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             ssb = new SpannableStringBuilder("Congratulations! You earned 800 points and " +
                     "have crossed all the checkpoints!");
             checkpoint.setText(ssb);
+            dailyPoints.setText("Your step count points today: 1900");
         }
         else if (stepDetect<500) {
             ssb = new SpannableStringBuilder("You will receive 50 points for the " +
                     "next checkpoint.");
             checkpoint.setText(ssb);
+            dailyPoints.setText("Your step count points today: 0");
         }
         else {
             if (stepDetect >= 500 && stepDetect < 1500) {
@@ -315,6 +328,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 50 points! ");
                 ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                 ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 50");
             }
             else if (stepDetect >= 1500 && stepDetect < 3000) {
                 cp_number = 2;
@@ -324,6 +338,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 150 points! ");
                 ForegroundColorSpan fcsOrange = new ForegroundColorSpan(Color.rgb(255,140,0));
                 ssb.setSpan(fcsOrange, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 200");
             }
             else if (stepDetect >= 3000 && stepDetect < 6000) {
                 cp_number = 3;
@@ -333,6 +348,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 300 points! ");
                 ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,215,0));
                 ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 500");
             }
             else if (stepDetect >= 6000 && stepDetect < 8000) {
                 cp_number = 4;
@@ -342,6 +358,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
                         + cp_number + " - " + cp_value + " steps and earned 600 points! ");
                 ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                 ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                dailyPoints.setText("Your step count points today: 1100");
             }
 
             ssb.setSpan(new StyleSpan(Typeface.BOLD),
@@ -365,9 +382,9 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             isDetectorSensorPresent = true;
         } else {
             //for testing purposes
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+//            textViewStepDetector.setText(String.valueOf(stepDetect));
             simpleProgressBar.setProgress(stepDetect);
-            textViewStepDetector.setText("Detector sensor is not present");
+//            textViewStepDetector.setText("Detector sensor is not present");
             isDetectorSensorPresent = false;
         }
     }
@@ -419,7 +436,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         // Update the textView of stepDetector when the user steps
         if (sensorEvent.sensor == myStepDetector) {
             stepDetect = (int) (stepDetect + sensorEvent.values[0]);
-            textViewStepDetector.setText(String.valueOf(stepDetect));
+//            textViewStepDetector.setText("Steps today: " + stepDetect);
             stepReference.setValue(stepDetect);
         }
 
@@ -434,8 +451,8 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
             remaining = 7000 - stepDetect;
         }
         progress.setText("You walked " + stepDetect + " steps today out of the " +
-                         "recommended 7000 per day. Only " + remaining +
-                         " steps remain till the next checkpoint.");
+                "recommended 7000 per day. Only " + remaining +
+                " steps remain till the next checkpoint.");
 
         // Set the points
         setPoints(stepDetect, pointsStepReference);
@@ -456,7 +473,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         if (sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR) != null) {
             sensorManager.registerListener(this,
-                                                myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
+                    myStepDetector, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
@@ -468,19 +485,36 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
     private void toastMessage(String message) {
         Toast.makeText(this, message,Toast.LENGTH_SHORT).show();
     }
+
+    //sets points for individual activity to be stored in firebase
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        //adds points to the total from the water page if these checkpoints are crossed
-        int points = 0;
-        if (totalProgress >= 500 && totalProgress < 1500) { points = 50; }
-        else if (totalProgress >= 1500 && totalProgress < 3000) { points = 200; }
-        else if (totalProgress >= 3000 && totalProgress < 6000) { points = 500; }
-        else if (totalProgress >= 6000 && totalProgress < 8000) { points = 1100; }
-        else if (totalProgress >= 8000) { points = 1900; }
-        else if (totalProgress < 500) { points = 0; }
-        pointsReference.setValue(points);
+        pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                int points;
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+
+                    points = task.getResult().getValue(Integer.class);
+                    //adds points to the total from the water page if these checkpoints are crossed
+                    if (totalProgress >= 500 && totalProgress < 1500) { points = 50; }
+                    else if (totalProgress >= 1500 && totalProgress < 3000) { points = 200; }
+                    else if (totalProgress >= 3000 && totalProgress < 6000) { points = 500; }
+                    else if (totalProgress >= 6000 && totalProgress < 8000) { points = 1100; }
+                    else if (totalProgress >= 8000) { points = 1900; }
+                    else if (totalProgress < 500) { points = 0; }
+                    pointsReference.setValue(points);
+
+                    dailyPoints.setText("Your step count points today: " + task.getResult().getValue(Integer.class));
+                }
+            }
+        });
     }
 
+    //sets firebase references that are used in the rest of the class
     @Override
     public void setReferences() {
         // Give the right data path to the corresponding reference
@@ -496,6 +530,7 @@ public class StepActivity extends AppCompatActivity implements SensorEventListen
         stepsWeekReference = firebaseDatabase.getReference().child("Users").child(userID).child("stepsWeek");
     }
 
+    //sets the combined steps of the last 7 days and stores in firebase
     private void setWeeklySteps() {
         stepsWeekReference.addValueEventListener(new ValueEventListener() {
             @Override

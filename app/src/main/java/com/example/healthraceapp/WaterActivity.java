@@ -18,19 +18,22 @@ import android.widget.ProgressBar;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarEntry;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class WaterActivity extends AppCompatActivity implements Intake {
     // Stores the progress on the slider
     TextView waterTvProgressLabel;
 
     // Displays how much progress the user has made
-    TextView waterProgress;
+    TextView waterProgress, dailyPoints;
 
     // Displays the points for each checkpoint
     TextView waterCheckpoint;
@@ -122,6 +125,11 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         waterProgress.setTextColor(Color.WHITE);
         waterProgress.setTextSize(20);
 
+        //shows the individual activity points
+        dailyPoints = findViewById(R.id.dailyPoints);
+        dailyPoints.setTextColor(Color.WHITE);
+        dailyPoints.setTextSize(20);
+
         // Informational textView for the amount of points you get for each checkpoint
         waterCheckpoint = findViewById(R.id.checkpoint);
         waterCheckpoint.setTextColor(Color.WHITE);
@@ -162,14 +170,16 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 //Informational TextView showing which checkpoint they crossed and information about
                 // the checkpoint
                 if (totalProgress>=3200) {
-                    ssb = new SpannableStringBuilder("Congratulations! You have crossed all " +
-                            "the checkpoints!");
+                    ssb = new SpannableStringBuilder("Congratulations! You earned 500 points" +
+                            " and crossed all the checkpoints!");
                     waterCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your water intake points today: 925");
                 }
                 else if (totalProgress<200) {
                     ssb = new SpannableStringBuilder("You will receive 25 points for the " +
                             "next checkpoint.");
                     waterCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your water intake points today: 0");
                 }
                 else {
                     if (totalProgress >= 200 && totalProgress < 500) {
@@ -180,6 +190,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 25 points! ");
                         ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                         ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 25");
                     }
                     else if (totalProgress >= 500 && totalProgress < 1000) {
                         cp_number = 2;
@@ -189,6 +200,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 50 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,140,0));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 75");
                     }
                     else if (totalProgress >= 1000 && totalProgress < 2000) {
                         cp_number = 3;
@@ -198,6 +210,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 100 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(218,165,32));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 175");
                     }
                     else if (totalProgress >= 2000 && totalProgress < 3200) {
                         cp_number = 4;
@@ -207,6 +220,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 250 points! ");
                         ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                         ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 425");
                     }
 
                     ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
@@ -259,11 +273,13 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                     ssb = new SpannableStringBuilder("Congratulations! You earned 500 points" +
                             " and crossed all the checkpoints!");
                     waterCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your water intake points today: 925");
                 }
                 else if (totalProgress<200) {
                     ssb = new SpannableStringBuilder("You will receive 25 points for the " +
                             "next checkpoint.");
                     waterCheckpoint.setText(ssb);
+                    dailyPoints.setText("Your fruit intake points today: 0");
                 }
                 else {
                     if (totalProgress >= 200 && totalProgress < 500) {
@@ -274,6 +290,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 25 points! ");
                         ForegroundColorSpan fcsRed = new ForegroundColorSpan(Color.RED);
                         ssb.setSpan(fcsRed, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 25");
                     }
                     else if (totalProgress >= 500 && totalProgress < 1000) {
                         cp_number = 2;
@@ -283,6 +300,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 50 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(255,140,0));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 75");
                     }
                     else if (totalProgress >= 1000 && totalProgress < 2000) {
                         cp_number = 3;
@@ -292,6 +310,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 100 points! ");
                         ForegroundColorSpan fcsYellow = new ForegroundColorSpan(Color.rgb(218,165,32));
                         ssb.setSpan(fcsYellow, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 175");
                     }
                     else if (totalProgress >= 2000 && totalProgress < 3200) {
                         cp_number = 4;
@@ -301,6 +320,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                                 + cp_number + " - " + cp_value + " ml and earned 250 points! ");
                         ForegroundColorSpan fcsGreen = new ForegroundColorSpan(Color.GREEN);
                         ssb.setSpan(fcsGreen, 23,36, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        dailyPoints.setText("Your water intake points today: 425");
                     }
 
                     ssb.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD),
@@ -314,6 +334,8 @@ public class WaterActivity extends AppCompatActivity implements Intake {
                 setPoints(totalProgress, pointsWaterReference);
 
                 setTotalPoints(firebaseDatabase, userID);
+
+//                dailyPoints.setText("Your water intake points today: " + snapshot.child("points").child("waterPoints"));
 
                 // Creates a new barChart
                 createBarChart(barChartWater, getGraphData());
@@ -493,19 +515,34 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         switchValues(waterReference, waterMinusOneDatabaseReference);
     }
 
+    //sets points for individual activity to be stored in firebase
     @Override
     public void setPoints(int totalProgress, DatabaseReference pointsReference) {
-        //adds points to the total from the water page if these checkpoints are crossed
-        int points = 0;
-        if (totalProgress >= 200 && totalProgress < 500) { points = 25; }
-        else if (totalProgress >= 500 && totalProgress < 1000) { points = 75; }
-        else if (totalProgress >= 1000 && totalProgress < 2000) { points = 175; }
-        else if (totalProgress >= 2000 && totalProgress < 3200) { points = 425; }
-        else if (totalProgress >= 3200) { points = 925; }
-        else if (totalProgress < 200) { points = 0; }
-        pointsReference.setValue(points);
+        pointsReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                int points;
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else
+                {
+                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
+
+                    points = task.getResult().getValue(Integer.class);
+                    //adds points to the total from the water page if these checkpoints are crossed
+                    if (totalProgress >= 200 && totalProgress < 500) { points = 25; }
+                    else if (totalProgress >= 500 && totalProgress < 1000) { points = 75; }
+                    else if (totalProgress >= 1000 && totalProgress < 2000) { points = 175; }
+                    else if (totalProgress >= 2000 && totalProgress < 3200) { points = 425; }
+                    else if (totalProgress >= 3200) { points = 925; }
+                    else if (totalProgress < 200) { points = 0; }
+                    pointsReference.setValue(points);
+                }
+            }
+        });
     }
 
+    //sets firebase references that are used in the rest of the class
     @Override
     public void setReferences(){
         // Give the right data path to the corresponding reference
