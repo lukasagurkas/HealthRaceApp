@@ -119,6 +119,8 @@
                     android:layout_width="289dp"
                     android:layout_height="58dp"
                     android:layout_gravity="left"
+                    android:background="@color/purple_200"
+                    android:progressBackgroundTint="@color/black"
                     android:max="2000"
                     android:progress="0"
                     app:layout_constraintBottom_toTopOf="@+id/buttonAdd"
