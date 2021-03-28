@@ -219,9 +219,9 @@ public class GroupActivity extends AppCompatActivity {
                     user = task.getResult().getValue(User.class);
                     // Getting all the groups that the user is part of
                     assert user != null;
-                    allGroupNames = user.getGroupNames();
+                    ArrayList<String> allUserGroupNames = user.getGroupNames();
 
-                    if (allGroupNames.size() < 2) {
+                    if (allUserGroupNames.size() < 2) {
                         ArrayList<String> temporaryList = new ArrayList<>();
                         temporaryList.add("Join a group");
                         Spinner spinner = (Spinner) findViewById(R.id.selectGroupSpinner);
@@ -241,11 +241,10 @@ public class GroupActivity extends AppCompatActivity {
                             }
                         });
                     } else {
-                        ArrayList<String> allGroupNamesCopy = allGroupNames;
-                        allGroupNamesCopy.remove("");
+                        allUserGroupNames.remove("");
                         // After retrieving all the group names set up the Spinner
                         Spinner spinner = (Spinner) findViewById(R.id.selectGroupSpinner);
-                        ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, allGroupNamesCopy);
+                        ArrayAdapter<String> addressAdapter = new ArrayAdapter<String>(GroupActivity.this, R.layout.simple_spinner_item_adjusted, allUserGroupNames);
                         addressAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(addressAdapter);
 
