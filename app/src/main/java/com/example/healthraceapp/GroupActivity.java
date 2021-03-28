@@ -510,6 +510,8 @@ public class GroupActivity extends AppCompatActivity {
                             }
                             databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
 
+                            allMembers.remove("groupName");
+
                             getUserInitializeView();
                             initializeSpinner();
 
@@ -549,6 +551,10 @@ public class GroupActivity extends AppCompatActivity {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
                     Log.d("firebase", String.valueOf(task.getResult().getValue()));
+
+                    allGroupNames.remove(currentlySelectedGroup);
+
+                    allGroupNames.add(groupNameNew);
 
                     Group currentGroup = task.getResult().getValue(Group.class);
 
@@ -644,37 +650,49 @@ public class GroupActivity extends AppCompatActivity {
             return;
         }
 
-        // New group
-        Group newGroup = new Group(user.getUsername(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user, newGroupName);
-
-        // Add the new group to the Firebase database
-        DatabaseReference newGroupRef = firebaseDatabase.getReference("Groups");
-        newGroupRef.child(newGroup.getGroupName()).setValue(newGroup).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseDatabase.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
+                    Log.e(TAG, task.getException().toString());
                 } else {
-                    Toast.makeText(GroupActivity.this, "Group has been created", Toast.LENGTH_LONG).show();
+                    Log.d(TAG, task.getResult().toString());
+                    user = task.getResult().getValue(User.class);
 
-                    setRecycleView();
+                    // New group
+                    Group newGroup = new Group(user.getUsername(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user, newGroupName);
 
-                    firebaseDatabase.getReference("Users")
-                            .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                            .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    // Add the new group to the Firebase database
+                    DatabaseReference newGroupRef = firebaseDatabase.getReference("Groups");
+                    newGroupRef.child(newGroup.getGroupName()).setValue(newGroup).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task1) {
-                            if (!task1.isSuccessful()) {
-                                Log.e("firebase", "Error getting data", task1.getException());
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (!task.isSuccessful()) {
+                                Log.e("firebase", "Error getting data", task.getException());
                             } else {
-                                Log.d("firebase", String.valueOf(task1.getResult()));
-                                initializeSpinner();
-                                userID = firebaseAuth.getCurrentUser().getUid();
-                                getUserInitializeView();
+                                Toast.makeText(GroupActivity.this, "Group has been created", Toast.LENGTH_LONG).show();
+
+                                setRecycleView();
+
+                                firebaseDatabase.getReference("Users")
+                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
+                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task1) {
+                                        if (!task1.isSuccessful()) {
+                                            Log.e("firebase", "Error getting data", task1.getException());
+                                        } else {
+                                            Log.d("firebase", String.valueOf(task1.getResult()));
+                                            initializeSpinner();
+                                            userID = firebaseAuth.getCurrentUser().getUid();
+                                            getUserInitializeView();
+                                        }
+                                    }
+                                });
+                                Log.d("firebase", String.valueOf(task.getResult()));
                             }
                         }
                     });
-                    Log.d("firebase", String.valueOf(task.getResult()));
                 }
             }
         });

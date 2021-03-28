@@ -198,6 +198,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                     });
                                                 } else {
                                                     Log.d(TAG, String.valueOf(task.getException()));
+                                                    Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -260,6 +261,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                     deleteUserAuth();
                                                 } else {
                                                     Log.d(TAG, String.valueOf(task.getException()));
+                                                    Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
