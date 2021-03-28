@@ -3,6 +3,7 @@ package com.example.healthraceapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -83,6 +84,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
     private DatabaseReference veggieMinusFiveDatabaseReference;
     private DatabaseReference veggieMinusSixDatabaseReference;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

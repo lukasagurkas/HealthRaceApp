@@ -461,6 +461,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
 
     // Adds listener for the slider
     SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @SuppressLint("SetTextI18n")
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             // updated continuously as the user slides the thumb
