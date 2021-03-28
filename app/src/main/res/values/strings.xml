@@ -24,7 +24,7 @@
     <string name="title_activity_water">Water Activity</string>
     <string name="title_activity_profile">Profile Activity</string>
     <string name="username">Username</string>
-    <string name="DoB">DoB</string>
+    <string name="DoB">DoB:</string>
     <string name="gender">Gender</string>
     <string name="email_profile">Email</string>
     <string name="card_view_username">Username:</string>

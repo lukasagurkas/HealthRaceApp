@@ -312,7 +312,7 @@ public class ProfileActivity extends AppCompatActivity {
                     groupNames = groupNames.substring(1, groupNames.length() - 1);
 
                     if (allUserGroupNames.size() == 0) {
-                        groups.setText("Part of groups: none");
+                        groups.setText("Part of groups: None yet!");
                     } else {
                         groups.setText("Part of groups: " + groupNames);
                     }
@@ -323,12 +323,11 @@ public class ProfileActivity extends AppCompatActivity {
                     month.setText("/" + myMonth);
                     year.setText("/" + myYear);
                     if (myGender) {
-                        gender.setText("Gender: male");
+                        gender.setText("Gender: Male");
                     } else {
-                        gender.setText("Gender: female");
+                        gender.setText("Gender: Female");
                     }
                     points.setText("Today's points: " + days_totalPoints);
-//                    groups.setText("Part of groups: " + myGroups);
                 }
             }
 
