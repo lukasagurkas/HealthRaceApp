@@ -303,17 +303,19 @@ public class ProfileActivity extends AppCompatActivity {
                     String myMonth = String.valueOf(snapshot.child("month").getValue());
                     String myYear = String.valueOf(snapshot.child("year").getValue());
                     String days_totalPoints = String.valueOf(snapshot.child("totalPoints").getValue());
-                    // Get all group names
-                    for (DataSnapshot dataSnapshot: snapshot.child("groupNames").getChildren()) {
-                        String groups = dataSnapshot.getValue(String.class);
-                        Log.d("groups", groups);
-                        allGroups.add(groups);
-                    }
-                    allGroups.remove(0);
-                    String group = String.valueOf(allGroups);
-                    String myGroups = group.substring(1, group.length()-1);
-                    groups.setText("Part of groups: " + myGroups);
 
+                    // Getting all group names that the user is part of
+                    User currentUser = snapshot.getValue(User.class);
+                    ArrayList<String> allUserGroupNames = currentUser.getGroupNames();
+                    allUserGroupNames.remove("");
+                    String groupNames = allUserGroupNames.toString();
+                    groupNames = groupNames.substring(1, groupNames.length() - 1);
+
+                    if (allUserGroupNames.size() == 0) {
+                        groups.setText("Part of groups: none");
+                    } else {
+                        groups.setText("Part of groups: " + groupNames);
+                    }
 
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
