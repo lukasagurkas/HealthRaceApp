@@ -259,6 +259,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                     Log.d(TAG, "User re-authenticated.");
                                                     Log.d(TAG, String.valueOf(task.getResult()));
                                                     deleteUserAuth();
+                                                    deleteUserFromGroups();
                                                 } else {
                                                     Log.d(TAG, String.valueOf(task.getException()));
                                                     Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
@@ -361,7 +362,7 @@ public class ProfileActivity extends AppCompatActivity {
                             });
                 }
                 mAuth.signOut();
-                Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_LONG).show();
+                Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(ProfileActivity.this,
                         RegisterActivity.class));
             }
@@ -370,7 +371,51 @@ public class ProfileActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }
 
+    private void deleteUserFromGroups() {
+        String userID = mAuth.getCurrentUser().getUid();
+
+        firebaseDatabase.getReference("Users").child(userID).child("username").get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e(TAG, task.getException().toString());
+                } else {
+                    String username = task.getResult().getValue(String.class);
+
+                    // Defining DatabaseReference object
+                    DatabaseReference databaseReferenceGroups = firebaseDatabase.getReference("Groups");
+
+                    // Helper class to either delete a group or remove a user from a group
+                    GroupDeletion groupDeletion = new GroupDeletion();
+
+                    databaseReferenceGroups.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Iterating through groups
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                // If the current user is the admin of the group then the whole group is deleted
+                                if (userID.equals(dataSnapshot.child("adminUID").getValue(String.class))) {
+                                    groupDeletion.deleteGroup(dataSnapshot.child("groupName").getValue(String.class),
+                                            ProfileActivity.this, null, ProfileActivity.class);
+                                } else { // Otherwise we just delete the user from the group
+                                    groupDeletion.removeUserFromGroup(username, dataSnapshot.child("groupName").getValue(String.class),
+                                            ProfileActivity.this, null, ProfileActivity.class);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Getting data was canceled
+                            Log.w(TAG, "onCancelled", error.toException());
+                        }
+                    });
+                }
+            }
+        });
     }
 
     // Delete user's authentication details

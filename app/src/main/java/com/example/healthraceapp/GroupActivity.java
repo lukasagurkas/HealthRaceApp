@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,7 +98,7 @@ public class GroupActivity extends AppCompatActivity {
         getUserInitializeView();
     }*/
 
-    private void getUserInitializeView() {
+    void getUserInitializeView() {
         databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -119,7 +120,7 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
-    private void setRecycleView() {
+    void setRecycleView() {
         // Clearing all the views
         viewGroup.removeAllViews();
 
@@ -208,7 +209,7 @@ public class GroupActivity extends AppCompatActivity {
         }
     }
 
-    private void initializeSpinner() {
+    void initializeSpinner() {
         databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -351,6 +352,9 @@ public class GroupActivity extends AppCompatActivity {
         final EditText input = new EditText(this);
         builder.setView(input);
 
+        // Helper class to either delete a group or remove a user from a group
+        GroupDeletion groupDeletion = new GroupDeletion();
+
         // Setting up the buttons for the AlertDialog
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -367,7 +371,8 @@ public class GroupActivity extends AppCompatActivity {
                                 "You cannot remove yourself from the group. If you wish to exit the group then you will have to delete it",
                                 Toast.LENGTH_LONG).show();
                     } else {
-                        removeUserFromGroup(input.getText().toString());
+                        groupDeletion.removeUserFromGroup(input.getText().toString(), currentlySelectedGroup,
+                                GroupActivity.this, GroupActivity.this, null);
                     }
                 } else if (item.getItemId() == R.id.changeGroupName) {
                     // We need to check if the given group name is already taken
@@ -376,7 +381,8 @@ public class GroupActivity extends AppCompatActivity {
                     if (input.getText().toString().equals(currentlySelectedGroup)) {
                         // If the correct group name was entered for the selected group
                         // the group is deleted
-                        deleteGroup(input.getText().toString());
+                        groupDeletion.deleteGroup(input.getText().toString(),
+                                GroupActivity.this, GroupActivity.this, null);
                     } else {
                         Toast.makeText(GroupActivity.this, "Incorrect group name entered", Toast.LENGTH_LONG).show();
                     }
@@ -436,94 +442,6 @@ public class GroupActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
                 // Getting data was canceled
                 Log.w(TAG, "onCancelled", error.toException());
-            }
-        });
-    }
-
-    private void removeUserFromGroup(String username) {
-        // Has to be final boolean array because it is accessed from an inner class
-        final boolean[] userExists = new boolean[1];
-        firebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child("username").getValue(String.class).equals(username)) {
-                        userExists[0] = true;
-                        User selectedUser = dataSnapshot.getValue(User.class);
-
-                        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.e("firebase", "Error getting data", task.getException());
-                                } else {
-                                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                                    Group selectedGroup = task.getResult().getValue(Group.class);
-
-                                    // Adding the new member to the group
-                                    selectedGroup.removeMember(selectedUser.getUsername(), selectedUser, currentlySelectedGroup);
-
-                                    databaseReference.child("Groups").child(currentlySelectedGroup).child("members").child(selectedUser.getUsername()).removeValue();
-
-                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
-
-                                    setRecycleView();
-
-                                    Toast.makeText(GroupActivity.this, username + " has been deleted from the group", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                    }
-                }
-                if (!userExists[0]) {
-                    Toast.makeText(GroupActivity.this, "A user with this username does not exist", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Getting data was canceled
-                Log.w(TAG, "onCancelled", error.toException());
-            }
-        });
-    }
-
-    private void deleteGroup(String groupName) {
-        databaseReference.child("Groups").child(groupName).child("members").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                    HashMap<String, User> allMembers = (HashMap<String, User>) task.getResult().getValue();
-
-                    databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                if (allMembers.containsKey(dataSnapshot.child("username").getValue(String.class))) {
-                                    User tempUser = dataSnapshot.getValue(User.class);
-                                    tempUser.exitGroup(groupName);
-                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(tempUser);
-                                }
-                            }
-                            databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
-
-                            allMembers.remove("groupName");
-
-                            getUserInitializeView();
-                            initializeSpinner();
-
-                            Toast.makeText(GroupActivity.this, "The group has been deleted", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
             }
         });
     }
