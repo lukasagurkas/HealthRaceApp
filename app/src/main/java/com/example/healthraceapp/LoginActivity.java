@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private ProgressDialog progressDialog;
     // Instances of TextView element
     private TextView textForgotPassword;
-
     // Defining FirebaseAuth object
     private FirebaseAuth mAuth;
 
@@ -81,72 +80,61 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    // Method for user login
-    private void userLogin() {
-        String email = editTextEmail.getText().toString().trim();
-        String password = editTextPassword.getText().toString().trim();
-
-
-        // Checking if email and passwords are empty
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (TextUtils.isEmpty(password) || password.length() < 6) {
-            Toast.makeText(this, "Please enter password longer than 6 characters",
-                    Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        // If the email and password are not empty and the password length is of 6 or more
-        // characters then display a progress dialog
-        progressDialog.setMessage("Signing In Please Wait...");
-        progressDialog.show();
-
-        //logging in the user
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // If the user has been signed in
-                            checkIfEmailVerified();
-                        } else {
-                            // If the user has not been signed in show exception
-                            Toast.makeText(LoginActivity.this,
-                                    Objects.requireNonNull(task.getException()).getMessage(),
-                                    Toast.LENGTH_LONG).show();
-                        }
-                        // Hide the progressDialog
-                        progressDialog.dismiss();
-                    }
-                });
-
-    }
-
-    // Check whether email is verified
-    private void checkIfEmailVerified() {
-        // Get the current user
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        // assert user is not null
-        assert user != null;
-        // If the email is verified
-        if (user.isEmailVerified()) {
-            // Start the main page
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-        } else {
-            Toast.makeText(LoginActivity.this,
-                    "Please verify your email address",
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
     // OnClick listeners of sign in and register buttons
     public void onClick(View view) {
         if (view == buttonSignIn) {
             //login the user
-            userLogin();
+            String email = editTextEmail.getText().toString().trim();
+            String password = editTextPassword.getText().toString().trim();
+
+
+            // Checking if email and passwords are empty
+            if (TextUtils.isEmpty(email)) {
+                Toast.makeText(this, "Please enter email", Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            if (TextUtils.isEmpty(password) || password.length() < 6) {
+                Toast.makeText(this, "Please enter password longer than 6 characters",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            // If the email and password are not empty and the password length is of 6 or more
+            // characters then display a progress dialog
+            progressDialog.setMessage("Signing In Please Wait...");
+            progressDialog.show();
+
+            //logging in the user
+            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Check if email hasd been verified
+                                // If the user has been signed in
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                // assert user is not null
+                                assert user != null;
+                                // If the email is verified
+                                if (user.isEmailVerified()) {
+                                    // Start the main page
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                } else {
+                                    Toast.makeText(LoginActivity.this,
+                                            "Please verify your email address",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            } else {
+                                // If the user has not been signed in show exception
+                                Toast.makeText(LoginActivity.this,
+                                        Objects.requireNonNull(task.getException()).getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                            // Hide the progressDialog
+                            progressDialog.dismiss();
+                        }
+                    });
         }
 
         if (view == buttonRegister) {
