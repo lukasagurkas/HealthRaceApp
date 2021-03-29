@@ -103,6 +103,7 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         userProfileImage = findViewById(R.id.userProfileImage);
+//        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
 
         // If there is a user a profile image should be fetched from storage
         if (user != null) {
@@ -115,7 +116,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         // OnClick listener for the log out button
         buttonLogout.setOnClickListener(new View.OnClickListener() {
-            // Pop-up logout
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder logoutDialog = new AlertDialog.Builder(v.getContext());
@@ -146,7 +146,6 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop-up change password
                 final AlertDialog.Builder deleteAccountDialog =
                         new AlertDialog.Builder(v.getContext());
                 deleteAccountDialog.setTitle("Change password");
@@ -199,6 +198,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                     });
                                                 } else {
                                                     Log.d(TAG, String.valueOf(task.getException()));
+                                                    Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -214,13 +214,14 @@ public class ProfileActivity extends AppCompatActivity {
                         });
                 deleteAccountDialog.show();
             }
+
+
         });
 
         // OnClick listener for the delete account button
         buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Pop-up delete account
                 final AlertDialog.Builder deleteAccountDialog =
                         new AlertDialog.Builder(v.getContext());
                 deleteAccountDialog.setTitle("Delete Account");
@@ -235,7 +236,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 // Setting up the input for the AlertDialog
                 EditText inputPassword = (EditText) passwordLayout.findViewById(R.id.editTextTextPassword);
-                // The use must inout their password
+
                 deleteAccountDialog.setView(inputPassword);
 
                 deleteAccountDialog.setPositiveButton("OK",
@@ -258,8 +259,10 @@ public class ProfileActivity extends AppCompatActivity {
                                                     Log.d(TAG, "User re-authenticated.");
                                                     Log.d(TAG, String.valueOf(task.getResult()));
                                                     deleteUserAuth();
+                                                    deleteUserFromGroups();
                                                 } else {
                                                     Log.d(TAG, String.valueOf(task.getException()));
+                                                    Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
                                         });
@@ -294,7 +297,6 @@ public class ProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 user = mAuth.getCurrentUser();
                 if (user != null) {
-                    // Get the values of all user informatyion
                     String myUsername = snapshot.child("username").getValue(String.class);
                     String myEmail = snapshot.child("email").getValue(String.class);
                     Boolean myGender = (Boolean) snapshot.child("male").getValue();
@@ -310,26 +312,23 @@ public class ProfileActivity extends AppCompatActivity {
                     String groupNames = allUserGroupNames.toString();
                     groupNames = groupNames.substring(1, groupNames.length() - 1);
 
-                    // CHeck how many groups the user is part of
                     if (allUserGroupNames.size() == 0) {
-                        groups.setText("Part of groups: none");
+                        groups.setText("Part of groups: None yet!");
                     } else {
                         groups.setText("Part of groups: " + groupNames);
                     }
 
-                    // Set the text of UI elements on the page
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
                     day.setText(myDay);
                     month.setText("/" + myMonth);
                     year.setText("/" + myYear);
                     if (myGender) {
-                        gender.setText("Gender: male");
+                        gender.setText("Gender: Male");
                     } else {
-                        gender.setText("Gender: female");
+                        gender.setText("Gender: Female");
                     }
                     points.setText("Today's points: " + days_totalPoints);
-//                    groups.setText("Part of groups: " + myGroups);
                 }
             }
 
@@ -341,40 +340,95 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    // Delete user from Realtime database
+    private void deleteUserRealtime() {
+        DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
+                "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
+                .child(userID);
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                    userSnapshot.getRef().removeValue()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, String.valueOf(task.getResult()) + "qwz");
+                                    } else {
+                                        Log.d(TAG, String.valueOf(task.getException()) + "zwq");
+                                    }
+                                }
+                            });
+                }
+                mAuth.signOut();
+                Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(ProfileActivity.this,
+                        RegisterActivity.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    private void deleteUserFromGroups() {
+        String userID = mAuth.getCurrentUser().getUid();
+
+        firebaseDatabase.getReference("Users").child(userID).child("username").get()
+                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e(TAG, task.getException().toString());
+                } else {
+                    String username = task.getResult().getValue(String.class);
+
+                    // Defining DatabaseReference object
+                    DatabaseReference databaseReferenceGroups = firebaseDatabase.getReference("Groups");
+
+                    // Helper class to either delete a group or remove a user from a group
+                    GroupDeletion groupDeletion = new GroupDeletion();
+
+                    databaseReferenceGroups.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            // Iterating through groups
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                // If the current user is the admin of the group then the whole group is deleted
+                                if (userID.equals(dataSnapshot.child("adminUID").getValue(String.class))) {
+                                    groupDeletion.deleteGroup(dataSnapshot.child("groupName").getValue(String.class),
+                                            ProfileActivity.this, null, ProfileActivity.class);
+                                } else { // Otherwise we just delete the user from the group
+                                    groupDeletion.removeUserFromGroup(username, dataSnapshot.child("groupName").getValue(String.class),
+                                            ProfileActivity.this, null, ProfileActivity.class);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            // Getting data was canceled
+                            Log.w(TAG, "onCancelled", error.toException());
+                        }
+                    });
+                }
+            }
+        });
+    }
+
     // Delete user's authentication details
     private void deleteUserAuth() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        // Delete user's Authentication details
+
         user.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "User account deleted.");
-                            // Get the reference of all users from firebase
-                            DatabaseReference ref = FirebaseDatabase
-                                    .getInstance("https://health-race-app-default-rtdb" +
-                                            ".europe-west1.firebasedatabase.app/")
-                                    .getReference("Users").child(userID);
-                            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                                        // Remove user from realtime database
-                                        userSnapshot.getRef().removeValue();
-                                    }
-                                    // User sign out and redirect to Registration page
-                                    mAuth.signOut();
-                                    Toast.makeText(ProfileActivity.this,
-                                            "Account deleted", Toast.LENGTH_LONG).show();
-                                    startActivity(new Intent(ProfileActivity.this,
-                                            RegisterActivity.class));
-                                }
-
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                }
-                            });
+                            deleteUserRealtime();
                         }
                     }
                 });
@@ -389,76 +443,80 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    // Taking the image and saving it
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == TAKE_IMAGE_CODE) {
             switch (resultCode) {
                 case RESULT_OK:
-                    // Create a bitmap
                     Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                    // Set the user image
                     userProfileImage.setImageBitmap(bitmap);
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                    final StorageReference reference = FirebaseStorage.getInstance().getReference()
-                            .child("profileImages")
-                            .child(uid + ".jpeg");
-
-                    reference.putBytes(baos.toByteArray())
-                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            reference.getDownloadUrl()
-                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            Log.d(TAG, "onSuccess: " + uri);
-                                            // Get current user
-                                            FirebaseUser user = FirebaseAuth.getInstance()
-                                                    .getCurrentUser();
-
-                                            UserProfileChangeRequest request =
-                                                    new UserProfileChangeRequest.Builder()
-                                                    .setPhotoUri(uri)
-                                                    .build();
-                                            // Update users profile picture
-                                            user.updateProfile(request)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Toast.makeText(ProfileActivity
-                                                                            .this,
-                                                                    "Updated successfully",
-                                                                    Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(ProfileActivity
-                                                                            .this,
-                                                                    "Profile image failed...",
-                                                                    Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    });
-                                        }
-                                    });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "onFailure: ", e.getCause());
-                        }
-                    });
+                    handleUpload(bitmap);
             }
         }
     }
 
+    // Upload the image to storage
+    private void handleUpload(Bitmap bitmap) {
 
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        final StorageReference reference = FirebaseStorage.getInstance().getReference()
+                .child("profileImages")
+                .child(uid + ".jpeg");
+
+        reference.putBytes(baos.toByteArray())
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        getDownloadUrl(reference);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: ", e.getCause());
+                    }
+                });
+    }
+
+    // Get the URL of the image
+    private void getDownloadUrl(StorageReference reference) {
+        reference.getDownloadUrl()
+                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d(TAG, "onSuccess: " + uri);
+                        setUserProfileUrl(uri);
+                    }
+                });
+    }
+
+    // Set the image as user's profile image
+    private void setUserProfileUrl(Uri uri) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest request = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(uri)
+                .build();
+
+        user.updateProfile(request)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(ProfileActivity.this, "Updated successfully",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ProfileActivity.this, "Profile image failed...",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
 }
