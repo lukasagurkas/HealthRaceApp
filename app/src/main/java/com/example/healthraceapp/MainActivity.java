@@ -3,6 +3,7 @@ package com.example.healthraceapp;
 import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,9 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
@@ -208,6 +212,81 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.profile_page) {
             startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        } else if (item.getItemId() == R.id.action_search) {
+            // Dialog to input a username
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Enter username");
+
+            // Setting up the input for the AlertDialog
+            final EditText input = new EditText(this);
+            builder.setView(input);
+
+            // Setting up the buttons for the AlertDialog
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String username = input.getText().toString();
+                    checkUsername(username);
+                }
+
+                //check all requirements for the username and see if it exists
+                private void checkUsername(String username) {
+                    //check if the given username is of the correct length
+                    if (username.length() > 16) {
+                        Toast.makeText(getApplicationContext(), "Username should have at least " +
+                                        "1 character and cannot exceed 16 characters",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        DatabaseReference tempRef = firebaseDatabase.getReference()
+                                .child("Users");
+                        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Boolean usernameExists = false;
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    if (dataSnapshot.child("username").getValue().equals(username)) {
+                                        usernameExists = true;
+                                    }
+                                }
+                                if (usernameExists) {
+                                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                                    //Create a bundle to pass to the profile activity
+                                    Bundle bundle = new Bundle();
+                                    //Put a boolean variable in the bundle
+                                    bundle.putBoolean("ownProfile", false);
+                                    //Put a boolean variable in the bundle
+                                    bundle.putString("username", username);
+                                    //Put the boolean variable to the intent
+                                    intent.putExtras(bundle);
+
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    //let the user know that the given username does not exists
+                                    Toast.makeText(getApplicationContext(), "Username does " +
+                                                    "not exists. Note: Usernames are case-sensitive",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+            });
+
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            builder.show();
+
         } else {}
         return super.onOptionsItemSelected(item);
     }
@@ -337,9 +416,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Calendar setCalendar = Calendar.getInstance();
         Calendar calendar = Calendar.getInstance();
         setCalendar.setTimeInMillis(System.currentTimeMillis());
-        setCalendar.set(Calendar.HOUR_OF_DAY, 17);
-        setCalendar.set(Calendar.MINUTE, 44);
-        setCalendar.set(Calendar.SECOND, 20);
+        setCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        setCalendar.set(Calendar.MINUTE, 0);
+        setCalendar.set(Calendar.SECOND, 0);
         Log.d("Timecheck", String.valueOf(setCalendar.getTime()));
 
         if (setCalendar.before(calendar)){
@@ -350,7 +429,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alarmManager.setRepeating(AlarmManager.RTC, setCalendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
     }
-
-
 
 }
