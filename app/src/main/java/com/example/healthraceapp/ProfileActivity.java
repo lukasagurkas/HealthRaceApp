@@ -73,11 +73,19 @@ public class ProfileActivity extends AppCompatActivity {
     String PROFILE_IMAGE_URL = null;
     int TAKE_IMAGE_CODE = 10001;
 
+    //boolean to see if the user is looking at his own profile
+    public boolean ownProfile;
+
+    //String for username to search
+    private String searchUsername;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        ownProfile = isOwnProfile();
 
         // Create title for the page
         ActionBar actionBar = getSupportActionBar();
@@ -89,14 +97,24 @@ public class ProfileActivity extends AppCompatActivity {
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb." +
                 "europe-west1.firebasedatabase.app/");
+
         // Get current user
         user = mAuth.getCurrentUser();
         // Get user ID of current user
         userID = user.getUid();
-        String uID = mAuth.getCurrentUser().getUid();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance("https://health-" +
-                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
-                getReference("Users").child(uID);
+
+        //Get the username if the user is looking at another profile
+        if (!ownProfile){
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                searchUsername = bundle.getString("username");
+            }
+        }
+        
+        setProfile(ownProfile);
+
+        
+        
 
         // Buttons and image reference to the UI
         buttonLogout = findViewById(R.id.buttonLogout);
@@ -104,6 +122,10 @@ public class ProfileActivity extends AppCompatActivity {
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         userProfileImage = findViewById(R.id.userProfileImage);
 //        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
+
+        //set the profile page according to the value of ownProfile
+        setButtonVisibility(ownProfile);
+
 
         // If there is a user a profile image should be fetched from storage
         if (user != null) {
@@ -113,6 +135,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .into(userProfileImage);
             }
         }
+
 
         // OnClick listener for the log out button
         buttonLogout.setOnClickListener(new View.OnClickListener() {
@@ -280,6 +303,17 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        
+
+    }
+
+    public DatabaseReference setRef(String uID) {
+        return FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
+                getReference("Users").child(uID);
+    }
+
+    public void setContent(DatabaseReference databaseReference) {
         //TextView references from the UI
         username = (TextView) findViewById(R.id.textUsernameProfile);
         email = (TextView) findViewById(R.id.textEmailProfile);
@@ -338,6 +372,59 @@ public class ProfileActivity extends AppCompatActivity {
                 Log.w("error", "loadPost:onCancelled", error.toException());
             }
         });
+    }
+
+
+    private void setProfile(Boolean ownProfile) {
+        if (ownProfile) {
+            // Get user ID of current user
+            String  uID = mAuth.getCurrentUser().getUid();
+            setContent(setRef(uID));
+        } else {
+            DatabaseReference tempRef = FirebaseDatabase.getInstance("https://health-" +
+                    "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
+                    getReference().child("Users");
+
+
+            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    //iterating over all users
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                        if (dataSnapshot.child("username").getValue() != null) {
+                            if (dataSnapshot.child("username").getValue().equals(searchUsername)) {
+                                Log.d("shot", String.valueOf(dataSnapshot.getKey()));
+                                String uID = dataSnapshot.getKey();
+                                setContent(setRef(uID));
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
+    //Method for grabbing the boolean variable ownProfile
+    public boolean isOwnProfile() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            return bundle.getBoolean("ownProfile");
+        } else {
+            return true;
+        }
+    }
+
+    public void setButtonVisibility(Boolean ownProfile) {
+        if (!ownProfile) {
+            buttonLogout.setVisibility(Button.GONE);
+            buttonChangePassword.setVisibility(Button.GONE);
+            buttonDeleteAccount.setVisibility(Button.GONE);
+        }
     }
 
     // Delete user from Realtime database

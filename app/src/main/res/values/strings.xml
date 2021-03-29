@@ -43,4 +43,5 @@
     <string name="profile">profile</string>
     <string name="nr_ppl_in_group">Number of members in selected group:</string>
     <string name="default_ppl_in_group">1</string>
+    <string name="action_search">Action Search</string>
 </resources>
