@@ -410,7 +410,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     //Method for grabbing the boolean variable ownProfile
-    public boolean isOwnProfile() {
+    private boolean isOwnProfile() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             return bundle.getBoolean("ownProfile");
@@ -419,7 +419,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void setButtonVisibility(Boolean ownProfile) {
+    private void setButtonVisibility(Boolean ownProfile) {
         if (!ownProfile) {
             buttonLogout.setVisibility(Button.GONE);
             buttonChangePassword.setVisibility(Button.GONE);

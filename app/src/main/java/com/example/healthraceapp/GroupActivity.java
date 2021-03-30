@@ -74,10 +74,17 @@ public class GroupActivity extends AppCompatActivity {
 
     private TextView nrOfMembersInGroup;
 
+    private Boolean fromMainDialog = false;
+
+    String usernameFromMain;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_activity_view_group);
+
+        //Check if we open this activity from the dialog on the main page
+        fromMainDialog = isFromMainDialog();
 
         viewGroup = (ViewGroup) findViewById(R.id.constraintLayout);
 
@@ -89,6 +96,21 @@ public class GroupActivity extends AppCompatActivity {
         currentUserReference = databaseReference.child("Users").child(userID);
 
         getUserInitializeView();
+
+        if (fromMainDialog){
+            createGroupButtonAction(usernameFromMain);
+
+        }
+    }
+
+    private Boolean isFromMainDialog(){
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            usernameFromMain = bundle.getString("username");
+            return bundle.getBoolean("fromMainDialog");
+        } else {
+            return false;
+        }
     }
 
     /*@Override
@@ -278,35 +300,39 @@ public class GroupActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
+    public void createGroupButtonAction(String usernameFromMain){
+        // Dialog to input the group name
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter group name");
+
+        // Setting up the input for the AlertDialog
+        final EditText input = new EditText(this);
+        builder.setView(input);
+
+        // Setting up the buttons for the AlertDialog
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                newGroupName = input.getText().toString();
+                checkGroupNameUniqueness(true, input.getText().toString());
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
     // Handle ActionBar requests
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.createGroupButton) {
-            // Dialog to input the group name
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Enter group name");
-
-            // Setting up the input for the AlertDialog
-            final EditText input = new EditText(this);
-            builder.setView(input);
-
-            // Setting up the buttons for the AlertDialog
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    newGroupName = input.getText().toString();
-                    checkGroupNameUniqueness(true, input.getText().toString());
-                }
-            });
-
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            builder.show();
+            createGroupButtonAction(usernameFromMain);
 
             // These other functions require administrative privileges
         } else if (item.getItemId() == R.id.addUserToGroup || item.getItemId() == R.id.removeUserFromGroup || item.getItemId() == R.id.deleteGroup || item.getItemId() == R.id.changeGroupName) {
@@ -363,7 +389,7 @@ public class GroupActivity extends AppCompatActivity {
                     if (input.getText().toString().equals(user.getUsername())) {
                         Toast.makeText(GroupActivity.this, "You are already in the group", Toast.LENGTH_LONG).show();
                     } else {
-                        addUserToGroup(input.getText().toString());
+                        addUserToGroup(input.getText().toString(), newGroupName);
                     }
                 } else if (item.getItemId() == R.id.removeUserFromGroup) {
                     if (input.getText().toString().equals(user.getUsername())) {
@@ -400,7 +426,7 @@ public class GroupActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void addUserToGroup(String username) {
+    private void addUserToGroup(String username, String currentlySelectedGroup1) {
         // Has to be final boolean array because it is accessed from an inner class
         final boolean[] userExists = new boolean[1];
         firebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -411,7 +437,7 @@ public class GroupActivity extends AppCompatActivity {
                         userExists[0] = true;
                         User selectedUser = dataSnapshot.getValue(User.class);
 
-                        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                        databaseReference.child("Groups").child(currentlySelectedGroup1).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DataSnapshot> task) {
                                 if (!task.isSuccessful()) {
@@ -421,9 +447,9 @@ public class GroupActivity extends AppCompatActivity {
                                     Group selectedGroup = task.getResult().getValue(Group.class);
 
                                     // Adding the new member to the group
-                                    selectedGroup.addMember(selectedUser.getUsername(), selectedUser, currentlySelectedGroup);
+                                    selectedGroup.addMember(selectedUser.getUsername(), selectedUser, currentlySelectedGroup1);
 
-                                    databaseReference.child("Groups").child(currentlySelectedGroup).child("members").child(selectedUser.getUsername()).setValue(selectedUser);
+                                    databaseReference.child("Groups").child(currentlySelectedGroup1).child("members").child(selectedUser.getUsername()).setValue(selectedUser);
 
                                     databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
 
@@ -444,6 +470,7 @@ public class GroupActivity extends AppCompatActivity {
                 Log.w(TAG, "onCancelled", error.toException());
             }
         });
+        fromMainDialog = false;
     }
 
     private void changeGroupName(String groupNameNew) {
@@ -520,9 +547,10 @@ public class GroupActivity extends AppCompatActivity {
     }
 
 
-    private void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1) {
+    public void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1) {
         // Defining DatabaseReference object
-        DatabaseReference databaseReferenceGroups = firebaseDatabase.getReference("Groups");
+        DatabaseReference databaseReferenceGroups = FirebaseDatabase.getInstance("https://health-" +
+                "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Groups");
 
         databaseReferenceGroups.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -536,7 +564,7 @@ public class GroupActivity extends AppCompatActivity {
                 }
                 if (createNewGroup) {
                     // After retrieving all the group names a new group can be created
-                    createNewGroup();
+                    createNewGroup(fromMainDialog, usernameFromMain);
                 } else { // The second function of this method is to change the group name of the
                     // selected group
                     changeGroupName(newGroupName1);
@@ -552,7 +580,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     // Create new group
-    private void createNewGroup() {
+    private void createNewGroup(Boolean fromMainDialog, String usernameFromMain) {
         if (allGroupNames.contains(newGroupName)) {
             Toast.makeText(this, "This group name is already in use", Toast.LENGTH_LONG).show();
             return;
@@ -564,7 +592,7 @@ public class GroupActivity extends AppCompatActivity {
         }
 
         if (newGroupName.length() < 1) {
-            Toast.makeText(this, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
+//            Toast.makeText(this, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -604,6 +632,9 @@ public class GroupActivity extends AppCompatActivity {
                                             initializeSpinner();
                                             userID = firebaseAuth.getCurrentUser().getUid();
                                             getUserInitializeView();
+                                            if (fromMainDialog) {
+                                                addUserToGroup(usernameFromMain, newGroupName);
+                                            }
                                         }
                                     }
                                 });

@@ -198,6 +198,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    //check all requirements for the username and see if it exists
+    public void checkUsername(String username, Boolean viewProfile) {
+        //check if the given username is of the correct length
+        if (username.length() > 16 || username.length() == 0) {
+            Toast.makeText(getApplicationContext(), "Username should have at least " +
+                            "1 character and cannot exceed 16 characters",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            DatabaseReference tempRef = firebaseDatabase.getReference()
+                    .child("Users");
+            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Boolean usernameExists = false;
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        if (dataSnapshot.child("username").getValue().equals(username)) {
+                            usernameExists = true;
+                        }
+                    }
+                    if (usernameExists && viewProfile) {
+                        Intent intent = new Intent(MainActivity.this,
+                                ProfileActivity.class);
+                        //Create a bundle to pass to the profile activity
+                        Bundle bundle = new Bundle();
+                        //Put a boolean variable in the bundle
+                        bundle.putBoolean("ownProfile", false);
+                        //Put a boolean variable in the bundle
+                        bundle.putString("username", username);
+                        //Put the boolean variable to the intent
+                        intent.putExtras(bundle);
+
+                        startActivity(intent);
+                        finish();
+                    } else if (usernameExists && !viewProfile) {
+                        Intent groupIntent = new Intent(MainActivity.this,
+                                GroupActivity.class);
+                        //Create a bundle to pass to the profile activity
+                        Bundle bundle = new Bundle();
+                        //Put a boolean variable in the bundle
+                        bundle.putBoolean("fromMainDialog", true);
+                        //Put String variables in the bundle
+                        bundle.putString("username", username);
+                        //Put the boolean variable to the intent
+                        groupIntent.putExtras(bundle);
+
+                        startActivity(groupIntent);
+                        finish();
+                    } else {
+                        //let the user know that the given username does not exists
+                        Toast.makeText(getApplicationContext(), "Username does " +
+                                        "not exists. Note: Usernames are case-sensitive",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
     // Create an ActionBar button
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -221,62 +284,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             final EditText input = new EditText(this);
             builder.setView(input);
 
-            // Setting up the buttons for the AlertDialog
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            builder.setNeutralButton("Create group", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String username = input.getText().toString();
-                    checkUsername(username);
-                }
-
-                //check all requirements for the username and see if it exists
-                private void checkUsername(String username) {
-                    //check if the given username is of the correct length
-                    if (username.length() > 16) {
-                        Toast.makeText(getApplicationContext(), "Username should have at least " +
-                                        "1 character and cannot exceed 16 characters",
-                                Toast.LENGTH_SHORT).show();
-                    } else {
-                        DatabaseReference tempRef = firebaseDatabase.getReference()
-                                .child("Users");
-                        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                Boolean usernameExists = false;
-                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                    if (dataSnapshot.child("username").getValue().equals(username)) {
-                                        usernameExists = true;
-                                    }
-                                }
-                                if (usernameExists) {
-                                    Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-                                    //Create a bundle to pass to the profile activity
-                                    Bundle bundle = new Bundle();
-                                    //Put a boolean variable in the bundle
-                                    bundle.putBoolean("ownProfile", false);
-                                    //Put a boolean variable in the bundle
-                                    bundle.putString("username", username);
-                                    //Put the boolean variable to the intent
-                                    intent.putExtras(bundle);
-
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    //let the user know that the given username does not exists
-                                    Toast.makeText(getApplicationContext(), "Username does " +
-                                                    "not exists. Note: Usernames are case-sensitive",
-                                            Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-                    }
+                    checkUsername(username, false);
                 }
             });
+
+            // Setting up the buttons for the AlertDialog
+            builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String username = input.getText().toString();
+                            checkUsername(username, true);
+                        }
+                    });
+
+
+
 
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
