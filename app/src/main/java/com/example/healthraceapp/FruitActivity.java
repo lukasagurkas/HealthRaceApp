@@ -246,7 +246,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from amountOfFruit in the database
         // And saves it in the variable totalProgress
         // And create a new barChart
-        fruitReference.addValueEventListener(new ValueEventListener() {
+        fruitReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -347,7 +347,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusOne in the database
         // And saves it in the variable fruitMinusOne
         // And create a new barChart
-        fruitMinusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusOneDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -365,7 +365,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusTwo in the database
         // And saves it in the variable fruitMinusTwo
         // And create a new barChart
-        fruitMinusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusTwoDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -383,7 +383,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusThree in the database
         // And saves it in the variable fruitMinusThree
         // And create a new barChart
-        fruitMinusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusThreeDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -401,7 +401,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusFour in the database
         // And saves it in the variable fruitMinusFour
         // And create a new barChart
-        fruitMinusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusFourDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -419,7 +419,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusFive in the database
         // And saves it in the variable fruitMinusFive
         // And create a new barChart
-        fruitMinusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusFiveDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -437,7 +437,7 @@ public class FruitActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusSix in the database
         // And saves it in the variable fruitMinusSix
         // And create a new barChart
-        fruitMinusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+        fruitMinusSixDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);

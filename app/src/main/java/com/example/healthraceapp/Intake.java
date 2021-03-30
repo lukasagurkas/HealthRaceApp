@@ -91,7 +91,7 @@ public interface Intake {
         DatabaseReference negativeTotalPointsReference = firebaseDatabase.getReference().child("Users")
                 .child(userID2).child("negativeTotalPoints");
 
-        pointsReference.addValueEventListener(new ValueEventListener() {
+        pointsReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int totalPoints = 0;

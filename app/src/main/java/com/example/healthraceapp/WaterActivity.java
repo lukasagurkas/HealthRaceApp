@@ -246,7 +246,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from amountOfWater in the database
         // And saves it in the variable totalProgress
         // And create a new barChart
-        waterReference.addValueEventListener(new ValueEventListener() {
+        waterReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -353,7 +353,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusOne in the database
         // And saves it in the variable fruitMinusOne
         // And create a new barChart
-        waterMinusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+        waterMinusOneDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -371,7 +371,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusTwo in the database
         // And saves it in the variable fruitMinusTwo
         // And create a new barChart
-        waterMinusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+        waterMinusTwoDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -389,7 +389,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusThree in the database
         // And saves it in the variable fruitMinusThree
         // And create a new barChart
-        waterMinusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+        waterMinusThreeDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -407,7 +407,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusFour in the database
         // And saves it in the variable fruitMinusFour
         // And create a new barChart
-        waterMinusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+        waterMinusFourDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -425,7 +425,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusFive in the database
         // And saves it in the variable fruitMinusFive
         // And create a new barChartFive
-        waterMinusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+        waterMinusFiveDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -443,7 +443,7 @@ public class WaterActivity extends AppCompatActivity implements Intake {
         // It takes the value from fruitMinusSix in the database
         // And saves it in the variable fruitMinusSix
         // And create a new barChart
-        waterMinusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+        waterMinusSixDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);

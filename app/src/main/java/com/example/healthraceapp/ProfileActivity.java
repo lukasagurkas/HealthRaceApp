@@ -110,11 +110,11 @@ public class ProfileActivity extends AppCompatActivity {
                 searchUsername = bundle.getString("username");
             }
         }
-        
+
         setProfile(ownProfile);
 
-        
-        
+
+
 
         // Buttons and image reference to the UI
         buttonLogout = findViewById(R.id.buttonLogout);
@@ -269,7 +269,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 user = FirebaseAuth.getInstance().getCurrentUser();
 
                                 // Get auth credentials from the user for re-authentication.
-                                assert user != null;
+                                //assert user != null;
                                 AuthCredential credential = EmailAuthProvider
                                         .getCredential(Objects.requireNonNull(user.getEmail()), inputPassword.getText().toString());
 
@@ -303,7 +303,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        
+
 
     }
 
@@ -432,6 +432,8 @@ public class ProfileActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
                 "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
                 .child(userID);
+        mAuth.signOut();
+
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -448,7 +450,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                 }
-                mAuth.signOut();
+                //mAuth.signOut();
                 Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(ProfileActivity.this,
                         RegisterActivity.class));
@@ -488,6 +490,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     groupDeletion.deleteGroup(dataSnapshot.child("groupName").getValue(String.class),
                                             ProfileActivity.this, null, ProfileActivity.class);
                                 } else { // Otherwise we just delete the user from the group
+
                                     groupDeletion.removeUserFromGroup(username, dataSnapshot.child("groupName").getValue(String.class),
                                             ProfileActivity.this, null, ProfileActivity.class);
                                 }

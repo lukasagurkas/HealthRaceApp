@@ -261,7 +261,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from amountOfVeg in the database
         // And saves it in the variable totalProgress
         // And create a new barChart
-        vegReference.addValueEventListener(new ValueEventListener() {
+        vegReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 int dataFromDatabase = snapshot.getValue(int.class);
@@ -365,7 +365,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from veggieMinusOne in the database
         // And saves it in the variable veggieMinusOne
         // And create a new barChart
-        veggieMinusOneDatabaseReference.addValueEventListener(new ValueEventListener() {
+        veggieMinusOneDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusOne = snapshot.getValue(int.class);
@@ -382,7 +382,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from veggieMinusTwo in the database
         // And saves it in the variable veggieMinusTwo
         // And create a new barChart
-        veggieMinusTwoDatabaseReference.addValueEventListener(new ValueEventListener() {
+        veggieMinusTwoDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusTwo = snapshot.getValue(int.class);
@@ -399,7 +399,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from veggieMinusThree in the database
         // And saves it in the variable veggieMinusThree
         // And create a new barChart
-        veggieMinusThreeDatabaseReference.addValueEventListener(new ValueEventListener() {
+        veggieMinusThreeDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusThree = snapshot.getValue(int.class);
@@ -416,7 +416,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from veggieMinusFour in the database
         // And saves it in the variable veggieMinusFour
         // And create a new barChart
-        veggieMinusFourDatabaseReference.addValueEventListener(new ValueEventListener() {
+        veggieMinusFourDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusFour = snapshot.getValue(int.class);
@@ -433,7 +433,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from veggieMinusFive in the database
         // And saves it in the variable veggieMinusFive
         // And create a new barChart
-        veggieMinusFiveDatabaseReference.addValueEventListener(new ValueEventListener() {
+        veggieMinusFiveDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusFive = snapshot.getValue(int.class);
@@ -450,7 +450,7 @@ public class VegetableActivity extends AppCompatActivity implements Intake {
         // It takes the value from veggieMinusSix in the database
         // And saves it in the variable veggieMinusSix
         // And create a new barChart
-        veggieMinusSixDatabaseReference.addValueEventListener(new ValueEventListener() {
+        veggieMinusSixDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 veggieMinusSix = snapshot.getValue(int.class);
