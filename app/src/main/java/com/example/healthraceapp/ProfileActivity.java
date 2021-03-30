@@ -432,7 +432,6 @@ public class ProfileActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
                 "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
                 .child(userID);
-        mAuth.signOut();
 
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -490,7 +489,6 @@ public class ProfileActivity extends AppCompatActivity {
                                     groupDeletion.deleteGroup(dataSnapshot.child("groupName").getValue(String.class),
                                             ProfileActivity.this, null, ProfileActivity.class);
                                 } else { // Otherwise we just delete the user from the group
-
                                     groupDeletion.removeUserFromGroup(username, dataSnapshot.child("groupName").getValue(String.class),
                                             ProfileActivity.this, null, ProfileActivity.class);
                                 }
