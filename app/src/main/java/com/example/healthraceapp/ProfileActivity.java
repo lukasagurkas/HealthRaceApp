@@ -449,7 +449,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             });
                 }
-                //mAuth.signOut();
+                mAuth.signOut();
                 Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(ProfileActivity.this,
                         RegisterActivity.class));
