@@ -230,7 +230,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         intent.putExtras(bundle);
 
                         startActivity(intent);
-                        finish();
                     } else if (usernameExists && !viewProfile) {
                         Intent groupIntent = new Intent(MainActivity.this,
                                 GroupActivity.class);
@@ -244,7 +243,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         groupIntent.putExtras(bundle);
 
                         startActivity(groupIntent);
-                        finish();
                     } else {
                         //let the user know that the given username does not exists
                         Toast.makeText(getApplicationContext(), "Username does " +
