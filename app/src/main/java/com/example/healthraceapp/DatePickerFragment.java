@@ -13,7 +13,7 @@ import java.util.Calendar;
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
-    private RegisterActivity currentActivity;
+    private RegisterActivityInterface currentActivity;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

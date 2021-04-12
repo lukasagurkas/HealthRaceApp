@@ -38,7 +38,7 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, RegisterActivityInterface {
 
     // Instances of all UI elements
     private Button buttonRegister, buttonSignIn;
@@ -275,6 +275,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     // Setting the date of birth
+    @Override
     public void setDateOfBirth(int year, int month, int day) {
         dateOfBirthSet = true;
         this.year = year;
