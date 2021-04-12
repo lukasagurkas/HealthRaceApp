@@ -78,9 +78,6 @@ public class GroupActivity extends AppCompatActivity {
 
     String usernameFromMain;
 
-    // Helper class to either delete a group or remove a user from a group
-    GroupDeletionInterface groupDeletion;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,9 +94,6 @@ public class GroupActivity extends AppCompatActivity {
         userID = firebaseAuth.getCurrentUser().getUid();
         databaseReference = firebaseDatabase.getReference();
         currentUserReference = databaseReference.child("Users").child(userID);
-
-        // Helper class to either delete a group or remove a user from a group
-        groupDeletion = new GroupDeletion();
 
         getUserInitializeView();
 
@@ -383,6 +377,9 @@ public class GroupActivity extends AppCompatActivity {
         // Setting up the input for the AlertDialog
         final EditText input = new EditText(this);
         builder.setView(input);
+
+        // Helper class to either delete a group or remove a user from a group
+        GroupDeletion groupDeletion = new GroupDeletion();
 
         // Setting up the buttons for the AlertDialog
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
