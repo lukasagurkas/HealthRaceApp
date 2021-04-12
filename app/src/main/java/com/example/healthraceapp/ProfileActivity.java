@@ -49,12 +49,17 @@ import java.util.Objects;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    // Instances of all UI elements
+    // Instances of all the textViews on the profile page
     private TextView email, username, day, month, year, gender, points, groups;
+
+    // Instances of all the Buttons on the profile page
     private Button buttonChangePassword, buttonDeleteAccount, buttonLogout;
+
+    // Instance of the profile picture on the profile page
     private ImageView userProfileImage;
 //    private ImageButton buttonAddGroup;
 
+    // String with the userID of the user
     private String userID;
 
     // Firebase instances
@@ -66,25 +71,26 @@ public class ProfileActivity extends AppCompatActivity {
     // Tag  value for debugging
     private static final String TAG = "ProfileActivity";
 
-    //
+    // ArrayList with all the groups the user is part of
     private final ArrayList<String> allGroups = new ArrayList<>();
 
-    //Instances for profile image
+    // Instances for profile image
     String PROFILE_IMAGE_URL = null;
     int TAKE_IMAGE_CODE = 10001;
 
-    //boolean to see if the user is looking at his own profile
+    // boolean to see if the user is looking at his own profile
     public boolean ownProfile;
 
-    //String for username to search
+    // String for username to search
     private String searchUsername;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        // Sets ownProfile to true if the user is looking at his own profile,
+        // Sets ownProfile to false otherwise
         ownProfile = isOwnProfile();
 
         // Create title for the page
@@ -94,6 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Firebase instantiations
         mAuth = FirebaseAuth.getInstance();
 
+        // Initializes the database references
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb." +
                 "europe-west1.firebasedatabase.app/");
@@ -103,7 +110,7 @@ public class ProfileActivity extends AppCompatActivity {
         // Get user ID of current user
         userID = user.getUid();
 
-        //Get the username if the user is looking at another profile
+        // Get the username if the user is looking at another profile
         if (!ownProfile){
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
@@ -112,9 +119,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         setProfile(ownProfile);
-
-
-
 
         // Buttons and image reference to the UI
         buttonLogout = findViewById(R.id.buttonLogout);
@@ -126,7 +130,6 @@ public class ProfileActivity extends AppCompatActivity {
         //set the profile page according to the value of ownProfile
         setButtonVisibility(ownProfile);
 
-
         // If there is a user a profile image should be fetched from storage
         if (user != null) {
             if (user.getPhotoUrl() != null) {
@@ -136,25 +139,32 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-
         // OnClick listener for the log out button
+        // Gives a pop-up asking the user if he/she really wants to log out
+        // If the user does not, he/she will get taken back to the profile page
+        // Otherwise he/she will be logged out and taken to the login page
         buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder logoutDialog = new AlertDialog.Builder(v.getContext());
                 logoutDialog.setTitle("Log out");
+                // Pop-up asking the user if he/she really wants to log out
                 logoutDialog.setMessage("Are you sure you want to log out?");
 
+                // The user wants to log out
                 logoutDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        // Logs out
                         mAuth.signOut();
                         finish();
+                        // Starts the login activity
                         startActivity(new Intent(ProfileActivity.this,
                                 LoginActivity.class));
                     }
                 });
 
+                // The user does not want to log out
                 logoutDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -169,10 +179,11 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final AlertDialog.Builder deleteAccountDialog =
+                final AlertDialog.Builder changePasswordDialog =
                         new AlertDialog.Builder(v.getContext());
-                deleteAccountDialog.setTitle("Change password");
-                deleteAccountDialog.setMessage("To change your password enter you current password");
+                changePasswordDialog.setTitle("Change password");
+                // Pop-up asking the user to enter its current password
+                changePasswordDialog.setMessage("To change your password enter you current password");
 
                 // Get a reference to the already created profile activity layout
                 ConstraintLayout parentLayout = (ConstraintLayout) findViewById(R.id.constraintLayoutProfile);
@@ -184,9 +195,10 @@ public class ProfileActivity extends AppCompatActivity {
                 // Setting up the input for the AlertDialog
                 EditText inputPassword = (EditText) passwordLayout.findViewById(R.id.editTextTextPassword);
 
-                deleteAccountDialog.setView(inputPassword);
+                changePasswordDialog.setView(inputPassword);
 
-                deleteAccountDialog.setPositiveButton("OK",
+                // The user wants to change its password
+                changePasswordDialog.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -202,6 +214,10 @@ public class ProfileActivity extends AppCompatActivity {
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
+                                                // If the user entered the correct current password
+                                                // An email will be sent, in which the user can
+                                                // change its password. Otherwise, an error Toast
+                                                // will be shown
                                                 if (task.isSuccessful()) {
                                                     Log.d(TAG, String.valueOf(task.getResult()));
 
@@ -228,14 +244,15 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         });
 
-                deleteAccountDialog.setNegativeButton("Cancel",
+                // The user does not want to change its password
+                changePasswordDialog.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
                         });
-                deleteAccountDialog.show();
+                changePasswordDialog.show();
             }
 
 
@@ -248,6 +265,7 @@ public class ProfileActivity extends AppCompatActivity {
                 final AlertDialog.Builder deleteAccountDialog =
                         new AlertDialog.Builder(v.getContext());
                 deleteAccountDialog.setTitle("Delete Account");
+                // Pop-up asking the user if he/she really want to deleted their account
                 deleteAccountDialog.setMessage("If you are sure that you want to delete this account enter your password");
 
                 // Get a reference to the already created profile activity layout
@@ -262,6 +280,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 deleteAccountDialog.setView(inputPassword);
 
+                // The user wants to delete their account
                 deleteAccountDialog.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -278,6 +297,8 @@ public class ProfileActivity extends AppCompatActivity {
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
+                                                // If the task is successful, the account is deleted
+                                                // Otherwise an error Toast is shown.
                                                 if (task.isSuccessful()) {
                                                     Log.d(TAG, "User re-authenticated.");
                                                     Log.d(TAG, String.valueOf(task.getResult()));
@@ -292,6 +313,7 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         });
 
+                // The user does not want to delete their account
                 deleteAccountDialog.setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -302,17 +324,16 @@ public class ProfileActivity extends AppCompatActivity {
                 deleteAccountDialog.show();
             }
         });
-
-
-
     }
 
+    // Method to set the reference for the databsae
     public DatabaseReference setRef(String uID) {
         return FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
                 getReference("Users").child(uID);
     }
 
+    // Method to show the right data for each textView
     public void setContent(DatabaseReference databaseReference) {
         //TextView references from the UI
         username = (TextView) findViewById(R.id.textUsernameProfile);
@@ -346,12 +367,14 @@ public class ProfileActivity extends AppCompatActivity {
                     String groupNames = allUserGroupNames.toString();
                     groupNames = groupNames.substring(1, groupNames.length() - 1);
 
+                    // In a textView, the number of groups the user is part of is shown
                     if (allUserGroupNames.size() == 0) {
                         groups.setText("Part of groups: None yet!");
                     } else {
                         groups.setText("Part of groups: " + groupNames);
                     }
 
+                    // Shows the right data for each textView
                     username.setText("@" + myUsername);
                     email.setText("Email: " + myEmail);
                     day.setText(myDay);
@@ -374,7 +397,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-
+    // If ownProfile is true, it shows the profile of the user itself
+    // Otherwise it will show the profile of the searched username
     private void setProfile(Boolean ownProfile) {
         if (ownProfile) {
             // Get user ID of current user
@@ -389,7 +413,7 @@ public class ProfileActivity extends AppCompatActivity {
             tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    //iterating over all users
+                    // Iterating over all users
                     for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                         if (dataSnapshot.child("username").getValue() != null) {
                             if (dataSnapshot.child("username").getValue().equals(searchUsername)) {
@@ -409,7 +433,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    //Method for grabbing the boolean variable ownProfile
+    // Method for grabbing the boolean variable ownProfile
     private boolean isOwnProfile() {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
@@ -419,6 +443,8 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // If the user is not viewing its own profile,
+    // the logOut button, changePassword button and deleteAccount button are not shown.
     private void setButtonVisibility(Boolean ownProfile) {
         if (!ownProfile) {
             buttonLogout.setVisibility(Button.GONE);
@@ -461,6 +487,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    // When the user deletes its account, it will be removed from all the groups it was part of
     private void deleteUserFromGroups() {
         String userID = mAuth.getCurrentUser().getUid();
 
@@ -591,6 +618,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .build();
 
         user.updateProfile(request)
+                // Update profile picture succesfully
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -598,6 +626,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }
                 })
+                // Update profile picture fails
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
