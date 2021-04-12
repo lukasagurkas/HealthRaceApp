@@ -517,7 +517,7 @@ public class ProfileActivity extends AppCompatActivity {
                                             ProfileActivity.this, null, ProfileActivity.class);
                                 } else { // Otherwise we just delete the user from the group
                                     groupDeletion.removeUserFromGroup(username, dataSnapshot.child("groupName").getValue(String.class),
-                                            ProfileActivity.this, null, ProfileActivity.class);
+                                            ProfileActivity.this, null);
                                 }
                             }
                         }

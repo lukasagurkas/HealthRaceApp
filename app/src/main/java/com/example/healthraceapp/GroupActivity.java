@@ -3,14 +3,10 @@ package com.example.healthraceapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,10 +35,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-public class GroupActivity extends AppCompatActivity {
+public class GroupActivity extends AppCompatActivity implements GroupActivityInterface {
 
     // TODO add group selection
     // TODO add user to group
@@ -120,7 +115,8 @@ public class GroupActivity extends AppCompatActivity {
         getUserInitializeView();
     }*/
 
-    void getUserInitializeView() {
+    @Override
+    public void getUserInitializeView() {
         databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -142,7 +138,8 @@ public class GroupActivity extends AppCompatActivity {
         });
     }
 
-    void setRecycleView() {
+    @Override
+    public void setRecycleView() {
         // Clearing all the views
         viewGroup.removeAllViews();
 
@@ -231,7 +228,8 @@ public class GroupActivity extends AppCompatActivity {
         }
     }
 
-    void initializeSpinner() {
+    @Override
+    public void initializeSpinner() {
         databaseReference.child("Users").child(userID).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -379,7 +377,7 @@ public class GroupActivity extends AppCompatActivity {
         builder.setView(input);
 
         // Helper class to either delete a group or remove a user from a group
-        GroupDeletion groupDeletion = new GroupDeletion();
+        GroupDeletionInterface groupDeletion = new GroupDeletion();
 
         // Setting up the buttons for the AlertDialog
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -398,7 +396,7 @@ public class GroupActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG).show();
                     } else {
                         groupDeletion.removeUserFromGroup(input.getText().toString(), currentlySelectedGroup,
-                                GroupActivity.this, GroupActivity.this, null);
+                                GroupActivity.this, GroupActivity.this);
                     }
                 } else if (item.getItemId() == R.id.changeGroupName) {
                     // We need to check if the given group name is already taken
@@ -408,7 +406,7 @@ public class GroupActivity extends AppCompatActivity {
                         // If the correct group name was entered for the selected group
                         // the group is deleted
                         groupDeletion.deleteGroup(input.getText().toString(),
-                                GroupActivity.this, GroupActivity.this, null);
+                                GroupActivity.this, GroupActivity.this);
                     } else {
                         Toast.makeText(GroupActivity.this, "Incorrect group name entered", Toast.LENGTH_LONG).show();
                     }
