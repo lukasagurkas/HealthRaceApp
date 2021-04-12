@@ -7,4 +7,7 @@ public interface GroupActivityInterface {
     void getUserInitializeView();
 
     void initializeSpinner();
+
+    void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1);
+
 }
