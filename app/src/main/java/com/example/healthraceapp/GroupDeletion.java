@@ -16,7 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class GroupDeletion {
+public class GroupDeletion implements GroupDeletionInterface {
     private static final String TAG = "GroupDeletion";
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
@@ -27,7 +27,8 @@ public class GroupDeletion {
         databaseReference = firebaseDatabase.getReference();
     }
 
-    void deleteGroup(String groupName, Context context, GroupActivity groupActivity, Class<?> profileActivity) {
+    @Override
+    public void deleteGroup(String groupName, Context context, GroupActivity groupActivity, Class<?> profileActivity) {
         databaseReference.child("Groups").child(groupName).child("members").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -68,7 +69,8 @@ public class GroupDeletion {
         });
     }
 
-    void removeUserFromGroup(String username, String currentlySelectedGroup, Context context, GroupActivity groupActivity, Class<?> profileActivity) {
+    @Override
+    public void removeUserFromGroup(String username, String currentlySelectedGroup, Context context, GroupActivity groupActivity, Class<?> profileActivity) {
         // Has to be final boolean array because it is accessed from an inner class
         final boolean[] userExists = new boolean[1];
         firebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
