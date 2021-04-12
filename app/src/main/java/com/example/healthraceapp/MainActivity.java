@@ -293,12 +293,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             // Setting up the buttons for the AlertDialog
             builder.setPositiveButton("View", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String username = input.getText().toString();
-                            checkUsername(username, true);
-                        }
-                    });
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String username = input.getText().toString();
+                    checkUsername(username, true);
+                }
+            });
 
 
 
