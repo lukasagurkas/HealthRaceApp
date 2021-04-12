@@ -285,7 +285,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     // Date picker dialog is shown when the button 'set' is pressed in the register activity
     public void showDatePickerDialog(View v) {
-        DatePickerFragment newFragment = new DatePickerFragment();
+        DatePickerFragmentInterface newFragment = new DatePickerFragment();
         newFragment.setCurrentActivity(this);
         newFragment.show(getSupportFragmentManager(), "datePicker");
     }

@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment;
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment
-        implements DatePickerDialog.OnDateSetListener {
+        implements DatePickerDialog.OnDateSetListener, DatePickerFragmentInterface {
 
     private RegisterActivityInterface currentActivity;
 
@@ -30,10 +30,12 @@ public class DatePickerFragment extends DialogFragment
         return new DatePickerDialog(getActivity(), this, year, month, day);
     }
 
+    @Override
     public void setCurrentActivity(Activity activity) {
-        currentActivity = (RegisterActivity) activity;
+        currentActivity = (RegisterActivityInterface) activity;
     }
 
+    @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
         currentActivity.setDateOfBirth(year, month, day);
     }
