@@ -549,7 +549,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
 
 
     public void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1) {
-        Log.d("Check", "check3");
         // Defining DatabaseReference object
         DatabaseReference databaseReferenceGroups = FirebaseDatabase.getInstance("https://health-" +
                 "race-app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Groups");
@@ -565,7 +564,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                     }
                 }
                 if (createNewGroup) {
-                    Log.d("Check", newGroupName1);
                     // After retrieving all the group names a new group can be created
                     createNewGroup(fromMainDialog, usernameFromMain, newGroupName1);
                 } else { // The second function of this method is to change the group name of the
@@ -584,7 +582,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
 
     // Create new group
     private void createNewGroup(Boolean fromMainDialog, String usernameFromMain, String newGroupName1) {
-        Log.d("Check", "check4");
         if (allGroupNames.contains(newGroupName1)) {
             Toast.makeText(this, "This group name is already in use", Toast.LENGTH_LONG).show();
             return;
@@ -604,7 +601,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
         firebaseDatabase.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                Log.d("Check", "check6");
                 if (!task.isSuccessful()) {
                     Log.e(TAG, task.getException().toString());
                 } else {
@@ -619,7 +615,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                     newGroupRef.child(newGroup.getGroupName()).setValue(newGroup).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            Log.d("Check", "check7");
                             if (!task.isSuccessful()) {
                                 Log.e("firebase", "Error getting data", task.getException());
                             } else {
@@ -632,7 +627,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task1) {
-                                        Log.d("Check", "check8");
                                         if (!task1.isSuccessful()) {
                                             Log.e("firebase", "Error getting data", task1.getException());
                                         } else {
@@ -648,7 +642,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                                 });
                                 Log.d("firebase", String.valueOf(task.getResult()));
                             }
-                            Log.d("Check", "check5");
                         }
                     });
                 }
