@@ -514,7 +514,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 // If the current user is the admin of the group then the whole group is deleted
                                 if (userID.equals(dataSnapshot.child("adminUID").getValue(String.class))) {
                                     groupDeletion.deleteGroup(dataSnapshot.child("groupName").getValue(String.class),
-                                            ProfileActivity.this, null, ProfileActivity.class);
+                                            ProfileActivity.this, null);
                                 } else { // Otherwise we just delete the user from the group
                                     groupDeletion.removeUserFromGroup(username, dataSnapshot.child("groupName").getValue(String.class),
                                             ProfileActivity.this, null);
