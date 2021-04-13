@@ -57,10 +57,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Instance of the profile picture on the profile page
     private ImageView userProfileImage;
-//    private ImageButton buttonAddGroup;
 
-    // String with the userID of the user
-    private String userID;
+    // String with the userID of the user and string for username to search
+    private String userID, searchUsername;
 
     // Firebase instances
     private FirebaseAuth mAuth;
@@ -81,8 +80,6 @@ public class ProfileActivity extends AppCompatActivity {
     // boolean to see if the user is looking at his own profile
     public boolean ownProfile;
 
-    // String for username to search
-    private String searchUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,14 +98,12 @@ public class ProfileActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Initializes the database references
-        storageReference = FirebaseStorage.getInstance().getReference();
+//        storageReference = FirebaseStorage.getInstance().getReference();
         firebaseDatabase = FirebaseDatabase.getInstance("https://health-race-app-default-rtdb." +
                 "europe-west1.firebasedatabase.app/");
 
-        // Get current user
-        user = mAuth.getCurrentUser();
         // Get user ID of current user
-        userID = user.getUid();
+        userID = mAuth.getCurrentUser() .getUid();
 
         // Get the username if the user is looking at another profile
         if (!ownProfile){
@@ -125,16 +120,15 @@ public class ProfileActivity extends AppCompatActivity {
         buttonChangePassword = findViewById(R.id.buttonChangePassword);
         buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         userProfileImage = findViewById(R.id.userProfileImage);
-//        buttonAddGroup = findViewById(R.id.imageButtonAddGroup);
 
         //set the profile page according to the value of ownProfile
         setButtonVisibility(ownProfile);
 
         // If there is a user a profile image should be fetched from storage
-        if (user != null) {
-            if (user.getPhotoUrl() != null) {
+        if (mAuth.getCurrentUser() != null) {
+            if (mAuth.getCurrentUser().getPhotoUrl() != null) {
                 Glide.with(this)
-                        .load(user.getPhotoUrl())
+                        .load(mAuth.getCurrentUser().getPhotoUrl())
                         .into(userProfileImage);
             }
         }
@@ -202,15 +196,14 @@ public class ProfileActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                user = FirebaseAuth.getInstance().getCurrentUser();
 
                                 // Get auth credentials from the user for re-authentication.
-                                assert user != null;
+                                assert FirebaseAuth.getInstance().getCurrentUser() != null;
                                 AuthCredential credential = EmailAuthProvider
                                         .getCredential(Objects.requireNonNull(user.getEmail()), inputPassword.getText().toString());
 
                                 // Prompt the user to re-provide their sign-in credentials
-                                user.reauthenticate(credential)
+                                FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credential)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -219,9 +212,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 // change its password. Otherwise, an error Toast
                                                 // will be shown
                                                 if (task.isSuccessful()) {
-                                                    Log.d(TAG, String.valueOf(task.getResult()));
-
-                                                    String email = user.getEmail();
+                                                    String email = FirebaseAuth.getInstance().getCurrentUser().getEmail();
                                                     mAuth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
@@ -236,7 +227,6 @@ public class ProfileActivity extends AppCompatActivity {
                                                         }
                                                     });
                                                 } else {
-                                                    Log.d(TAG, String.valueOf(task.getException()));
                                                     Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
@@ -285,7 +275,7 @@ public class ProfileActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                user = FirebaseAuth.getInstance().getCurrentUser();
+
 
                                 // Get auth credentials from the user for re-authentication.
                                 //assert user != null;
@@ -293,19 +283,16 @@ public class ProfileActivity extends AppCompatActivity {
                                         .getCredential(Objects.requireNonNull(user.getEmail()), inputPassword.getText().toString());
 
                                 // Prompt the user to re-provide their sign-in credentials
-                                user.reauthenticate(credential)
+                                FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credential)
                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 // If the task is successful, the account is deleted
                                                 // Otherwise an error Toast is shown.
                                                 if (task.isSuccessful()) {
-                                                    Log.d(TAG, "User re-authenticated.");
-                                                    Log.d(TAG, String.valueOf(task.getResult()));
                                                     deleteUserAuth();
                                                     deleteUserFromGroups();
                                                 } else {
-                                                    Log.d(TAG, String.valueOf(task.getException()));
                                                     Toast.makeText(ProfileActivity.this, String.valueOf(task.getException().getMessage()), Toast.LENGTH_SHORT).show();
                                                 }
                                             }
@@ -350,8 +337,7 @@ public class ProfileActivity extends AppCompatActivity {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                user = mAuth.getCurrentUser();
-                if (user != null) {
+                if (mAuth.getCurrentUser() != null) {
                     String myUsername = snapshot.child("username").getValue(String.class);
                     String myEmail = snapshot.child("email").getValue(String.class);
                     Boolean myGender = (Boolean) snapshot.child("male").getValue();
@@ -402,22 +388,17 @@ public class ProfileActivity extends AppCompatActivity {
     private void setProfile(Boolean ownProfile) {
         if (ownProfile) {
             // Get user ID of current user
-            String  uID = mAuth.getCurrentUser().getUid();
-            setContent(setRef(uID));
+            setContent(setRef(mAuth.getCurrentUser().getUid()));
         } else {
-            DatabaseReference tempRef = FirebaseDatabase.getInstance("https://health-" +
+            FirebaseDatabase.getInstance("https://health-" +
                     "race-app-default-rtdb.europe-west1.firebasedatabase.app/").
-                    getReference().child("Users");
-
-
-            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    getReference().child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     // Iterating over all users
                     for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
                         if (dataSnapshot.child("username").getValue() != null) {
                             if (dataSnapshot.child("username").getValue().equals(searchUsername)) {
-                                Log.d("shot", String.valueOf(dataSnapshot.getKey()));
                                 String uID = dataSnapshot.getKey();
                                 setContent(setRef(uID));
                             }
@@ -455,25 +436,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     // Delete user from Realtime database
     private void deleteUserRealtime() {
-        DatabaseReference ref = FirebaseDatabase.getInstance("https://health-race-" +
+        FirebaseDatabase.getInstance("https://health-race-" +
                 "app-default-rtdb.europe-west1.firebasedatabase.app/").getReference("Users")
-                .child(userID);
-
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                .child(userID).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-                    userSnapshot.getRef().removeValue()
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Log.d(TAG, String.valueOf(task.getResult()) + "qwz");
-                                    } else {
-                                        Log.d(TAG, String.valueOf(task.getException()) + "zwq");
-                                    }
-                                }
-                            });
+                    userSnapshot.getRef().removeValue();
                 }
                 mAuth.signOut();
                 Toast.makeText(ProfileActivity.this, "Account deleted", Toast.LENGTH_SHORT).show();
@@ -489,10 +458,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     // When the user deletes its account, it will be removed from all the groups it was part of
     private void deleteUserFromGroups() {
-        String userID = mAuth.getCurrentUser().getUid();
 
-        firebaseDatabase.getReference("Users").child(userID).child("username").get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        firebaseDatabase.getReference("Users").child(mAuth.getCurrentUser().getUid())
+                .child("username").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 if (!task.isSuccessful()) {
@@ -500,13 +468,11 @@ public class ProfileActivity extends AppCompatActivity {
                 } else {
                     String username = task.getResult().getValue(String.class);
 
-                    // Defining DatabaseReference object
-                    DatabaseReference databaseReferenceGroups = firebaseDatabase.getReference("Groups");
-
                     // Helper class to either delete a group or remove a user from a group
                     GroupDeletion groupDeletion = new GroupDeletion();
 
-                    databaseReferenceGroups.addListenerForSingleValueEvent(new ValueEventListener() {
+                    firebaseDatabase.getReference("Groups").addListenerForSingleValueEvent(
+                            new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             // Iterating through groups
@@ -542,7 +508,6 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "User account deleted.");
                             deleteUserRealtime();
                         }
                     }
@@ -603,7 +568,6 @@ public class ProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d(TAG, "onSuccess: " + uri);
                         setUserProfileUrl(uri);
                     }
                 });
