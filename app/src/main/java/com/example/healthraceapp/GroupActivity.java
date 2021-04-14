@@ -489,7 +489,10 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                 }
                 if (createNewGroup) {
                     // After retrieving all the group names a new group can be created
-                    createNewGroup(fromMainDialog, usernameFromMain, newGroupName1);
+                    groupCreation.createNewGroup(fromMainDialog, usernameFromMain, newGroupName1,
+                            groupAdjustments, firebaseDatabase, databaseReference, firebaseAuth,
+                            allGroupNames, GroupActivity.this,
+                            GroupActivity.this );
                 } else { // The second function of this method is to change the group name of the
                     // selected group
                     changeGroupName(newGroupName1);
@@ -504,72 +507,4 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
         });
     }
 
-    // Create new group
-    private void createNewGroup(Boolean fromMainDialog, String usernameFromMain, String newGroupName1) {
-        if (allGroupNames.contains(newGroupName1)) {
-            Toast.makeText(this, "This group name is already in use", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (newGroupName1.length() > 10) {
-            Toast.makeText(this, "The group name has to contain at most ten characters", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (newGroupName1.length() < 1) {
-            Toast.makeText(this, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-
-        firebaseDatabase.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e(TAG, task.getException().toString());
-                } else {
-                    Log.d(TAG, task.getResult().toString());
-                    user = task.getResult().getValue(User.class);
-
-                    // New group
-                    Group newGroup = new Group(user.getUsername(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user, newGroupName1);
-
-                    // Add the new group to the Firebase database
-                    DatabaseReference newGroupRef = firebaseDatabase.getReference("Groups");
-                    newGroupRef.child(newGroup.getGroupName()).setValue(newGroup).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (!task.isSuccessful()) {
-                                Log.e("firebase", "Error getting data", task.getException());
-                            } else {
-                                Toast.makeText(GroupActivity.this, "Group has been created", Toast.LENGTH_LONG).show();
-
-                                setRecycleView();
-
-                                firebaseDatabase.getReference("Users")
-                                        .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
-                                        .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task1) {
-                                        if (!task1.isSuccessful()) {
-                                            Log.e("firebase", "Error getting data", task1.getException());
-                                        } else {
-                                            Log.d("firebase", String.valueOf(task1.getResult()));
-                                            initializeSpinner();
-                                            userID = firebaseAuth.getCurrentUser().getUid();
-                                            getUserInitializeView();
-                                            if (fromMainDialog) {
-                                                groupAdjustments.addUserToGroup(usernameFromMain, newGroupName1, firebaseDatabase, databaseReference, GroupActivity.this);
-                                            }
-                                        }
-                                    }
-                                });
-                                Log.d("firebase", String.valueOf(task.getResult()));
-                            }
-                        }
-                    });
-                }
-            }
-        });
-    }
 }

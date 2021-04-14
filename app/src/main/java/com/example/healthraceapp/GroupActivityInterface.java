@@ -10,4 +10,6 @@ public interface GroupActivityInterface {
 
     void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1);
 
+
+
 }
