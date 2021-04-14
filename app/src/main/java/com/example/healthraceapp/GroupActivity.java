@@ -38,9 +38,6 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class GroupActivity extends AppCompatActivity implements GroupActivityInterface {
-
-
-
     private static final String TAG = "GroupActivity";
     private FirebaseRecyclerAdapter adapter;
 
@@ -108,13 +105,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
             return false;
         }
     }
-
-    /*@Override
-    protected void onResume() {
-        super.onResume();
-        userID = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
-        getUserInitializeView();
-    }*/
 
     @Override
     public void getUserInitializeView() {
@@ -397,81 +387,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
         builder.show();
     }
 
-
-    private void changeGroupName(String groupNameNew) {
-        if (allGroupNames.contains(groupNameNew)) {
-            Toast.makeText(this, "This group name is already in use", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (groupNameNew.length() > 10) {
-            Toast.makeText(this, "The group name has to contain at most ten characters", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (groupNameNew.length() < 1) {
-            Toast.makeText(this, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                } else {
-                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-
-                    allGroupNames.remove(currentlySelectedGroup);
-
-                    allGroupNames.add(groupNameNew);
-
-                    Group currentGroup = task.getResult().getValue(Group.class);
-
-                    currentGroup.setGroupName(groupNameNew);
-
-                    HashMap<String, User> allMembers = (HashMap<String, User>) currentGroup.getMembers();
-
-                    databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
-
-                    databaseReference.child("Groups").child(groupNameNew).setValue(currentGroup);
-
-                    databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                                if (allMembers.containsKey(dataSnapshot.child("username").getValue(String.class))) {
-                                    User tempUser = dataSnapshot.getValue(User.class);
-                                    tempUser.exitGroup(currentlySelectedGroup);
-                                    tempUser.addGroup(groupNameNew);
-                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(tempUser).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (!task.isSuccessful()) {
-                                                Log.e("firebase", task.getException().getMessage());
-                                            } else {
-                                                Toast.makeText(GroupActivity.this, "The group name has been changed", Toast.LENGTH_LONG).show();
-                                            }
-                                        }
-                                    });
-                                }
-                            }
-
-                            getUserInitializeView();
-                            initializeSpinner();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-
     public void checkGroupNameUniqueness(boolean createNewGroup, String newGroupName1) {
         // Defining DatabaseReference object
         DatabaseReference databaseReferenceGroups = FirebaseDatabase.getInstance("https://health-" +
@@ -495,7 +410,9 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                             GroupActivity.this );
                 } else { // The second function of this method is to change the group name of the
                     // selected group
-                    changeGroupName(newGroupName1);
+                    groupAdjustments.changeGroupName(newGroupName1, allGroupNames, databaseReference
+                    , currentlySelectedGroup, GroupActivity.this,
+                            GroupActivity.this);
                 }
             }
 
@@ -506,5 +423,4 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
             }
         });
     }
-
 }

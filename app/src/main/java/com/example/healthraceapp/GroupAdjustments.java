@@ -14,6 +14,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class GroupAdjustments implements GroupAdjustmentsInterface {
 
     public void addUserToGroup(String username, String currentlySelectedGroup1,
@@ -67,6 +70,87 @@ public class GroupAdjustments implements GroupAdjustmentsInterface {
             public void onCancelled(@NonNull DatabaseError error) {
                 // Getting data was canceled
                 Log.w("Database", "onCancelled", error.toException());
+            }
+        });
+    }
+
+    public void changeGroupName(String groupNameNew, ArrayList<String> allGroupNames,
+                                 DatabaseReference databaseReference, String currentlySelectedGroup,
+                                 GroupActivityInterface groupActivityInterface,
+                                 Context context) {
+        if (allGroupNames.contains(groupNameNew)) {
+            Toast.makeText(context, "This group name is already in use", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (groupNameNew.length() > 10) {
+            Toast.makeText(context, "The group name has to contain at most ten characters", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (groupNameNew.length() < 1) {
+            Toast.makeText(context, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        databaseReference.child("Groups").child(currentlySelectedGroup).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                } else {
+                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
+
+                    allGroupNames.remove(currentlySelectedGroup);
+
+                    allGroupNames.add(groupNameNew);
+
+                    Group currentGroup = task.getResult().getValue(Group.class);
+
+                    currentGroup.setGroupName(groupNameNew);
+
+                    HashMap<String, User> allMembers = (HashMap<String, User>) currentGroup.getMembers();
+
+                    databaseReference.child("Groups").child(currentlySelectedGroup).removeValue();
+
+                    databaseReference.child("Groups").child(groupNameNew).setValue(currentGroup);
+
+                    databaseReference.child("Users").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                if (allMembers.containsKey(dataSnapshot.child("username")
+                                        .getValue(String.class))) {
+                                    User tempUser = dataSnapshot.getValue(User.class);
+                                    tempUser.exitGroup(currentlySelectedGroup);
+                                    tempUser.addGroup(groupNameNew);
+                                    databaseReference.child("Users").child(dataSnapshot.getKey())
+                                            .setValue(tempUser).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (!task.isSuccessful()) {
+                                                Log.e("firebase", task.getException()
+                                                        .getMessage());
+                                            } else {
+                                                Toast.makeText(context,
+                                                        "The group name has been changed",
+                                                        Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+
+                            groupActivityInterface.getUserInitializeView();
+                            groupActivityInterface.initializeSpinner();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
             }
         });
     }
