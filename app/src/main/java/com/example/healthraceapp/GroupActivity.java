@@ -114,7 +114,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
-                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
                     user = task.getResult().getValue(User.class);
                     assert user != null;
                     if (user.getGroupNames().size() < 2) { // The user is not part of any group
@@ -227,7 +226,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                 if (!task.isSuccessful()) {
                     Log.e("firebase", "Error getting data", task.getException());
                 } else {
-                    Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult()).getValue()));
                     user = task.getResult().getValue(User.class);
                     // Getting all the groups that the user is part of
                     assert user != null;
@@ -303,7 +301,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                     if (!task.isSuccessful()) {
                         Log.e("firebase", "Error getting data", task.getException());
                     } else {
-                        Log.d("firebase", String.valueOf(Objects.requireNonNull(task.getResult().getValue())));
                         // Checking if the user is the admin of the selected group
                         if (task.getResult().getValue(String.class).equals(userID)) {
                             // We have to call this method because we have to wait for the retrieval
