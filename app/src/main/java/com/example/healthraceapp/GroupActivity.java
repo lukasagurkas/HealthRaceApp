@@ -39,12 +39,7 @@ import java.util.Objects;
 
 public class GroupActivity extends AppCompatActivity implements GroupActivityInterface {
 
-    // TODO add group selection
-    // TODO add user to group
-    // TODO remove user from group
-    // TODO admin privileges
-    // TODO sort by score
-    // TODO delete group
+
 
     private static final String TAG = "GroupActivity";
     private FirebaseRecyclerAdapter adapter;
@@ -69,12 +64,15 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
 
     private TextView nrOfMembersInGroup;
 
-    private Boolean fromMainDialog = false;
+    private  Boolean fromMainDialog = false;
 
     String usernameFromMain;
 
-    // Helper class to either delete a group or remove a user from a group
+    // Helper class to create a new group
     GroupCreationInterface groupCreation = new GroupCreation();
+
+    // Helper class to make adjustments to groups
+    GroupAdjustmentsInterface groupAdjustments = new GroupAdjustments();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -301,34 +299,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
         return super.onCreateOptionsMenu(menu);
     }
 
-//    public void createGroupButtonAction(String usernameFromMain){
-//        // Dialog to input the group name
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("Enter group name");
-//
-//        // Setting up the input for the AlertDialog
-//        final EditText input = new EditText(this);
-//        builder.setView(input);
-//
-//        // Setting up the buttons for the AlertDialog
-//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                newGroupName = input.getText().toString();
-//                checkGroupNameUniqueness(true, input.getText().toString());
-//            }
-//        });
-//
-//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                dialog.cancel();
-//            }
-//        });
-//
-//        builder.show();
-//    }
-
     // Handle ActionBar requests
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -390,7 +360,7 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                     if (input.getText().toString().equals(user.getUsername())) {
                         Toast.makeText(GroupActivity.this, "You are already in the group", Toast.LENGTH_LONG).show();
                     } else {
-                        addUserToGroup(input.getText().toString(), newGroupName);
+                        groupAdjustments.addUserToGroup(input.getText().toString(), currentlySelectedGroup, firebaseDatabase, databaseReference, GroupActivity.this);
                     }
                 } else if (item.getItemId() == R.id.removeUserFromGroup) {
                     if (input.getText().toString().equals(user.getUsername())) {
@@ -427,52 +397,6 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
         builder.show();
     }
 
-    private void addUserToGroup(String username, String currentlySelectedGroup1) {
-        // Has to be final boolean array because it is accessed from an inner class
-        final boolean[] userExists = new boolean[1];
-        firebaseDatabase.getReference("Users").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    if (dataSnapshot.child("username").getValue(String.class).equals(username)) {
-                        userExists[0] = true;
-                        User selectedUser = dataSnapshot.getValue(User.class);
-
-                        databaseReference.child("Groups").child(currentlySelectedGroup1).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                if (!task.isSuccessful()) {
-                                    Log.e("firebase", "Error getting data", task.getException());
-                                } else {
-                                    Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                                    Group selectedGroup = task.getResult().getValue(Group.class);
-
-                                    // Adding the new member to the group
-                                    selectedGroup.addMember(selectedUser.getUsername(), selectedUser, currentlySelectedGroup1);
-
-                                    databaseReference.child("Groups").child(currentlySelectedGroup1).child("members").child(selectedUser.getUsername()).setValue(selectedUser);
-
-                                    databaseReference.child("Users").child(dataSnapshot.getKey()).setValue(selectedUser);
-
-                                    Toast.makeText(GroupActivity.this, username + " has been added to the group", Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-                    }
-                }
-                if (!userExists[0]) {
-                    Toast.makeText(GroupActivity.this, "A user with this username does not exist", Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Getting data was canceled
-                Log.w(TAG, "onCancelled", error.toException());
-            }
-        });
-        fromMainDialog = false;
-    }
 
     private void changeGroupName(String groupNameNew) {
         if (allGroupNames.contains(groupNameNew)) {
@@ -635,7 +559,7 @@ public class GroupActivity extends AppCompatActivity implements GroupActivityInt
                                             userID = firebaseAuth.getCurrentUser().getUid();
                                             getUserInitializeView();
                                             if (fromMainDialog) {
-                                                addUserToGroup(usernameFromMain, newGroupName1);
+                                                groupAdjustments.addUserToGroup(usernameFromMain, newGroupName1, firebaseDatabase, databaseReference, GroupActivity.this);
                                             }
                                         }
                                     }

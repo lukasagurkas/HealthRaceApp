@@ -1,5 +1,7 @@
 package com.example.healthraceapp;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +38,7 @@ public class Group {
 
     // Adds a member to the map with members and adds the user to the group
     public void addMember(String username, User user, String groupName) {
+        Log.d("check", "3");
         members.put(username, user);
         user.addGroup(groupName);
     }
