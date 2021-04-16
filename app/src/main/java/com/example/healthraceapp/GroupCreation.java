@@ -19,17 +19,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Objects;
 
+//Helper class of groupActivity.java
 public class GroupCreation implements GroupCreationInterface{
+    //assigning an empty string as a newGroupName
     String newGroupName = "";
 
 
     public void createGroupButtonAction(String usernameFromMain, GroupActivityInterface groupActivityInterface, Context context){
         // Dialog to input the group name
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        //set the text of the dialog
         builder.setTitle("Enter group name");
 
         // Setting up the input for the AlertDialog
         final EditText input = new EditText(context);
+        //displaying the input area
         builder.setView(input);
 
         // Setting up the buttons for the AlertDialog
@@ -37,46 +41,48 @@ public class GroupCreation implements GroupCreationInterface{
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 newGroupName = input.getText().toString();
-                Log.d("Check", newGroupName);
-                Log.d("Check", "check1");
+                //call to check if the group name is unique
                 groupActivityInterface.checkGroupNameUniqueness(true, newGroupName);
-                Log.d("Check", "check2");
             }
         });
 
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //cancel the dialog if the user clicked on "cancel"
                 dialog.cancel();
             }
         });
 
+        //display the created builder
         builder.show();
     }
 
-    // Create new group
+    // Method to create new group
     public void createNewGroup(Boolean fromMainDialog, String usernameFromMain, String newGroupName1,
                                 GroupAdjustmentsInterface groupAdjustments,
                                 FirebaseDatabase firebaseDatabase,
                                 DatabaseReference databaseReference,
                                 FirebaseAuth firebaseAuth, ArrayList<String> allGroupNames ,
                                 GroupActivityInterface groupActivityInterface, Context context) {
+        //Checking if the group name is not already been used
         if (allGroupNames.contains(newGroupName1)) {
             Toast.makeText(context, "This group name is already in use", Toast.LENGTH_LONG).show();
             return;
         }
-
+        //Checking if the group name contains at most 10 characters
         if (newGroupName1.length() > 10) {
             Toast.makeText(context, "The group name has to contain at most ten characters", Toast.LENGTH_LONG).show();
             return;
         }
-
+        //Checking if the group name contains at least one character
         if (newGroupName1.length() < 1) {
             Toast.makeText(context, "The group name has to contain at least one character", Toast.LENGTH_LONG).show();
             return;
         }
 
 
+        //add listener to the firebaseDatabase of the user reference
         firebaseDatabase.getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -98,9 +104,9 @@ public class GroupCreation implements GroupCreationInterface{
                                 Log.e("firebase", "Error getting data", task.getException());
                             } else {
                                 Toast.makeText(context, "Group has been created", Toast.LENGTH_LONG).show();
-
+                                //call the method to set the recycle view
                                 groupActivityInterface.setRecycleView();
-
+                                //add listener to the firebaseDatabase of the user reference
                                 firebaseDatabase.getReference("Users")
                                         .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                         .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -109,17 +115,18 @@ public class GroupCreation implements GroupCreationInterface{
                                         if (!task1.isSuccessful()) {
                                             Log.e("firebase", "Error getting data", task1.getException());
                                         } else {
-                                            Log.d("firebase", String.valueOf(task1.getResult()));
+                                            //Initialize the spinner
                                             groupActivityInterface.initializeSpinner();
-                                            String userID = firebaseAuth.getCurrentUser().getUid();
+                                            //initialize the user view
                                             groupActivityInterface.getUserInitializeView();
+                                            //if the user is being sent to the group page via the main page
                                             if (fromMainDialog) {
+                                                //add the user to the new group
                                                 groupAdjustments.addUserToGroup(usernameFromMain, newGroupName1, firebaseDatabase, databaseReference, context);
                                             }
                                         }
                                     }
                                 });
-                                Log.d("firebase", String.valueOf(task.getResult()));
                             }
                         }
                     });
